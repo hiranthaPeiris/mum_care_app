@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sign_button/sign_button.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -16,7 +18,6 @@ class MyApp extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               Container(
-
                 child: Text('LogIn Now',
                   style: TextStyle(
                     color: Colors.lightBlue,
@@ -45,11 +46,21 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               Container(
+                alignment: Alignment.center,
                 child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    leftSection,
-                    rightSection
-                  ],
+                    SignInButton.mini(
+                      buttonType: ButtonType.facebook,
+                      onPressed: () {},
+                    ),
+                    SignInButton.mini(
+                        buttonType: ButtonType.google,
+                        buttonSize: ButtonSize.large, // small(default), medium, large
+                        onPressed: () {
+                          print('click');
+                        })
+                  ]
                 ),
               ),
               Container(
@@ -96,9 +107,7 @@ class MyApp extends StatelessWidget {
                   textColor: Colors.white,
                   color: Colors.lightBlue,
                   child: Text('LogIn'),
-                  onPressed: (){
-
-                  },
+                  onPressed: (){},
                 ),
               ),
               Container(
@@ -121,30 +130,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-
     );
   }
 }
-
-final leftSection = new Container(
-  alignment: Alignment.center,
-  padding: EdgeInsets.fromLTRB(80, 10, 10, 10),
-  child: Image.asset(
-    "assets/hh.png",
-    width: 70.0,
-    height: 70,
-  ),
-);
-
-
-final rightSection = new Container(
-  alignment: Alignment.center,
-  padding: EdgeInsets.fromLTRB(10, 10, 80, 10),
-  child: Image.asset(
-    "assets/gg.png",
-    width: 70.0,
-    height: 70,
-  ),
-);
-
 
