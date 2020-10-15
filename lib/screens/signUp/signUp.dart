@@ -161,32 +161,33 @@ bool newValue=true;
          ),
         ),
 
-                    Container(
-                //padding: EdgeInsets.all(10.0),
-            child: Column(
+               Container(
+                
+               child: Column(
                children: <Widget>[
                   Row(  
                     children: <Widget>[  
-                      SizedBox(width: 10,),  
+                      SizedBox(width: 10,),
+                      
                       Checkbox(
                         value: _termsAgreed,
                        activeColor: Colors.blue,
                         onChanged:(newValue){
                        setState(() {
                        _termsAgreed = newValue;
-                     });
+                            });
        
-                  }),
-            Text('I agree with private policy' ,textAlign: TextAlign.right,),  
-
-        
-          ],),
-           ],),
+                       }),
+                     Text('I agree with private policy' ,textAlign: TextAlign.right,),  
+                     ],
+                    ),
+                 ],
+                ),
             ),///////////
 
         Container(
               height: 50.0,
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: RaisedButton(
                 shape: StadiumBorder(),
                 textColor: Colors.white,
@@ -220,22 +221,3 @@ bool newValue=true;
     }
 
   }
-
-
-final leftSection = new Container(
-  alignment: Alignment.center,
-  padding: EdgeInsets.fromLTRB(80, 10, 10, 10),  child: Image.asset(
-    "assets/fb.jpg",
-    width: 70.0,
-    height: 70,
-  ),
-);
-
-
-
-
-
-
-
-
-
