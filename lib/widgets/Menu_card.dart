@@ -7,8 +7,8 @@ class Menu_card extends StatelessWidget {
   final String svgSrc;
   final String title;
   final Function press;
-
-  const Menu_card({Key key, this.svgSrc, this.title, this.press})
+  final String heading;
+  const Menu_card({Key key, this.svgSrc, this.title, this.press, this.heading})
       : super(key: key);
 
   @override
@@ -37,6 +37,13 @@ class Menu_card extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: <Widget>[
+
+                    Text(
+                      heading,
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                    ),
                     Spacer(),
                     SvgPicture.asset(svgSrc),
                     Spacer(),
@@ -46,7 +53,7 @@ class Menu_card extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .title
-                          .copyWith(fontSize: 15),
+                          .copyWith(fontSize: 12),
                     )
                   ],
                 ),

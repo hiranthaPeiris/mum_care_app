@@ -102,31 +102,37 @@ class _DashboardState extends State<Dashboard> {
                           delegate: SliverChildListDelegate([
                             Menu_card(
                               title: "View Upcoming Clinics",
-                              svgSrc: "assets/icons/Hamburger.svg",
+                              heading: "Clinics",
+                              svgSrc: "assets/icons/clinics.svg",
                               press: () {},
                             ),
                             Menu_card(
                               title: "View Upcoming Home Visits",
-                              svgSrc: "assets/icons/Excrecises.svg",
+                              heading: "Home Visits",
+                              svgSrc: "assets/icons/home-visits.svg",
                               press: () {},
                             ),
                             Menu_card(
-                              title: "Report Medications",
-                              svgSrc: "assets/icons/Meditation.svg",
+                              title: "Report private medications",
+                              heading: "Report Medications",
+                              svgSrc: "assets/icons/yoga.svg",
                               press: () {},
                             ),
                             Menu_card(
-                              title: "Report Leaving Residential Area",
+                              title: "Report leaving residential area",
+                              heading: "Report Leaving",
                               svgSrc: "assets/icons/yoga.svg",
                               press: () {},
                             ),
                             Menu_card(
                               title: "Meditation",
+                              heading: "Home Visits",
                               svgSrc: "assets/icons/Meditation.svg",
                               press: () {},
                             ),
                             Menu_card(
                               title: "Yoga",
+                              heading: "Home Visits",
                               svgSrc: "assets/icons/yoga.svg",
                               press: () {},
                             )
