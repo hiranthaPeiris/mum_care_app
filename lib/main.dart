@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
+import 'package:mun_care_app/screens/login/Login_comp.dart';
 
 import 'helpers/Constants.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: kBackgroundColor,
         textTheme: Theme.of(context).textTheme.apply(displayColor: kTextColor),
       ),
-      home: Dashboard(),
+      home: LoginComp(),
     );
   }
 }
