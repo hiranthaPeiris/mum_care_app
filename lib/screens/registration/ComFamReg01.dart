@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'ComFamReg02.dart';
 
-class ComFamReg extends StatelessWidget {
+class ComFamRegMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,7 +26,21 @@ class ShapePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-Widget showTextField(String hintText, String inputName) {
+
+
+class Registration01 extends StatefulWidget {
+  @override
+  _Registration01State createState() => _Registration01State();
+}
+
+class _Registration01State extends State<Registration01> {
+String mohDropdownValue = 'Select Area';
+String phmDropdownValue = 'Select Area';
+String yearDropdownValue = 'Year';
+String monthDropdownValue = 'Mon';
+String dayDropdownValue = 'Day';
+
+ Widget showTextField(String hintText, String inputName) {
   return TextFormField(
     maxLines: 1,
     decoration: InputDecoration(
@@ -41,19 +55,6 @@ Widget showTextField(String hintText, String inputName) {
     onSaved: (input) => inputName = input,
   );
 }
-
-class Registration01 extends StatefulWidget {
-  @override
-  _Registration01State createState() => _Registration01State();
-}
-
-class _Registration01State extends State<Registration01> {
-String mohDropdownValue = 'Select Area';
-String phmDropdownValue = 'Select Area';
-String yearDropdownValue = 'Year';
-String monthDropdownValue = 'Mon';
-String dayDropdownValue = 'Day';
-
 
   Widget mohDropDownMenu() {
     return DropdownButton<String>(
