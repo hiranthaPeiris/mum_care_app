@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/RouteGenerator.dart';
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
+import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/login/Login_comp.dart';
 
 import 'helpers/Constants.dart';
@@ -8,6 +9,9 @@ import 'helpers/Constants.dart';
 void main() {
   runApp(MyApp());
 }
+/*
+
+*/
 
 class MyApp extends StatefulWidget {
   @override
@@ -29,3 +33,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+

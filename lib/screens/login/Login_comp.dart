@@ -120,6 +120,9 @@ class LoginComp extends StatelessWidget {
                     Text('Does not have account?'),
                     FlatButton(
                       textColor: Colors.lightBlueAccent,
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/signup');
+                      },
                       child: Text(
                         'SingUp',
                         style: TextStyle(
