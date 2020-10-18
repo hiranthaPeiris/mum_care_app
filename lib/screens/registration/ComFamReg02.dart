@@ -31,9 +31,9 @@ class Registration02 extends StatefulWidget {
 
 class _Registration02State extends State<Registration02> {
   String eduDropdownValue = 'Education Level';
-  String yearDropdownValue = 'Year';
-  String monthDropdownValue = 'Mon';
-  String dayDropdownValue = 'Day';
+  String myearDropdownValue = 'Year';
+  String mmonthDropdownValue = 'Mon';
+  String mdayDropdownValue = 'Day';
   bool d1_Yes = false;
   bool d1_No = false;
   bool d2_Yes = false;
@@ -93,7 +93,7 @@ class _Registration02State extends State<Registration02> {
 
   Widget yearDropDownMenu() {
     return DropdownButton<String>(
-      value: yearDropdownValue,
+      value: myearDropdownValue,
       icon: Icon(Icons.arrow_downward),
       iconSize: 18,
       elevation: 36,
@@ -114,7 +114,7 @@ class _Registration02State extends State<Registration02> {
       }).toList(),
       onChanged: (String value) {
         setState(() {
-          yearDropdownValue = value;
+          myearDropdownValue = value;
         });
       },
     );
@@ -122,7 +122,7 @@ class _Registration02State extends State<Registration02> {
 
   Widget monthDropDownMenu() {
     return DropdownButton<String>(
-      value: monthDropdownValue,
+      value: mmonthDropdownValue,
       icon: Icon(Icons.arrow_downward),
       iconSize: 18,
       elevation: 36,
@@ -157,7 +157,7 @@ class _Registration02State extends State<Registration02> {
       }).toList(),
       onChanged: (String value) {
         setState(() {
-          monthDropdownValue = value;
+          mmonthDropdownValue = value;
         });
       },
     );
@@ -165,7 +165,7 @@ class _Registration02State extends State<Registration02> {
 
   Widget dayDropDownMenu() {
     return DropdownButton<String>(
-      value: dayDropdownValue,
+      value: mdayDropdownValue,
       icon: Icon(Icons.arrow_downward),
       iconSize: 18,
       elevation: 36,
@@ -197,38 +197,9 @@ class _Registration02State extends State<Registration02> {
       }).toList(),
       onChanged: (String value) {
         setState(() {
-          dayDropdownValue = value;
+          mdayDropdownValue = value;
         });
       },
-    );
-  }
-
-  Widget checkBoxDisplay(String diseases, bool valName) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-          MediaQuery.of(context).size.width * 0.05,
-          MediaQuery.of(context).size.height * 0.005,
-          MediaQuery.of(context).size.width * 0.03,
-          MediaQuery.of(context).size.height * 0.005),
-      child: Container(
-        child: Row(
-          children: <Widget>[
-            Expanded(flex: 60, child: Text(diseases)),
-            Expanded(
-                flex: 20,
-                child: Checkbox(
-                    value: valName,
-                    onChanged: (bool value) {
-                      setState(() {
-                        valName = value;
-                      });
-                    })),
-            Expanded(
-                flex: 20,
-                child: Checkbox(value: valName, onChanged: (bool value) {})),
-          ],
-        ),
-      ),
     );
   }
 

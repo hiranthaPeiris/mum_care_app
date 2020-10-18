@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg01.dart';
 
 void main() {
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ComFamRegMain(),
+      home: ComFamReg(),
     );
   }
 }
