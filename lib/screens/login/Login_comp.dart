@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:sign_button/sign_button.dart';
 
-class LoginComp extends StatelessWidget {
+class LoginComp extends StatefulWidget {
+  @override
+  _LoginCompState createState() => _LoginCompState();
+}
+
+class _LoginCompState extends State<LoginComp> {
+  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -109,8 +117,14 @@ class LoginComp extends StatelessWidget {
                   textColor: Colors.white,
                   color: Colors.lightBlue,
                   child: Text('LogIn'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/dashboard');
+                  onPressed: ()async{
+                    dynamic result = await _auth.signAnon();
+                    if(result!=null){
+                      print('signed in');
+                      print(result.uid);
+                    }else{
+                      print('error signing in');
+                    }
                   },
                 ),
               ),

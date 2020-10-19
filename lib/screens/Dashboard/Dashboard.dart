@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
+import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
@@ -11,16 +12,32 @@ class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 }
+AuthService  _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
   int notificationCount = 2;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      bottomNavigationBar: Bottom_nav(),
+      key: _scaffoldKey,
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(child: Text("Settings")),
+            ListTile(
+              title: Text("Sign out"),
+              onTap: () async{
+                await _authService.SignOut();
+              },
+            )
+          ],
+        ),
+      ),
+      bottomNavigationBar: Bottom_nav(scaffoldKey: _scaffoldKey),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -74,7 +91,8 @@ class _DashboardState extends State<Dashboard> {
                                 : new Container()
                           ],
                         ),
-                        onTap: () => {Navigator.pushNamed(context, '/notification')},
+                        onTap: () =>
+                            {Navigator.pushNamed(context, '/notification')},
                       ),
                       Align(
                         alignment: Alignment.topRight,
@@ -90,7 +108,8 @@ class _DashboardState extends State<Dashboard> {
                             child: SvgPicture.asset("assets/icons/profile.svg",
                                 height: 30, width: 30),
                           ),
-                          onTap: () => {print("profile tapped")},
+                          onTap: () =>
+                              {Navigator.pushNamed(context, '/profile')},
                         ),
                       ),
                     ],

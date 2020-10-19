@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/Wapper.dart';
+import 'package:mun_care_app/screens/Authentication/Authentication.dart';
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
+import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/login/Login_comp.dart';
 
@@ -11,13 +14,15 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => LoginComp());
+        return MaterialPageRoute(builder: (_) => Wapper());
       case '/dashboard':
         return MaterialPageRoute(builder: (_) => Dashboard());
       case '/signup':
         return MaterialPageRoute(builder: (_) => Signup());
       case '/notification':
         return MaterialPageRoute(builder: (_)=> NotificationScreen());
+      case '/profile':
+        return MaterialPageRoute(builder: (_)=> Profile());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));
