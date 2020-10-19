@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:sign_button/sign_button.dart';
 
 class Signup extends StatefulWidget {
+  final Function toggleView;
+
+  Signup ({ this.toggleView });
+
   @override
   _SignupState createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup> {
+  AuthService _auth = AuthService();
+
   bool _termsAgreed = false;
   bool newValue = true;
+  String error = "";
+  String email = "";
+  String password = "";
+  final _formKey = GlobalKey<FormState>();
+
+  bool validate() {
+    if (email.isEmpty && password.isEmpty) {
+      print("empty");
+      return false;
+    }
+    print("not");
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,24 +108,41 @@ class _SignupState extends State<Signup> {
               ),
             ),
 
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(20.0)),
-                  labelText: 'Email',
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(20.0)),
-                  labelText: 'Password',
-                ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(20.0)),
+                        labelText: 'Email',
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          email = val;
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(20.0)),
+                        labelText: 'Password',
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          password = val;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
 
@@ -145,10 +182,23 @@ class _SignupState extends State<Signup> {
                     style: TextStyle(
                       fontSize: 24.0,
                     )),
-                onPressed: () {},
+                onPressed: () {
+                  if (validate()) {
+                    dynamic result = _auth.Register(email, password);
+                    if (result == null) {
+                      setState(() {
+                        error = 'Please supply a valid email';
+                      });
+                    }
+                  }
+                },
               ),
             ),
-
+            SizedBox(height: 12.0),
+            Text(
+              error,
+              style: TextStyle(color: Colors.red, fontSize: 14.0),
+            ),
             Container(
               child: Row(
                 children: <Widget>[
@@ -156,7 +206,7 @@ class _SignupState extends State<Signup> {
                   FlatButton(
                     textColor: Colors.lightBlueAccent,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/');
+                      widget.toggleView();
                     },
                     child: Text(
                       'Login',

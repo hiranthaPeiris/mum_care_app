@@ -29,13 +29,41 @@ class AuthService {
   }
 
   //sign in email pass
-
+  Future signIn(String email,String pass) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: pass);
+      return _userFromFirebase(userCredential.user);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+        return null;
+      }
+      }catch (e) {
+        print(e.toString());
+        return null;
+    }
+  }
   //sign out
   Future SignOut() async {
     try {
       return await _auth.signOut();
     } catch (error) {
       print(error.toString());
+      return null;
+    }
+  }
+
+  //register
+  Future Register(String email, String password) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      print(userCredential.user.uid);
+      return (_userFromFirebase(userCredential.user));
+    } catch (e) {
+      print(e.toString());
       return null;
     }
   }
