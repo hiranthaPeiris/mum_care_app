@@ -12,7 +12,8 @@ class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 }
-AuthService  _authService = AuthService();
+
+AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
   int notificationCount = 2;
@@ -30,7 +31,7 @@ class _DashboardState extends State<Dashboard> {
             DrawerHeader(child: Text("Settings")),
             ListTile(
               title: Text("Sign out"),
-              onTap: () async{
+              onTap: () async {
                 await _authService.SignOut();
               },
             )
@@ -141,7 +142,9 @@ class _DashboardState extends State<Dashboard> {
                               content:
                                   "Complete the competency family registration",
                               svgSrc: "assets/icons/Hamburger.svg",
-                              press: () {}),
+                              press: () {
+                                Navigator.pushNamed(context, '/comReg');
+                              }),
                           Menu_liner_card(
                               heading: "Pregnancy Registration",
                               content: "Complete the pregnancy registration",
