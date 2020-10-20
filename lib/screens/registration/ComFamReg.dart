@@ -43,6 +43,8 @@ class _ComFamRegState extends State<ComFamReg> {
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
   String eduDropdownValue = 'Education Level';
+  String womenBloodDropdownValue = 'A+';
+  String menBloodDropdownValue = 'A+';
 
   bool d1_Yes = false;
   bool d1_No = false;
@@ -70,7 +72,7 @@ class _ComFamRegState extends State<ComFamReg> {
   String bloodDropdownValue = null;
   DateTime _dateDOB;
   DateTime _dateMarrage;
-  bool _set=false;
+  bool _set = false;
 
   @override
   Widget build(BuildContext context) {
@@ -137,8 +139,6 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
-   
-
 ////////////////////////////////////////////////step 02 widgets////////////////
     Widget eduDropDownMenu() {
       return DropdownButton<String>(
@@ -176,7 +176,6 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
-  
 //////////////////////////////////step 04 widgets///////////////////////
 
     Widget rubellaDropDownMenu() {
@@ -266,16 +265,16 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
-    Widget bloodDropDownMenu() {
+    Widget womenBloodDropDownMenu() {
       return DropdownButton<String>(
-        value: bloodDropdownValue,
+        value: womenBloodDropdownValue,
         icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
         items:
-            <String>['Yes', 'No'].map<DropdownMenuItem<String>>((String value) {
+            <String>['A+', 'A-','AB','O+','O-'].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -289,11 +288,40 @@ class _ComFamRegState extends State<ComFamReg> {
         }).toList(),
         onChanged: (String value) {
           setState(() {
-            bloodDropdownValue = value;
+            womenBloodDropdownValue = value;
           });
         },
       );
     }
+    Widget menBloodDropDownMenu() {
+      return DropdownButton<String>(
+        value: menBloodDropdownValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 36,
+        isExpanded: true,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        items:
+            <String>['A+', 'A-','AB','O+','O-'].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }).toList(),
+        onChanged: (String value) {
+          setState(() {
+            menBloodDropdownValue = value;
+          });
+        },
+      );
+    }
+
 
     List<Step> steps = [
       Step(
@@ -501,47 +529,55 @@ class _ComFamRegState extends State<ComFamReg> {
                   children: <Widget>[
                     Expanded(
                       flex: 30,
-                      child: Text("Date of Birth"),
+                      child: Text(
+                        "Date of Birth",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
-                     Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(_dateDOB==null ?"Select DOB":_dateDOB.year.toString() +"/"+ _dateDOB.month.toString()  +"/"+_dateDOB.day.toString()),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    SizedBox(
-                      width: 20,
-                      height: 30,
-                      child: RaisedButton(
-                          child: Text(
-                            ".",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(fontSize: 35),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(_dateDOB == null
+                              ? "Select DOB"
+                              : _dateDOB.year.toString() +
+                                  "/" +
+                                  _dateDOB.month.toString() +
+                                  "/" +
+                                  _dateDOB.day.toString()),
+                          SizedBox(
+                            width: 20,
                           ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(
-                                color: Color.fromARGB(500, 21, 166, 211),
-                              )),
-                          onPressed: () {
-                            showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(1980),
-                                    lastDate: DateTime(2021))
-                                .then((date) {
-                              setState(() {
-                                _dateDOB = date;
-                              });
-                            });
-                          }),
+                          SizedBox(
+                            width: 20,
+                            height: 30,
+                            child: RaisedButton(
+                                child: Text(
+                                  ".",
+                                  textAlign: TextAlign.justify,
+                                  style: TextStyle(fontSize: 35),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(
+                                      color: Color.fromARGB(500, 21, 166, 211),
+                                    )),
+                                onPressed: () {
+                                  showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1980),
+                                          lastDate: DateTime(2021))
+                                      .then((date) {
+                                    setState(() {
+                                      _dateDOB = date;
+                                    });
+                                  });
+                                }),
+                          )
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              )
-                    
                   ],
                 ),
               ),
@@ -572,7 +608,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
-                    MediaQuery.of(context).size.height * 0.005),
+                    MediaQuery.of(context).size.height * 0.05),
                 child: showTextField("Job", "_job"),
               ),
             ),
@@ -625,55 +661,63 @@ class _ComFamRegState extends State<ComFamReg> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width * 0.1,
-                    MediaQuery.of(context).size.height * 0.005,
+                    MediaQuery.of(context).size.height * 0.05,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
                 child: Row(
                   children: <Widget>[
                     Expanded(
                       flex: 37,
-                      child: Text("Marriage Date"),
+                      child: Text(
+                        "Marriage Date",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
-                   Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(_dateMarrage==null ?"Select Marriage Date":_dateMarrage.year.toString() +"/"+ _dateMarrage.month.toString()  +"/"+_dateMarrage.day.toString()),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    SizedBox(
-                      width: 20,
-                      height: 30,
-                      child: RaisedButton(
-                          child: Text(
-                            ".",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(fontSize: 35),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(_dateMarrage == null
+                              ? "Select Marriage Date"
+                              : _dateMarrage.year.toString() +
+                                  "/" +
+                                  _dateMarrage.month.toString() +
+                                  "/" +
+                                  _dateMarrage.day.toString()),
+                          SizedBox(
+                            width: 20,
                           ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(
-                                color: Color.fromARGB(500, 21, 166, 211),
-                              )),
-                          onPressed: () {
-                            showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(1980),
-                                    lastDate: DateTime(2021))
-                                .then((date) {
-                              setState(() {
-                                _dateMarrage = date;
-                                _set = true;
-                              });
-                            });
-                          }),
+                          SizedBox(
+                            width: 20,
+                            height: 30,
+                            child: RaisedButton(
+                                child: Text(
+                                  ".",
+                                  textAlign: TextAlign.justify,
+                                  style: TextStyle(fontSize: 35),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(
+                                      color: Color.fromARGB(500, 21, 166, 211),
+                                    )),
+                                onPressed: () {
+                                  showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1980),
+                                          lastDate: DateTime(2021))
+                                      .then((date) {
+                                    setState(() {
+                                      _dateMarrage = date;
+                                      _set = true;
+                                    });
+                                  });
+                                }),
+                          )
+                        ],
+                      ),
                     )
-                  ],
-                ),
-              )
-                   
                   ],
                 ),
               ),
@@ -695,7 +739,7 @@ class _ComFamRegState extends State<ComFamReg> {
             Padding(
               padding: EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width * 0.05,
-                  MediaQuery.of(context).size.height * 0.03,
+                  MediaQuery.of(context).size.height * 0.001,
                   MediaQuery.of(context).size.width * 0.03,
                   MediaQuery.of(context).size.height * 0.03),
               child: Container(
@@ -1030,6 +1074,25 @@ class _ComFamRegState extends State<ComFamReg> {
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 8, 2, 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      height: 25,
+                      child: Text(
+                        "Special information about women",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Container(
                 child: Column(
                   children: <Widget>[
@@ -1162,7 +1225,283 @@ class _ComFamRegState extends State<ComFamReg> {
                   ],
                 ),
               ),
-              
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.05,
+                    MediaQuery.of(context).size.width * 0.03,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(flex: 10, child: Container()),
+                      Expanded(
+                          flex: 15,
+                          child: Text(
+                            "Women's",
+                            style: TextStyle(
+                                color: Color.fromARGB(500, 21, 166, 211),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                            textAlign: TextAlign.center,
+                          )),
+                      Expanded(
+                          flex: 20,
+                          child: Text(
+                            "Men's",
+                            style: TextStyle(
+                                color: Color.fromARGB(500, 21, 166, 211),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                            textAlign: TextAlign.center,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.025,
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            flex: 25,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 25,
+                                child: Text(
+                                  "Weight -",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          flex: 15,
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Container(
+                              height: 30,
+                              alignment: Alignment.center,
+                              child: showTextField("", "kgWeight"),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(0),
+                                  color: Colors.grey[300],
+                                  border: Border.all(
+                                      color: Colors.black,
+                                      style: BorderStyle.solid,
+                                      width: 0.5)),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 15,
+                          child: Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Text("Kg")),
+                        ),
+                        Expanded(
+                          flex: 15,
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Container(
+                              height: 30,
+                              alignment: Alignment.center,
+                              child: showTextField("", "gWeight"),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(0),
+                                  color: Colors.grey[300],
+                                  border: Border.all(
+                                      color: Colors.black,
+                                      style: BorderStyle.solid,
+                                      width: 0.5)),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 8,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Text("Kg"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.025,
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              flex: 25,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 25,
+                                  child: Text(
+                                    "Height -",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                          Expanded(
+                            flex: 15,
+                            child: Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                height: 30,
+                                alignment: Alignment.center,
+                                child: showTextField("", "womenHeight"),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 15,
+                            child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Text("cm")),
+                          ),
+                          Expanded(
+                            flex: 15,
+                            child: Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                height: 30,
+                                alignment: Alignment.center,
+                                child: showTextField("", "menHeight"),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 8,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Text("cm"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.025,
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            flex: 25,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 25,
+                                child: Text(
+                                  "Blood Type -",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          flex: 15,
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Container(
+                                height: 25,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                    boxShadow: [
+                                      new BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 80.0),
+                                    ],
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                                child:womenBloodDropDownMenu()),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 15,
+                          child: Container(),
+                        ),
+                        Expanded(
+                          flex: 15,
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Container(
+                                height: 25,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                    boxShadow: [
+                                      new BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 80.0),
+                                    ],
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                                child: menBloodDropDownMenu()),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 8,
+                          child: Container(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ))
     ];
