@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sign_button/sign_button.dart';
 
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class LoginComp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: Scaffold(
-
         body: Padding(
           padding: EdgeInsets.all(40),
           child: ListView(
             children: <Widget>[
               Container(
-                child: Text('LogIn Now',
+                child: Text(
+                  'LogIn Now',
                   style: TextStyle(
                     color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,
@@ -28,7 +22,8 @@ class MyApp extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Text('Please login to continue using our app',
+                child: Text(
+                  'Please login to continue using our app',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -38,8 +33,10 @@ class MyApp extends StatelessWidget {
               Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 alignment: Alignment.center,
-                child: Text('Enter via Social Networks',
-                  style: TextStyle(color: Colors.lightBlue,
+                child: Text(
+                  'Enter via Social Networks',
+                  style: TextStyle(
+                    color: Colors.lightBlue,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -49,25 +46,27 @@ class MyApp extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SignInButton.mini(
-                      buttonType: ButtonType.facebook,
-                      onPressed: () {},
-                    ),
-                    SignInButton.mini(
-                        buttonType: ButtonType.google,
-                        buttonSize: ButtonSize.large, // small(default), medium, large
-                        onPressed: () {
-                          print('click');
-                        })
-                  ]
-                ),
+                    children: <Widget>[
+                      SignInButton.mini(
+                        buttonType: ButtonType.facebook,
+                        onPressed: () {},
+                      ),
+                      SignInButton.mini(
+                          buttonType: ButtonType.google,
+                          buttonSize:
+                              ButtonSize.large, // small(default), medium, large
+                          onPressed: () {
+                            print('click');
+                          })
+                    ]),
               ),
               Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.all(20),
-                child: Text('or login with Email',
-                  style: TextStyle(fontWeight: FontWeight.bold,
+                child: Text(
+                  'or login with Email',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
                 ),
@@ -76,7 +75,8 @@ class MyApp extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 child: TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: new BorderRadius.circular(20.0)),
+                    border: OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(20.0)),
                     labelText: 'Email',
                   ),
                 ),
@@ -85,17 +85,19 @@ class MyApp extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 child: TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: new BorderRadius.circular(20.0)),
+                    border: OutlineInputBorder(
+                        borderRadius: new BorderRadius.circular(20.0)),
                     labelText: 'Password',
                   ),
                   obscureText: true,
                 ),
               ),
               FlatButton(
-                onPressed: (){
+                onPressed: () {
                   //forgot password screen
                 },
-                child: Text('Forgot Password',
+                child: Text(
+                  'Forgot Password',
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -107,7 +109,9 @@ class MyApp extends StatelessWidget {
                   textColor: Colors.white,
                   color: Colors.lightBlue,
                   child: Text('LogIn'),
-                  onPressed: (){},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/dashboard');
+                  },
                 ),
               ),
               Container(
@@ -116,8 +120,10 @@ class MyApp extends StatelessWidget {
                     Text('Does not have account?'),
                     FlatButton(
                       textColor: Colors.lightBlueAccent,
-                      child: Text('SingUp',
-                        style: TextStyle(fontSize: 16,
+                      child: Text(
+                        'SingUp',
+                        style: TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.lightBlue,
                         ),
@@ -133,4 +139,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
