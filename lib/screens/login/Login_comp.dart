@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_button/sign_button.dart';
 
 class LoginComp extends StatefulWidget {
@@ -13,6 +15,7 @@ class LoginComp extends StatefulWidget {
 
 class _LoginCompState extends State<LoginComp> {
   final AuthService _auth = AuthService();
+
   String Email = '';
   String password = '';
   String error = '';
@@ -27,6 +30,7 @@ class _LoginCompState extends State<LoginComp> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserM>(context);
     return MaterialApp(
       home: Scaffold(
         body: Padding(
@@ -145,10 +149,13 @@ class _LoginCompState extends State<LoginComp> {
                   onPressed: () async {
                     if (validate()) {
                       dynamic result = _auth.signIn(Email, password);
+
                       if (result == null) {
                         setState(() {
                           error = 'Please supply a valid email';
                         });
+                      }else{
+                        _auth.setUid();
                       }
                     }else{
                       dynamic result = await _auth.signAnon();

@@ -1,8 +1,16 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mun_care_app/helpers/DataHolder.dart';
 import 'package:mun_care_app/models/UserM.dart';
+
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   UserM _userFromFirebase(User user) {
     return user != null ? UserM(user.uid) : null;
@@ -45,6 +53,39 @@ class AuthService {
         return null;
     }
   }
+
+  void setUid () async{
+       _auth.authStateChanges()
+        .listen((User user) async{
+      if (user == null) {
+        print('User is currently signed out!');
+
+      } else {
+        print('User is signed in!');
+        // Get the token for this device
+
+        String uid = user.uid;
+        DataHolder.uid = uid;
+        String fcmToken = await _firebaseMessaging.getToken();
+
+        // Save it to Firestore
+        if (fcmToken != null) {
+          var tokens = _firestore
+              .collection('users')
+              .doc(uid)
+              .collection('tokens')
+              .doc(fcmToken);
+
+          await tokens.set({
+            'token': fcmToken,
+            'createdAt': FieldValue.serverTimestamp(), // optional
+            'platform': Platform.operatingSystem // optional
+          });
+        }
+      }
+    });
+  }
+
   //sign out
   Future SignOut() async {
     try {
