@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-void main() {
+/*void main() {
   runApp(MyApp());
 }
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       home: HomePage(),
     ); //material app
   }
-}
+}*/
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TimeOfDay _time = TimeOfDay.now();
   TimeOfDay picked1;
-  Future<Null> selectTime(BuildContext context) async {
+  Future<Null> _selectTime(BuildContext context) async {
     picked1 = await showTimePicker(
       context: context,
       initialTime: _time,
@@ -52,11 +52,12 @@ class _HomePageState extends State<HomePage> {
   TextEditingController date = TextEditingController();
   TextEditingController time = TextEditingController();
   TextEditingController venue = TextEditingController();
+  TextEditingController motherName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;
-
+    String dropdownValue = 'One';
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(30),
@@ -113,12 +114,56 @@ class _HomePageState extends State<HomePage> {
                         controller: time,
                         decoration: InputDecoration(
                           labelText: "Time",
-                          hintText: "${_time.hour}:${_time.hour}",
+                          hintText: "${_time.hour}:${_time.minute}",
                         ),
-                        onTap: () => selectTime(context),
+                        onTap: () => _selectTime(context),
                       ),
+                      /*TextFormField(
+                        controller: description,
+                        decoration: InputDecoration(
+                          labelText: "Mother Name",
+                          hintText: "Select the Mother Name",
+                        ),
+                      ),*/
                     ],
                   )
+                ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    child: Text("Mother Name"),
+                    alignment: Alignment.bottomLeft,
+                  ),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: Icon(Icons.arrow_downward),
+                      iconSize: 30,
+                      elevation: 16,
+                      style: TextStyle(color: Colors.deepPurple, fontSize: 20),
+                      underline: Container(
+                        height: 5,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                      },
+                      items: <String>['One', 'Two', 'Free', 'Four']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ],
               ),
             ),
