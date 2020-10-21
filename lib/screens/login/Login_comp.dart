@@ -1,7 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:sign_button/sign_button.dart';
 
-class LoginComp extends StatelessWidget {
+class LoginComp extends StatefulWidget {
+  final Function toggleView;
+
+  LoginComp({this.toggleView});
+
+  @override
+  _LoginCompState createState() => _LoginCompState();
+}
+
+class _LoginCompState extends State<LoginComp> {
+  final AuthService _auth = AuthService();
+  String Email = '';
+  String password = '';
+  String error = '';
+  bool validate() {
+    if (Email.isEmpty && password.isEmpty) {
+      print("empty");
+      return false;
+    }
+    print("not empty");
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -79,6 +102,11 @@ class LoginComp extends StatelessWidget {
                         borderRadius: new BorderRadius.circular(20.0)),
                     labelText: 'Email',
                   ),
+                  onChanged: (val) {
+                    setState(() {
+                      Email = val;
+                    });
+                  },
                 ),
               ),
               Container(
@@ -90,6 +118,11 @@ class LoginComp extends StatelessWidget {
                     labelText: 'Password',
                   ),
                   obscureText: true,
+                  onChanged: (val) {
+                    setState(() {
+                      password = val;
+                    });
+                  },
                 ),
               ),
               FlatButton(
@@ -109,10 +142,30 @@ class LoginComp extends StatelessWidget {
                   textColor: Colors.white,
                   color: Colors.lightBlue,
                   child: Text('LogIn'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/dashboard');
+                  onPressed: () async {
+                    if (validate()) {
+                      dynamic result = _auth.signIn(Email, password);
+                      if (result == null) {
+                        setState(() {
+                          error = 'Please supply a valid email';
+                        });
+                      }
+                    }else{
+                      dynamic result = await _auth.signAnon();
+                      if (result != null) {
+                        print('signed in');
+                        print(result.uid);
+                      } else {
+                        print('error signing in');
+                      }
+                    }
                   },
                 ),
+              ),
+              SizedBox(height: 12.0),
+              Text(
+                error,
+                style: TextStyle(color: Colors.red, fontSize: 14.0),
               ),
               Container(
                 child: Row(
@@ -120,6 +173,9 @@ class LoginComp extends StatelessWidget {
                     Text('Does not have account?'),
                     FlatButton(
                       textColor: Colors.lightBlueAccent,
+                      onPressed: () {
+                        widget.toggleView();
+                      },
                       child: Text(
                         'SingUp',
                         style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
+import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
@@ -12,13 +13,32 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState();
 }
 
+AuthService _authService = AuthService();
+
 class _DashboardState extends State<Dashboard> {
+  int notificationCount = 2;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      bottomNavigationBar: Bottom_nav(),
+      key: _scaffoldKey,
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(child: Text("Settings")),
+            ListTile(
+              title: Text("Sign out"),
+              onTap: () async {
+                await _authService.SignOut();
+              },
+            )
+          ],
+        ),
+      ),
+      bottomNavigationBar: Bottom_nav(scaffoldKey: _scaffoldKey),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -41,24 +61,56 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                          alignment: Alignment.center,
-                          height: 45,
-                          width: 45,
-                          child: SvgPicture.asset("assets/icons/bell.svg",
-                              color: Colors.white)),
+                      InkWell(
+                        child: Stack(
+                          children: [
+                            Container(
+                                alignment: Alignment.center,
+                                height: 45,
+                                width: 45,
+                                child: SvgPicture.asset("assets/icons/bell.svg",
+                                    color: Colors.white)),
+                            notificationCount != 0
+                                ? new Positioned(
+                                    right: 5,
+                                    top: 0,
+                                    child: Container(
+                                        padding: EdgeInsets.all(2),
+                                        decoration: new BoxDecoration(
+                                            color: Colors.redAccent,
+                                            shape: BoxShape.circle),
+                                        constraints: new BoxConstraints(
+                                            minHeight: 16, minWidth: 16),
+                                        child: Text(
+                                          '$notificationCount',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w800),
+                                        )))
+                                : new Container()
+                          ],
+                        ),
+                        onTap: () =>
+                            {Navigator.pushNamed(context, '/notification')},
+                      ),
                       Align(
                         alignment: Alignment.topRight,
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 45,
-                          width: 45,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF8d3edd),
-                            shape: BoxShape.circle,
+                        child: InkWell(
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF8d3edd),
+                              shape: BoxShape.circle,
+                            ),
+                            child: SvgPicture.asset("assets/icons/profile.svg",
+                                height: 30, width: 30),
                           ),
-                          child: SvgPicture.asset("assets/icons/profile.svg",
-                              height: 30, width: 30),
+                          onTap: () =>
+                              {Navigator.pushNamed(context, '/profile')},
                         ),
                       ),
                     ],
@@ -90,7 +142,9 @@ class _DashboardState extends State<Dashboard> {
                               content:
                                   "Complete the competency family registration",
                               svgSrc: "assets/icons/Hamburger.svg",
-                              press: () {}),
+                              press: () {
+                                Navigator.pushNamed(context, '/comReg');
+                              }),
                           Menu_liner_card(
                               heading: "Pregnancy Registration",
                               content: "Complete the pregnancy registration",
