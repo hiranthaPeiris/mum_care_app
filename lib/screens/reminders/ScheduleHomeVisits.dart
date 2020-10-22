@@ -1,26 +1,12 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class ScheduleHomeVisits extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    ); //material app
-  }
+  _ScheduleHomeVisitsState createState() => _ScheduleHomeVisitsState();
 }
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
   TimeOfDay _time = TimeOfDay.now();
   TimeOfDay picked1;
   Future<Null> selectTime(BuildContext context) async {
@@ -56,7 +42,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;
-
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(30),
