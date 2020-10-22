@@ -158,8 +158,7 @@ class _DashboardState extends State<Dashboard> {
                               title: "View Upcoming Clinics",
                               heading: "Clinics",
                               svgSrc: "assets/icons/clinics.svg",
-                              press: () {
-                              },
+                              press: () {},
                             ),
                             Menu_card(
                               title: "View Upcoming Home Visits",
@@ -201,54 +200,6 @@ class _DashboardState extends State<Dashboard> {
                           ))
                     ],
                   ))
-
-                  /*Expanded(
-                    child: Column(
-                      children: [
-                        Menu_liner_card(
-                            content: "Test",
-                            svgSrc: "assets/icons/Hamburger.svg",
-                            press: () {}),
-                        Expanded(
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            childAspectRatio: .85,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            children: <Widget>[
-                              Menu_card(
-                                title: "Diet Recommendation",
-                                svgSrc: "assets/icons/Hamburger.svg",
-                                press: () {},
-                              ),
-                              Menu_card(
-                                title: "Kegel Exercises",
-                                svgSrc: "assets/icons/Excrecises.svg",
-                                press: () {},
-                              ),
-                              Menu_card(
-                                title: "Meditation",
-                                svgSrc: "assets/icons/Meditation.svg",
-                                press: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return null;
-                                    }),
-                                  );
-                                },
-                              ),
-                              Menu_card(
-                                title: "Yoga",
-                                svgSrc: "assets/icons/yoga.svg",
-                                press: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),*/
                 ],
               ),
             )
