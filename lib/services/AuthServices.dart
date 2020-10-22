@@ -53,7 +53,6 @@ class AuthService {
         return null;
     }
   }
-
   void setUid () async{
        _auth.authStateChanges()
         .listen((User user) async{

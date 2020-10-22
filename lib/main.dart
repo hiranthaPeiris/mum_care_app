@@ -11,11 +11,14 @@ import 'package:provider/provider.dart';
 import 'Locator.dart';
 import 'helpers/Constants.dart';
 
-void main() {
+
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(AppFire());
 }
+
+
 
 class MyApp extends StatefulWidget {
   @override
@@ -25,9 +28,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final GlobalKey<NavigatorState> navigatorKey =
       new GlobalKey<NavigatorState>();
+  final NotificationService _notificationService = NotificationService();
+
+  Future Startup()async{
+    await _notificationService.InitalizeMessaging();
+    print("notifi start");
+  }
 
   @override
   Widget build(BuildContext context) {
+    Startup();
     return StreamProvider<UserM>.value(
       value: AuthService().user,
       child: MaterialApp(
@@ -48,23 +58,17 @@ class _MyAppState extends State<MyApp> {
 
 //firebase
 class AppFire extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-  final NotificationService _notificationService = NotificationService();
-
-  Future Startup()async{
-    await _notificationService.InitalizeMessaging();
-    print("notifi start");
-  }
+  //final Future<FirebaseApp> _initialization = ;
 
   @override
   Widget build(BuildContext context) {
 
     return FutureBuilder(
       // Initialize FlutterFire:
-      future: _initialization,
+      future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         // Check for errors
-        Startup();
+        //Startup();
         if (snapshot.hasError) {
           String tostring = snapshot.error.toString();
           print(tostring);

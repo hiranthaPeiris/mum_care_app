@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mun_care_app/helpers/DataHolder.dart';
+import 'package:mun_care_app/helpers/MessageStream.dart';
 import 'package:mun_care_app/models/message.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
@@ -23,6 +24,7 @@ class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final NavigationService _navigationService = locator<NavigationService>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  MessageStream _messageStream = MessageStream.instance;
 
   StreamSubscription iosSubscription;
   final String serverToken =
@@ -39,6 +41,7 @@ class NotificationService {
         print("onMessage: $message");
         print(DataHolder.uid);
         store(DataHolder.uid, message);
+        _messageStream.addMessage(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
