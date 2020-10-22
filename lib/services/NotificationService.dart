@@ -11,7 +11,11 @@ import 'package:mun_care_app/models/message.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 import '../Locator.dart';
+
+var uuid = Uuid();
+
 
 class NotificationService {
   final DataHolder _dataHolder = DataHolder();
@@ -32,11 +36,9 @@ class NotificationService {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-
         print("onMessage: $message");
         print(DataHolder.uid);
         store(DataHolder.uid, message);
-
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
@@ -49,23 +51,24 @@ class NotificationService {
     );
   }
 
-  void store(String uid,Map<String, dynamic> message)async{
-
-    final notification = message['notification'];
+  void store(String uid, Map<String, dynamic> message) async {
+    final notification = message['data'];
+    String keyVal = uuid.v1();
     // Save it to Firestore
-    if (notification!= null) {
+    if (notification != null) {
       var notifi = _firestore
           .collection('notifications')
-          .doc(uid);
+          .doc(uid).collection("received").doc(keyVal);
 
       await notifi.set({
         'title': notification['title'],
-        'body':notification['body'],
+        'body': notification['body'],
         'createdAt': FieldValue.serverTimestamp(), // optional
         'platform': Platform.operatingSystem // optional
       });
     }
   }
+
 
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
     await _firebaseMessaging.requestNotificationPermissions(

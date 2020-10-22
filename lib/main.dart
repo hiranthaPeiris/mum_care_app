@@ -58,12 +58,13 @@ class AppFire extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Startup();
+
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
       builder: (context, snapshot) {
         // Check for errors
+        Startup();
         if (snapshot.hasError) {
           String tostring = snapshot.error.toString();
           print(tostring);
