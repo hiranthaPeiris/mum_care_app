@@ -1,25 +1,14 @@
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ComFamReg extends StatefulWidget {
   @override
   _ComFamRegState createState() => _ComFamRegState();
-}
-
-Widget showTextField(String hintText, String inputName) {
-  return TextFormField(
-    maxLines: 1,
-    decoration: InputDecoration(
-      hintText: hintText,
-    ),
-    // ignore: missing_return
-    validator: (input) {
-      if (input.isEmpty) {
-        return 'This can\'t be empty';
-      }
-    },
-    onSaved: (input) => inputName = input,
-  );
 }
 
 class ShapePainter extends CustomPainter {
@@ -45,6 +34,33 @@ class _ComFamRegState extends State<ComFamReg> {
   String eduDropdownValue = 'Education Level';
   String womenBloodDropdownValue = 'A+';
   String menBloodDropdownValue = 'A+';
+
+  TextEditingController myController1=new TextEditingController();
+  TextEditingController myController2=new TextEditingController();
+  TextEditingController myController3=new TextEditingController();
+  TextEditingController myController4=new TextEditingController();
+  TextEditingController myController5=new TextEditingController();
+  TextEditingController myController6=new TextEditingController();
+  TextEditingController myController7=new TextEditingController();
+  TextEditingController myController8=new TextEditingController();
+  TextEditingController myController9=new TextEditingController();
+  TextEditingController myController10=new TextEditingController();
+  TextEditingController myController11=new TextEditingController();
+
+  void dispose(){
+    super.dispose();
+    myController1.dispose();
+    myController2.dispose();
+    myController3.dispose();
+    myController4.dispose();
+    myController5.dispose();
+    myController6.dispose();
+    myController7.dispose();
+    myController8.dispose();
+    myController9.dispose();
+    myController10.dispose();
+    myController11.dispose();
+  }
 
   bool d1_Yes = false;
   bool d1_No = false;
@@ -76,6 +92,25 @@ class _ComFamRegState extends State<ComFamReg> {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget showTextField(String hintText, String inputName,TextEditingController controller) {
+      return TextFormField(
+        maxLines: 1,
+        controller: controller,
+        decoration: InputDecoration(
+          //hintText: hintText,
+          labelText: hintText,
+        ),
+        // ignore: missing_return
+        validator: (input) {
+          if (input.isEmpty) {
+            return 'This can\'t be empty';
+          }
+        },
+        onSaved: (input) => inputName = input,
+      );
+    }
+
     Widget mohDropDownMenu() {
       return DropdownButton<String>(
         value: mohDropdownValue,
@@ -321,6 +356,80 @@ class _ComFamRegState extends State<ComFamReg> {
         },
       );
     }
+    stepOneReg() async{
+      FirebaseAuth _auth=FirebaseAuth.instance;
+      ComStepOne comStepOne= ComStepOne(husbandName: myController1.text,wifeName: myController2.text,address: myController3.text,nic:myController4.text, mohDropDownValue: mohDropdownValue,phmDropDownValue: phmDropdownValue);
+      try{
+        Firestore.instance.runTransaction((Transaction transaction)async{
+            await Firestore.instance.collection("com_step1").document(_auth.currentUser.uid).setData(comStepOne.toJson());
+        }
+        );
+      }
+      catch(e){
+        print(e.toString());
+      }
+
+    }
+
+    stepTwoReg() async{
+      FirebaseAuth _auth=FirebaseAuth.instance;
+      ComStepTwo comStepTwo= ComStepTwo(dateDOB: _dateDOB.toString(),contactNum: myController5.text,email: myController6.text,job:myController7.text, eduDropDownValue: eduDropdownValue,marrageDate: _dateMarrage.toString());
+      try{
+        Firestore.instance.runTransaction((Transaction transaction)async{
+            await Firestore.instance.collection("com_step2").document(_auth.currentUser.uid).setData(comStepTwo.toJson());
+        }
+        );
+      }
+      catch(e){
+        print(e.toString());
+      }
+
+    }
+
+    stepThreeRegMen() async{
+      FirebaseAuth _auth=FirebaseAuth.instance;
+      ComStepThreeMen comStepThreeMen= ComStepThreeMen(d1: d1_Yes,d2: d2_Yes,d3: d3_Yes,d4: d4_Yes,d5: d5_Yes,d6: d6_Yes,d7: d7_Yes,d8: d8_Yes,d9: d9_Yes,d10: d10_Yes);
+      try{
+        Firestore.instance.runTransaction((Transaction transaction)async{
+            await Firestore.instance.collection("com_step3").document(_auth.currentUser.uid).collection("men_d").document(_auth.currentUser.uid).setData(comStepThreeMen.toJson());
+        }
+        );
+      }
+      catch(e){
+        print(e.toString());
+      }
+
+    }
+
+    stepThreeRegWomen() async{
+      FirebaseAuth _auth=FirebaseAuth.instance;
+      ComStepThreeWomen comStepThreeWomen= ComStepThreeWomen(d1: d1_No,d2: d2_No,d3: d3_No,d4: d4_No,d5: d5_No,d6: d6_No,d7: d7_No,d8: d8_No,d9: d9_No,d10: d10_No);
+      try{
+        Firestore.instance.runTransaction((Transaction transaction)async{
+            await Firestore.instance.collection("com_step3").document(_auth.currentUser.uid).collection("women_d").document(_auth.currentUser.uid).setData(comStepThreeWomen.toJson());
+        }
+        );
+      }
+      catch(e){
+        print(e.toString());
+      }
+
+    }
+
+    stepFourReg() async{
+      FirebaseAuth _auth=FirebaseAuth.instance;
+      ComStepFour comStepFour= ComStepFour(rubellaDropDownValue: rubellaDropdownValue,formicDropDownValue: formicDropdownValue,womenWeight: myController8.text,menWeight:myController9.text,womenHeight:myController10.text,menHeight:myController11.text,womenBloodDropDownValue: womenBloodDropdownValue,menBloodDropDownValue: menBloodDropdownValue);
+      try{
+        Firestore.instance.runTransaction((Transaction transaction)async{
+            await Firestore.instance.collection("com_step4").document(_auth.currentUser.uid).setData(comStepFour.toJson());
+        }
+        );
+      }
+      catch(e){
+        print(e.toString());
+      }
+
+    }
 
 
     List<Step> steps = [
@@ -471,7 +580,7 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Husbond\'s Name", "_husbondName"),
+                  child: showTextField("Husbond\'s Name", "_husbondName",myController1),
                 ),
               ),
               Container(
@@ -481,7 +590,7 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Wife\'s Name", "_wifeName"),
+                  child: showTextField("Wife\'s Name", "_wifeName",myController2),
                 ),
               ),
               Container(
@@ -491,7 +600,7 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Address", "_address"),
+                  child: showTextField("Address", "_address",myController3),
                 ),
               ),
               Container(
@@ -501,7 +610,7 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("NIC Number", "_nic"),
+                  child: showTextField("NIC Number", "_nic",myController4),
                 ),
               ),
             ],
@@ -589,7 +698,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
-                child: showTextField("Contact Number", "_contactNumber"),
+                child: showTextField("Contact Number", "_contactNumber",myController5),
               ),
             ),
             Container(
@@ -599,7 +708,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
-                child: showTextField("Email", "_email"),
+                child: showTextField("Email", "_email",myController6),
               ),
             ),
             Container(
@@ -609,7 +718,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.05),
-                child: showTextField("Job", "_job"),
+                child: showTextField("Job", "_job",myController7),
               ),
             ),
             Container(
@@ -776,7 +885,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     Expanded(
                         flex: 20,
                         child: Text(
-                          "Women's",
+                          "Men's",
                           style: TextStyle(
                               color: Color.fromARGB(500, 21, 166, 211),
                               fontWeight: FontWeight.bold,
@@ -786,7 +895,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     Expanded(
                         flex: 20,
                         child: Text(
-                          "Men's",
+                          "Women's",
                           style: TextStyle(
                               color: Color.fromARGB(500, 21, 166, 211),
                               fontWeight: FontWeight.bold,
@@ -1292,7 +1401,7 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Container(
                               height: 30,
                               alignment: Alignment.center,
-                              child: showTextField("", "kgWeight"),
+                              child: showTextField("", "womenWeight",myController8),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -1316,7 +1425,7 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Container(
                               height: 30,
                               alignment: Alignment.center,
-                              child: showTextField("", "gWeight"),
+                              child: showTextField("", "menWeight",myController9),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -1373,7 +1482,7 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                child: showTextField("", "womenHeight"),
+                                child: showTextField("", "womenHeight",myController10),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
@@ -1397,7 +1506,7 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                child: showTextField("", "menHeight"),
+                                child: showTextField("", "menHeight",myController11),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
@@ -1548,6 +1657,11 @@ class _ComFamRegState extends State<ComFamReg> {
                             onPressed: () {
                               setState(() {
                                 complete = false;
+                                stepOneReg();
+                                stepTwoReg();
+                                stepThreeRegMen();
+                                stepThreeRegWomen();
+                                stepFourReg();
                               });
                             }),
                         FlatButton(
@@ -1555,6 +1669,7 @@ class _ComFamRegState extends State<ComFamReg> {
                             onPressed: () {
                               setState(() {
                                 complete = false;
+                                
                               });
                             }),
                       ],

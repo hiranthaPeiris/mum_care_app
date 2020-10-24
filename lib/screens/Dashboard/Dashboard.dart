@@ -149,7 +149,9 @@ class _DashboardState extends State<Dashboard> {
                               heading: "Pregnancy Registration",
                               content: "Complete the pregnancy registration",
                               svgSrc: "assets/icons/Hamburger.svg",
-                              press: () {}),
+                              press: () {
+                                Navigator.pushNamed(context, '/preReg');
+                              }),
                         ]),
                       ),
                       SliverGrid(

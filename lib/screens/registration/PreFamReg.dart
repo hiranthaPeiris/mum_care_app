@@ -6,9 +6,10 @@ class PreFamReg extends StatefulWidget {
   _PreFamRegState createState() => _PreFamRegState();
 }
 
-Widget showTextField(String hintText, String inputName) {
+Widget showTextField(String hintText, String inputName,TextEditingController controller) {
   return TextFormField(
     maxLines: 1,
+    controller: controller,
     decoration: InputDecoration(
       hintText: hintText,
     ),
@@ -38,6 +39,18 @@ class ShapePainter extends CustomPainter {
 class _PreFamRegState extends State<PreFamReg> {
   int currentStep = 0;
   bool complete = false;
+
+  TextEditingController myController12=new TextEditingController();
+  TextEditingController myController13=new TextEditingController();
+  TextEditingController myController14=new TextEditingController();
+  TextEditingController myController15=new TextEditingController();
+  TextEditingController myController16=new TextEditingController();
+  TextEditingController myController17=new TextEditingController();
+  TextEditingController myController18=new TextEditingController();
+  TextEditingController myController19=new TextEditingController();
+  TextEditingController myController20=new TextEditingController();
+  TextEditingController myController21=new TextEditingController();
+  TextEditingController myController22=new TextEditingController();
   String wombDropdownValue = "G1";
 
   bool diabetic_Yes = false;
@@ -136,7 +149,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Grama Niladhari Division", "gnDivision"),
+                  child: showTextField("Grama Niladhari Division", "gnDivision",myController12),
                 ),
               ),
               Container(
@@ -146,7 +159,17 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Field Clinic", "fcName"),
+                  child: showTextField("Name of the Field Clinic", "fcName",myController13),
+                ),
+              ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * 0.05,-
+                      MediaQuery.of(context).size.height * 0.025,
+                      MediaQuery.of(context).size.width * 0.05,
+                      MediaQuery.of(context).size.height * 0.005),
+                  child: showTextField("Name of the Hospital in Clinic", "hcName",myController14),
                 ),
               ),
               Container(
@@ -156,17 +179,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Hospital in Clinic", "hcName"),
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Consultant Obstetrician", "coName"),
+                  child: showTextField("Name of the Consultant Obstetrician", "coName",myController15),
                 ),
               ),
               
@@ -254,7 +267,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Result", "pohResult"),
+                  child: showTextField("Result", "pohResult",myController16),
                 ),
               ),
               Container(
@@ -264,7 +277,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Details", "pohDetails"),
+                  child: showTextField("Details", "pohDetails",myController17),
                 ),
               ),
               Padding(
@@ -300,7 +313,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                child:  showTextField("", "kgWeight"),
+                                child:  showTextField("", "kgWeight",myController18),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -325,7 +338,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                child:  showTextField("", "gWeight"),
+                                child:  showTextField("", "gWeight",myController19),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -356,7 +369,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Sex", "pohDetails"),
+                  child: showTextField("Sex", "pohDetails",myController20),
                 ),
               ),
           ],
@@ -398,7 +411,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Present vaginal bleeding", "pvb"),
+                  child: showTextField("Present vaginal bleeding", "pvb",myController21),
                 ),
               ),
                Container(
@@ -408,7 +421,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Blood Pressure", "bloodPressure"),
+                  child: showTextField("Blood Pressure", "bloodPressure",myController22),
                 ),
               ),
               Padding(
