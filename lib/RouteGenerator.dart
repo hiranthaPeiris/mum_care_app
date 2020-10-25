@@ -8,6 +8,8 @@ import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/login/Login_comp.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
+import 'package:mun_care_app/screens/reminders/ScheduleClinic.dart';
+import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -24,6 +26,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Signup());
       case '/notification':
         return MaterialPageRoute(builder: (_) => NotificationScreen());
+      case '/sechHomeVisits':
+        return MaterialPageRoute(builder: (_) => ScheduleHomeVisits());
+      case '/sechClinics':
+        return MaterialPageRoute(builder: (_) => ScheduleClinic());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/error':
