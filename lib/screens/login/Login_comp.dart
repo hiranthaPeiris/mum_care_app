@@ -149,7 +149,6 @@ class _LoginCompState extends State<LoginComp> {
                   onPressed: () async {
                     if (validate()) {
                       dynamic result = _auth.signIn(Email, password);
-
                       if (result == null) {
                         setState(() {
                           error = 'Please supply a valid email';
