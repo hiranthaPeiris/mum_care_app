@@ -19,6 +19,15 @@ class _SignupState extends State<Signup> {
   String error = "";
   String email = "";
   String password = "";
+  String _comfirmPassword = "";
+  TextEditingController myController1=new TextEditingController();
+  TextEditingController myController2=new TextEditingController();
+
+  void dispose(){
+    super.dispose();
+    myController1.dispose();
+    myController2.dispose();
+  }
   final _formKey = GlobalKey<FormState>();
 
   bool validate() {
@@ -111,7 +120,7 @@ class _SignupState extends State<Signup> {
             Form(
               key: _formKey,
               child: Column(
-                children: [
+                children: <Widget>[
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: TextField(
@@ -130,6 +139,7 @@ class _SignupState extends State<Signup> {
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: TextField(
+                      controller: myController1,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(20.0)),
@@ -142,6 +152,22 @@ class _SignupState extends State<Signup> {
                       },
                     ),
                   ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: TextField(
+                      controller: myController2,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(20.0)),
+                        labelText: 'Comfirm Password',
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          _comfirmPassword = val;
+                        });
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
@@ -184,13 +210,13 @@ class _SignupState extends State<Signup> {
                     )),
                 onPressed: () {
                   if (validate()) {
-                    dynamic result = _auth.Register(email, password);
-                    if (result == null) {
-                      setState(() {
-                        error = 'Please supply a valid email';
-                      });
-                    }
-                  }
+                                            dynamic result = _auth.Register(email, password);
+                                            if (result == null) {
+                                              setState(() {
+                                                error = 'Please supply a valid email';
+                                              });
+                                            }
+                                          }
                 },
               ),
             ),

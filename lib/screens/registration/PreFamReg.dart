@@ -1,27 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/models/UserReg.dart';
 
 class PreFamReg extends StatefulWidget {
   @override
   _PreFamRegState createState() => _PreFamRegState();
 }
 
-Widget showTextField(String hintText, String inputName,TextEditingController controller) {
-  return TextFormField(
-    maxLines: 1,
-    controller: controller,
-    decoration: InputDecoration(
-      hintText: hintText,
-    ),
-    // ignore: missing_return
-    validator: (input) {
-      if (input.isEmpty) {
-        return 'This can\'t be empty';
-      }
-    },
-    onSaved: (input) => inputName = input,
-  );
-}
+
 
 class ShapePainter extends CustomPainter {
   @override
@@ -40,6 +28,17 @@ class _PreFamRegState extends State<PreFamReg> {
   int currentStep = 0;
   bool complete = false;
 
+  
+  String wombDropdownValue = "G1";
+
+  bool diabetic_Yes = false;
+  bool maleria_Yes = false;
+  bool heartDisorders_Yes = false;
+  bool kidneyDisorders_Yes = false;
+
+  DateTime _dateDOB;
+  DateTime _dateMarrage;
+
   TextEditingController myController12=new TextEditingController();
   TextEditingController myController13=new TextEditingController();
   TextEditingController myController14=new TextEditingController();
@@ -51,17 +50,43 @@ class _PreFamRegState extends State<PreFamReg> {
   TextEditingController myController20=new TextEditingController();
   TextEditingController myController21=new TextEditingController();
   TextEditingController myController22=new TextEditingController();
-  String wombDropdownValue = "G1";
+  
+  void dispose(){
+    super.dispose();
+    myController12.dispose();
+    myController13.dispose();
+    myController14.dispose();
+    myController15.dispose();
+    myController16.dispose();
+    myController17.dispose();
+    myController18.dispose();
+    myController19.dispose();
+    myController20.dispose();
+    myController21.dispose();
+    myController22.dispose();
+  }
 
-  bool diabetic_Yes = false;
-  bool maleria_Yes = false;
-  bool heartDisorders_Yes = false;
-  bool kidneyDisorders_Yes = false;
-
-  DateTime _dateDOB;
-  DateTime _dateMarrage;
 
   Widget build(BuildContext context) {
+
+    Widget showTextField(String hintText, String inputName,TextEditingController controller) {
+        return TextFormField(
+          controller: controller,
+          maxLines: 1,
+          decoration: InputDecoration(
+            //hintText: hintText,
+            labelText: hintText,
+          ),
+          // ignore: missing_return
+          validator: (input) {
+            if (input.isEmpty) {
+              return 'This can\'t be empty';
+            }
+          },
+          onSaved: (input) => inputName = input,
+        );
+      }
+
     Widget wombDropDownMenu() {
       return DropdownButton<String>(
         value: wombDropdownValue,
@@ -90,6 +115,37 @@ class _PreFamRegState extends State<PreFamReg> {
         },
       );
     }
+
+    stepOneReg() async{
+      FirebaseAuth _auth=FirebaseAuth.instance;
+      PreStepOne preStepOne= PreStepOne(gnDivision: myController12.text,fcName: myController13.text,hcName: myController14.text,coName:myController15.text);
+      try{
+        Firestore.instance.runTransaction((Transaction transaction)async{
+            await Firestore.instance.collection("pre_step1").document(_auth.currentUser.uid).setData(preStepOne.toJson());
+        }
+        );
+      }
+      catch(e){
+        print(e.toString());
+      }
+
+    }
+    stepOneThree() async{
+      FirebaseAuth _auth=FirebaseAuth.instance;
+      PreStepThree preStepThree= PreStepThree(pvb: myController21.text,bloodPresure: myController22.text,diabetic: diabetic_Yes,maleria:maleria_Yes,heartDisorder:heartDisorders_Yes,kidneyDisorder:kidneyDisorders_Yes);
+      try{
+        Firestore.instance.runTransaction((Transaction transaction)async{
+            await Firestore.instance.collection("pre_step3").document(_auth.currentUser.uid).setData(preStepThree.toJson());
+        }
+        );
+      }
+      catch(e){
+        print(e.toString());
+      }
+
+    }
+
+
 
     List<Step> steps = [
       Step(
@@ -159,17 +215,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Field Clinic", "fcName",myController13),
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.05,-
-                      MediaQuery.of(context).size.height * 0.025,
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Hospital in Clinic", "hcName",myController14),
+                  child: showTextField("Field Clinic", "fcName",myController13),
                 ),
               ),
               Container(
@@ -179,7 +225,17 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Consultant Obstetrician", "coName",myController15),
+                  child: showTextField("Hospital in Clinic", "hcName",myController14),
+                ),
+              ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * 0.05,
+                      MediaQuery.of(context).size.height * 0.025,
+                      MediaQuery.of(context).size.width * 0.05,
+                      MediaQuery.of(context).size.height * 0.005),
+                  child: showTextField("Consultant Obstetrician", "coName",myController15),
                 ),
               ),
               
@@ -488,7 +544,7 @@ class _PreFamRegState extends State<PreFamReg> {
                     ),
             Row(
                 children: <Widget>[
-                        Expanded(flex: 40, child: Text("Heart Disrders")),
+                        Expanded(flex: 40, child: Text("Heart Disorders")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -574,6 +630,8 @@ class _PreFamRegState extends State<PreFamReg> {
                             onPressed: () {
                               setState(() {
                                 complete = false;
+                                stepOneReg();
+                                stepOneThree();
                               });
                             }),
                         FlatButton(

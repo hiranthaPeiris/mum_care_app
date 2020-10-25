@@ -203,3 +203,71 @@ class ComStepFour{
      };
   }
 }
+
+class PreStepOne{
+
+  String gnDivision;
+  String fcName;
+  String hcName;
+  String coName;
+
+  DocumentReference documentReference;
+
+  PreStepOne({this.gnDivision,this.fcName,this.hcName,this.coName});
+
+  PreStepOne.fromMap(Map<String,dynamic> map,{this.documentReference}){
+      gnDivision=map["_gnDivision"];
+      fcName=map["_fcName"];
+      hcName=map["_hcName"];
+      coName=map["_coName"];
+
+  }
+  PreStepOne.fromSnapshot(DocumentSnapshot snapshot):this.fromMap(snapshot.data(),documentReference:snapshot.reference);
+
+  toJson(){
+     return {
+       '_gnDivision':gnDivision,
+       '_fcName':fcName,
+       '_hcName':hcName,
+       '_coName':coName,
+     };
+  }
+
+}
+
+class PreStepThree{
+
+  String pvb;
+  String bloodPresure;
+  bool diabetic;
+  bool maleria;
+  bool heartDisorder;
+  bool kidneyDisorder;
+
+  DocumentReference documentReference;
+
+  PreStepThree({this.pvb,this.bloodPresure,this.diabetic,this.maleria,this.heartDisorder,this.kidneyDisorder});
+
+  PreStepThree.fromMap(Map<String,dynamic> map,{this.documentReference}){
+      pvb=map["_pvb"];
+      bloodPresure=map["_bloodPresure"];
+      diabetic=map["_diabetic"];
+      maleria=map["_maleria"];
+      heartDisorder=map["_heartDisorder"];
+      maleria=map["_maleria"];
+
+  }
+  PreStepThree.fromSnapshot(DocumentSnapshot snapshot):this.fromMap(snapshot.data(),documentReference:snapshot.reference);
+
+  toJson(){
+     return {
+       '_pvb':pvb,
+       '_bloodPresure':bloodPresure,
+       '_diabetic':diabetic,
+       '_maleria':maleria,
+       '_heartDisorder':heartDisorder,
+       '_kidneyDisorder':kidneyDisorder,
+     };
+  }
+
+}
