@@ -12,7 +12,11 @@ import 'Locator.dart';
 import 'helpers/Constants.dart';
 
 
-void main() async{
+
+
+
+void main() {
+
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(AppFire());

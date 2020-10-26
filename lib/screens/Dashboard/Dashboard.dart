@@ -135,8 +135,7 @@ class _DashboardState extends State<Dashboard> {
                               title: "View Upcoming Clinics",
                               heading: "Clinics",
                               svgSrc: "assets/icons/clinics.svg",
-                              press: () {
-                              },
+                              press: () {},
                             ),
                             Menu_card(
                               title: "View Upcoming Home Visits",
@@ -178,6 +177,7 @@ class _DashboardState extends State<Dashboard> {
                           ))
                     ],
                   ))
+
 
                   /*Expanded(
                     child: Column(
@@ -277,6 +277,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         )));
+
   }
 }
 /*

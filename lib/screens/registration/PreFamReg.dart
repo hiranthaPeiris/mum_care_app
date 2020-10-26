@@ -56,9 +56,9 @@ class _PreFamRegState extends State<PreFamReg> {
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
-       // style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items:
-            <String>['G1', 'G2','G3','G4','G5','G6','G7'].map<DropdownMenuItem<String>>((String value) {
+        // style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        items: <String>['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7']
+            .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -85,7 +85,7 @@ class _PreFamRegState extends State<PreFamReg> {
             style: TextStyle(
                 fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
           ),
-          isActive: true,
+          isActive: currentStep >= 0,
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -136,7 +136,8 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Grama Niladhari Division", "gnDivision"),
+                  child:
+                      showTextField("Grama Niladhari Division", "gnDivision"),
                 ),
               ),
               Container(
@@ -156,7 +157,8 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Hospital in Clinic", "hcName"),
+                  child:
+                      showTextField("Name of the Hospital in Clinic", "hcName"),
                 ),
               ),
               Container(
@@ -166,10 +168,10 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Name of the Consultant Obstetrician", "coName"),
+                  child: showTextField(
+                      "Name of the Consultant Obstetrician", "coName"),
                 ),
               ),
-              
             ],
           )),
       Step(
@@ -178,7 +180,7 @@ class _PreFamRegState extends State<PreFamReg> {
           style:
               TextStyle(fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
         ),
-        isActive: true,
+        isActive: currentStep >= 1,
         state: StepState.indexed,
         content: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -201,8 +203,7 @@ class _PreFamRegState extends State<PreFamReg> {
                 ),
               ),
             ),
-
-              Container(
+            Container(
               child: Column(
                 children: <Widget>[
                   Row(
@@ -217,7 +218,8 @@ class _PreFamRegState extends State<PreFamReg> {
                                 "What a Womb",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                   fontSize: 15, ),
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           )),
@@ -248,32 +250,32 @@ class _PreFamRegState extends State<PreFamReg> {
               ),
             ),
             Container(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Result", "pohResult"),
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Details", "pohDetails"),
-                ),
-              ),
-              Padding(
+              child: Padding(
                 padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.005),
-                child: Container(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.025,
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: showTextField("Result", "pohResult"),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.025,
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: showTextField("Details", "pohDetails"),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * 0.05,
+                  MediaQuery.of(context).size.height * 0.025,
+                  MediaQuery.of(context).size.width * 0.05,
+                  MediaQuery.of(context).size.height * 0.005),
+              child: Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
@@ -289,7 +291,8 @@ class _PreFamRegState extends State<PreFamReg> {
                                   "Birth Weight",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                     fontSize: 16, ),
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             )),
@@ -298,42 +301,41 @@ class _PreFamRegState extends State<PreFamReg> {
                           child: Padding(
                             padding: const EdgeInsets.all(0),
                             child: Container(
-                                height: 30,
-                                alignment: Alignment.center,
-                                child:  showTextField("", "kgWeight"),
-                                decoration: BoxDecoration(
+                              height: 30,
+                              alignment: Alignment.center,
+                              child: showTextField("", "kgWeight"),
+                              decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
                                   border: Border.all(
                                       color: Colors.black,
                                       style: BorderStyle.solid,
                                       width: 0.5)),
-                              ),
+                            ),
                           ),
                         ),
                         Expanded(
                           flex: 7,
                           child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Text("Kg")
-                          ),
+                              padding: const EdgeInsets.all(4),
+                              child: Text("Kg")),
                         ),
                         Expanded(
                           flex: 15,
                           child: Padding(
                             padding: const EdgeInsets.all(0),
                             child: Container(
-                                height: 30,
-                                alignment: Alignment.center,
-                                child:  showTextField("", "gWeight"),
-                                decoration: BoxDecoration(
+                              height: 30,
+                              alignment: Alignment.center,
+                              child: showTextField("", "gWeight"),
+                              decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
                                   border: Border.all(
                                       color: Colors.black,
                                       style: BorderStyle.solid,
                                       width: 0.5)),
-                              ),
+                            ),
                           ),
                         ),
                         Expanded(
@@ -347,18 +349,18 @@ class _PreFamRegState extends State<PreFamReg> {
                     ),
                   ],
                 ),
+              ),
             ),
-              ),
             Container(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Sex", "pohDetails"),
-                ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.025,
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: showTextField("Sex", "pohDetails"),
               ),
+            ),
           ],
         ),
       ),
@@ -368,30 +370,30 @@ class _PreFamRegState extends State<PreFamReg> {
             style: TextStyle(
                 fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
           ),
-          isActive: true,
+          isActive: currentStep >= 2,
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width * 0.05,
-                  MediaQuery.of(context).size.height * 0.01,
-                  MediaQuery.of(context).size.width * 0.03,
-                  MediaQuery.of(context).size.height * 0.01),
-              child: Container(
-                child: Text(
-                  "Present Obstetric History",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    // color: Color.fromARGB(500, 21, 166, 211),
-                    fontSize: 20,
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.01,
+                    MediaQuery.of(context).size.width * 0.03,
+                    MediaQuery.of(context).size.height * 0.01),
+                child: Container(
+                  child: Text(
+                    "Present Obstetric History",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      // color: Color.fromARGB(500, 21, 166, 211),
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
+              Container(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.05,
@@ -401,7 +403,7 @@ class _PreFamRegState extends State<PreFamReg> {
                   child: showTextField("Present vaginal bleeding", "pvb"),
                 ),
               ),
-               Container(
+              Container(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.05,
@@ -412,109 +414,96 @@ class _PreFamRegState extends State<PreFamReg> {
                 ),
               ),
               Padding(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width * 0.05,
-                  MediaQuery.of(context).size.height * 0.03,
-                  MediaQuery.of(context).size.width * 0.03,
-                  MediaQuery.of(context).size.height * 0.03),
-              child: Container(
-                child: Text(
-                  "Medical/Surgical History",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    // color: Color.fromARGB(500, 21, 166, 211),
-                    fontSize: 20,
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.03,
+                    MediaQuery.of(context).size.width * 0.03,
+                    MediaQuery.of(context).size.height * 0.03),
+                child: Container(
+                  child: Text(
+                    "Medical/Surgical History",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      // color: Color.fromARGB(500, 21, 166, 211),
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width * 0.05,
-                  MediaQuery.of(context).size.height * 0.01,
-                  MediaQuery.of(context).size.width * 0.01,
-                  MediaQuery.of(context).size.height * 0.01),
-              child: Column(
-                children: <Widget>[
-                 Row(
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.01,
+                    MediaQuery.of(context).size.width * 0.01,
+                    MediaQuery.of(context).size.height * 0.01),
+                child: Column(children: <Widget>[
+                  Row(
                     children: <Widget>[
-                            Expanded(flex: 40, child: Text("Diabetic")),
-                            Expanded(
-                                flex: 20,
-                                child: Checkbox(
-                                    value: diabetic_Yes,
-                                    onChanged: (bool value) {
-                                      setState(() {
-                                        diabetic_Yes = value;
-                                        print(value);
-                                      });
-                                    })),
-                            Expanded(
-                                flex: 40,
-                                child:Container()),
-                          ],
-                        ),
-                         Row(
-                children: <Widget>[
-                        Expanded(flex: 40, child: Text("Maleria")),
-                        Expanded(
-                            flex: 20,
-                            child: Checkbox(
-                                value: maleria_Yes,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    maleria_Yes = value;
-                                    print(value);
-                                  });
-                                })),
-                        Expanded(
-                            flex: 40,
-                            child:Container()),
-                      ],
-                    ),
-            Row(
-                children: <Widget>[
-                        Expanded(flex: 40, child: Text("Heart Disrders")),
-                        Expanded(
-                            flex: 20,
-                            child: Checkbox(
-                                value: heartDisorders_Yes,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    heartDisorders_Yes = value;
-                                    print(value);
-                                  });
-                                })),
-                        Expanded(
-                            flex: 40,
-                            child:Container()),
-                      ],
-                    ),
-            Row(
-                children: <Widget>[
-                        Expanded(flex: 40, child: Text("Kidney Disorders")),
-                        Expanded(
-                            flex: 20,
-                            child: Checkbox(
-                                value: kidneyDisorders_Yes,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    kidneyDisorders_Yes = value;
-                                    print(value);
-                                  });
-                                })),
-                        Expanded(
-                            flex: 40,
-                            child:Container()),
-                      ],
-                    ),
-                ]
+                      Expanded(flex: 40, child: Text("Diabetic")),
+                      Expanded(
+                          flex: 20,
+                          child: Checkbox(
+                              value: diabetic_Yes,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  diabetic_Yes = value;
+                                  print(value);
+                                });
+                              })),
+                      Expanded(flex: 40, child: Container()),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(flex: 40, child: Text("Maleria")),
+                      Expanded(
+                          flex: 20,
+                          child: Checkbox(
+                              value: maleria_Yes,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  maleria_Yes = value;
+                                  print(value);
+                                });
+                              })),
+                      Expanded(flex: 40, child: Container()),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(flex: 40, child: Text("Heart Disrders")),
+                      Expanded(
+                          flex: 20,
+                          child: Checkbox(
+                              value: heartDisorders_Yes,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  heartDisorders_Yes = value;
+                                  print(value);
+                                });
+                              })),
+                      Expanded(flex: 40, child: Container()),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(flex: 40, child: Text("Kidney Disorders")),
+                      Expanded(
+                          flex: 20,
+                          child: Checkbox(
+                              value: kidneyDisorders_Yes,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  kidneyDisorders_Yes = value;
+                                  print(value);
+                                });
+                              })),
+                      Expanded(flex: 40, child: Container()),
+                    ],
+                  ),
+                ]),
               ),
-            ),
-           
-
-
             ],
           ))
     ];
