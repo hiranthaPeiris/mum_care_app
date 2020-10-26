@@ -4,6 +4,23 @@ import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 
 class Profile extends StatelessWidget {
+  final String userEmail;
+  final String userName;
+  final String userBio;
+  final String status;
+  final String nameOfMidwife;
+  final String area;
+
+  const Profile(
+      {Key key,
+      this.userEmail,
+      this.userName,
+      this.userBio,
+      this.status,
+      this.nameOfMidwife,
+      this.area})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -12,7 +29,7 @@ class Profile extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text("Profile"),
-            backgroundColor: Colors.orangeAccent,
+            backgroundColor: kBackground,
             /*leading: IconButton(
               icon: Icon(Icons.menu),
               onPressed: () {},
@@ -58,24 +75,7 @@ class Profile extends StatelessWidget {
                     ),
                     //child: ,
                   ),
-                  otherAccountsPictures: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(110),
-                      child: Image.asset(
-                        "assets/images/pro3.jpg",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(110),
-                      child: Image.asset(
-                        "assets/images/pro2.jpg",
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  ],
                 ),
-
                 ListTile(
                   title: Text(
                     'Edit Competency Fam Data',
@@ -108,7 +108,7 @@ class Profile extends StatelessWidget {
                       gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.redAccent, Colors.pinkAccent],
+                    colors: [kBackground, kBlueColor],
                     //tileMode: TileMode.repeated,
                   )),
                   child: Container(
@@ -153,10 +153,10 @@ class Profile extends StatelessWidget {
                                     child: Column(
                                       children: <Widget>[
                                         Text(
-                                          "Posts",
+                                          "Status",
                                           style: TextStyle(
                                             color: Colors.redAccent,
-                                            fontSize: 22.0,
+                                            fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -164,9 +164,9 @@ class Profile extends StatelessWidget {
                                           height: 5.0,
                                         ),
                                         Text(
-                                          "5200",
+                                          "Competency Family",textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontSize: 20.0,
+                                            fontSize: 14.0,
                                             color: Colors.pinkAccent,
                                           ),
                                         )
@@ -177,20 +177,20 @@ class Profile extends StatelessWidget {
                                     child: Column(
                                       children: <Widget>[
                                         Text(
-                                          "Followers",
+                                          "Area",
                                           style: TextStyle(
                                             color: Colors.redAccent,
-                                            fontSize: 22.0,
+                                            fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 5.0,
+                                          height: 3.0,
                                         ),
                                         Text(
-                                          "28.5K",
+                                          "Colombo South",
                                           style: TextStyle(
-                                            fontSize: 20.0,
+                                            fontSize: 14,
                                             color: Colors.pinkAccent,
                                           ),
                                         )
@@ -201,20 +201,20 @@ class Profile extends StatelessWidget {
                                     child: Column(
                                       children: <Widget>[
                                         Text(
-                                          "Follow",
+                                          "Mid Wife",
                                           style: TextStyle(
                                             color: Colors.redAccent,
-                                            fontSize: 22.0,
+                                            fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 5.0,
+                                          height: 3.0,
                                         ),
                                         Text(
-                                          "1300",
+                                          "Mrs. A.D. Sliva",
                                           style: TextStyle(
-                                            fontSize: 20.0,
+                                            fontSize: 14,
                                             color: Colors.pinkAccent,
                                           ),
                                         )

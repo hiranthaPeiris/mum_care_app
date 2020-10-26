@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
           textTheme:
               Theme.of(context).textTheme.apply(displayColor: kTextColor),
         ),
-        initialRoute: '/profile',
+        initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );
