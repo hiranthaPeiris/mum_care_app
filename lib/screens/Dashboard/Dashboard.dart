@@ -129,34 +129,98 @@ class _DashboardState extends State<Dashboard> {
                             fontSize: 14,
                             fontWeight: FontWeight.w400),
                       ),
-                      Text("Elizabeth",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: kTextColor,
-                              fontSize: 36,
-                              fontFamily: "Roboto",
-                              fontWeight: FontWeight.w800)),
-                      Search_bar(),
-                      Expanded(
-                          child: CustomScrollView(
-                        slivers: <Widget>[
-                          SliverList(
-                            delegate: SliverChildListDelegate([
-                              Menu_liner_card(
-                                  heading: "Complete Registration",
-                                  content:
-                                      "Complete the competency family registration",
-                                  svgSrc: "assets/icons/Hamburger.svg",
-                                  press: () {
-                                    Navigator.pushNamed(context, '/comReg');
-                                  }),
-                              Menu_liner_card(
-                                  heading: "Pregnancy Registration",
-                                  content:
-                                      "Complete the pregnancy registration",
-                                  svgSrc: "assets/icons/Hamburger.svg",
-                                  press: () {}),
-                            ]),
+                      SliverGrid(
+                          delegate: SliverChildListDelegate([
+                            Menu_card(
+                              title: "View Upcoming Clinics",
+                              heading: "Clinics",
+                              svgSrc: "assets/icons/clinics.svg",
+                              press: () {
+                              },
+                            ),
+                            Menu_card(
+                              title: "View Upcoming Home Visits",
+                              heading: "Home Visits",
+                              svgSrc: "assets/icons/home-visits.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "Report private medications",
+                              heading: "Report Medications",
+                              svgSrc: "assets/icons/yoga.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "Report leaving residential area",
+                              heading: "Report Leaving",
+                              svgSrc: "assets/icons/yoga.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "Meditation",
+                              heading: "Home Visits",
+                              svgSrc: "assets/icons/Meditation.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "Yoga",
+                              heading: "Home Visits",
+                              svgSrc: "assets/icons/yoga.svg",
+                              press: () {},
+                            )
+                          ]),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: .85,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                          ))
+                    ],
+                  ))
+
+                  /*Expanded(
+                    child: Column(
+                      children: [
+                        Menu_liner_card(
+                            content: "Test",
+                            svgSrc: "assets/icons/Hamburger.svg",
+                            press: () {}),
+                        Expanded(
+                          child: GridView.count(
+                            crossAxisCount: 2,
+                            childAspectRatio: .85,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            children: <Widget>[
+                              Menu_card(
+                                title: "Diet Recommendation",
+                                svgSrc: "assets/icons/Hamburger.svg",
+                                press: () {},
+                              ),
+                              Menu_card(
+                                title: "Kegel Exercises",
+                                svgSrc: "assets/icons/Excrecises.svg",
+                                press: () {},
+                              ),
+                              Menu_card(
+                                title: "Meditation",
+                                svgSrc: "assets/icons/Meditation.svg",
+                                press: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return null;
+                                    }),
+                                  );
+                                },
+                              ),
+                              Menu_card(
+                                title: "Yoga",
+                                svgSrc: "assets/icons/yoga.svg",
+                                press: () {},
+                              ),
+                            ],
                           ),
                           SliverGrid(
                               delegate: SliverChildListDelegate([
