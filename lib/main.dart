@@ -1,16 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-
 import 'package:mun_care_app/RouteGenerator.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:provider/provider.dart';
 import 'helpers/Constants.dart';
-
-
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
