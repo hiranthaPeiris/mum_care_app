@@ -273,8 +273,8 @@ class _ComFamRegState extends State<ComFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items:
-            <String>['A+', 'A-','AB','O+','O-'].map<DropdownMenuItem<String>>((String value) {
+        items: <String>['A+', 'A-', 'AB', 'O+', 'O-']
+            .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -293,6 +293,7 @@ class _ComFamRegState extends State<ComFamReg> {
         },
       );
     }
+
     Widget menBloodDropDownMenu() {
       return DropdownButton<String>(
         value: menBloodDropdownValue,
@@ -301,8 +302,8 @@ class _ComFamRegState extends State<ComFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items:
-            <String>['A+', 'A-','AB','O+','O-'].map<DropdownMenuItem<String>>((String value) {
+        items: <String>['A+', 'A-', 'AB', 'O+', 'O-']
+            .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -322,7 +323,6 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
-
     List<Step> steps = [
       Step(
           title: const Text(
@@ -330,7 +330,7 @@ class _ComFamRegState extends State<ComFamReg> {
             style: TextStyle(
                 fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
           ),
-          isActive: true,
+          isActive: currentStep >= 0,
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -512,7 +512,7 @@ class _ComFamRegState extends State<ComFamReg> {
           style:
               TextStyle(fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
         ),
-        isActive: true,
+        isActive: currentStep >= 1,
         state: StepState.indexed,
         //content: ComFamRegNext(),
         content: Column(
@@ -731,7 +731,7 @@ class _ComFamRegState extends State<ComFamReg> {
           style:
               TextStyle(fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
         ),
-        isActive: true,
+        isActive: currentStep >= 2,
         state: StepState.indexed,
         content: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -1069,7 +1069,7 @@ class _ComFamRegState extends State<ComFamReg> {
             style: TextStyle(
                 fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
           ),
-          isActive: true,
+          isActive: currentStep >= 3,
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -1465,7 +1465,7 @@ class _ComFamRegState extends State<ComFamReg> {
                                         color: Colors.black,
                                         style: BorderStyle.solid,
                                         width: 0.5)),
-                                child:womenBloodDropDownMenu()),
+                                child: womenBloodDropDownMenu()),
                           ),
                         ),
                         Expanded(

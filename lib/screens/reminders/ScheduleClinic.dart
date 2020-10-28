@@ -51,7 +51,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
             Container(
               padding: EdgeInsets.all(15),
               child: Text(
-                'New Home Visits',
+                'New Clinics',
                 style: TextStyle(
                   color: Colors.lightBlue,
                   fontSize: 24,
