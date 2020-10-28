@@ -166,16 +166,13 @@ class _LoginCompState extends State<LoginComp> {
                                 error = 'Please supply a valid email';
                               });
                             } else {
-                              _auth.setUid();
+                              print(new UserM.get().userCredential.user.uid);
+                              _auth.setUserMessageToken();
                             }
                           } else {
-                            dynamic result = await _auth.signAnon();
-                            if (result != null) {
-                              print('signed in');
-                              print(result.uid);
-                            } else {
-                              print('error signing in');
-                            }
+                            setState(() {
+                              error = 'Please supply a valid email';
+                            });
                           }
                         },
                       ),
