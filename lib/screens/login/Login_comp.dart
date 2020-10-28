@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
+import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_button/sign_button.dart';
 
 class LoginComp extends StatefulWidget {
@@ -14,6 +17,7 @@ class LoginComp extends StatefulWidget {
 
 class _LoginCompState extends State<LoginComp> {
   final AuthService _auth = AuthService();
+
   String Email = '';
   String password = '';
   String error = '';
@@ -31,6 +35,7 @@ class _LoginCompState extends State<LoginComp> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserM>(context);
     return MaterialApp(
       home: pending
           ? Loading()
@@ -160,15 +165,14 @@ class _LoginCompState extends State<LoginComp> {
                                 pending = false;
                                 error = 'Please supply a valid email';
                               });
+                            } else {
+                              print(new UserM.get().userCredential.user.uid);
+                              _auth.setUserMessageToken();
                             }
                           } else {
-                            dynamic result = await _auth.signAnon();
-                            if (result != null) {
-                              print('signed in');
-                              print(result.uid);
-                            } else {
-                              print('error signing in');
-                            }
+                            setState(() {
+                              error = 'Please supply a valid email';
+                            });
                           }
                         },
                       ),
