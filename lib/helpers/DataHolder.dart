@@ -7,6 +7,7 @@ class DataHolder{
   factory DataHolder(){
     return _dataHolder;
   }
+
   DataHolder._internal();
 
   List<NotificationM> notifications = [

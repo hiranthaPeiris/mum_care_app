@@ -4,12 +4,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:mun_care_app/helpers/DataHolder.dart';
 import 'package:mun_care_app/helpers/MessageStream.dart';
-import 'package:mun_care_app/models/message.dart';
-import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
+import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
@@ -19,7 +15,7 @@ var uuid = Uuid();
 
 
 class NotificationService {
-  final DataHolder _dataHolder = DataHolder();
+
   //final List<Message> message = [];
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final NavigationService _navigationService = locator<NavigationService>();
@@ -39,29 +35,31 @@ class NotificationService {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        print(DataHolder.uid);
-        store(DataHolder.uid, message);
+        print(new UserM.get().uid);
+        store(message);
         _messageStream.addMessage(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        store(DataHolder.uid, message);
+        store(message);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        store(DataHolder.uid, message);
+        store(message);
       },
     );
   }
 
-  void store(String uid, Map<String, dynamic> message) async {
+  void store( Map<String, dynamic> message) async {
     final notification = message['data'];
+    var user = new UserM.get();
+
     String keyVal = uuid.v1();
     // Save it to Firestore
     if (notification != null) {
       var notifi = _firestore
           .collection('notifications')
-          .doc(uid).collection("received").doc(keyVal);
+          .doc(user.uid).collection("received").doc(keyVal);
 
       await notifi.set({
         'title': notification['title'],
@@ -106,9 +104,7 @@ class NotificationService {
         Completer<Map<String, dynamic>>();
 
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        completer.complete(message);
-      },
+      onMessage: (Map<String, dynamic> message) async => completer.complete(message),
     );
 
     return completer.future;
