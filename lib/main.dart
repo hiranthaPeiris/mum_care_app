@@ -12,14 +12,11 @@ import 'package:provider/provider.dart';
 import 'Locator.dart';
 import 'helpers/Constants.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(AppFire());
 }
-
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -31,7 +28,7 @@ class _MyAppState extends State<MyApp> {
       new GlobalKey<NavigatorState>();
   final NotificationService _notificationService = NotificationService();
 
-  Future Startup()async{
+  Future Startup() async {
     await _notificationService.InitalizeMessaging();
     print("notifi start");
   }
@@ -50,7 +47,7 @@ class _MyAppState extends State<MyApp> {
           textTheme:
               Theme.of(context).textTheme.apply(displayColor: kTextColor),
         ),
-        initialRoute: '/',
+        initialRoute: '/dailyRepo',
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );
@@ -63,7 +60,6 @@ class AppFire extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
       // Initialize FlutterFire:
       future: Firebase.initializeApp(),
