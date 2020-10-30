@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
@@ -165,15 +166,14 @@ class _LoginCompState extends State<LoginComp> {
                                 pending = false;
                                 error = 'Please supply a valid email';
                               });
+                            } else {
+                              print(new UserM.get().userCredential.user.uid);
+                              _auth.setUserMessageToken();
                             }
                           } else {
-                            dynamic result = await _auth.signAnon();
-                            if (result != null) {
-                              print('signed in');
-                              print(result.uid);
-                            } else {
-                              print('error signing in');
-                            }
+                            setState(() {
+                              error = 'Please supply a valid email';
+                            });
                           }
                         },
                       ),
