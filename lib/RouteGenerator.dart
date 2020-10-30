@@ -38,6 +38,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => LoginComp());
       case '/dailyRepo':
         return MaterialPageRoute(builder: (_) => DairlyReport());
+      case '/monthlyRepo':
+        return MaterialPageRoute(builder: (_) => MonthlyReport());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));
