@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/widgets/categoryslector.dart';
-import 'package:mun_care_app/widgets/UrgentContacts.dart';
 import 'package:mun_care_app/widgets/recent_chats.dart';
 
 void main() => runApp(MyApp());
@@ -31,12 +30,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        leading: IconButton(
+        /*leading: IconButton(
           icon: Icon(Icons.menu),
           iconSize: 30.0,
           color: Colors.white,
           onPressed: () {},
-        ),
+        ),*/
         title: Text(
           'Chats',
           style: TextStyle(
@@ -68,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Column(
                 children: <Widget>[
-                  FavoriteContacts(),
                   RecentChats(),
                 ],
               ),
