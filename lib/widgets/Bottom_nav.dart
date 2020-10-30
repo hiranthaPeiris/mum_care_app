@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
-import 'package:mun_care_app/services/NotificationService.dart';
+
 
 class Bottom_nav extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  final NotificationService _notificationService = NotificationService();
+
   Bottom_nav({
     Key key,
     this.scaffoldKey
@@ -26,9 +26,7 @@ class Bottom_nav extends StatelessWidget {
         children: <Widget>[
           BottomNavItem(
             title: "Today",
-            svgScr: "assets/icons/calendar.svg",press: ()async{
-              //await _notificationService.sendAndRetrieveMessage();
-          },
+            svgScr: "assets/icons/calendar.svg",
           ),
           BottomNavItem(
             title: "Menu",
