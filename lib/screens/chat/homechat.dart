@@ -2,29 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/widgets/categoryslector.dart';
 import 'package:mun_care_app/widgets/recent_chats.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class HomeChat extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Chat UI',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.lightBlue,
-        accentColor: Color(0xFFFEF9EB),
-      ),
-      home: HomeScreen(),
-    );
-  }
-}
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeChatState createState() => _HomeChatState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeChatState extends State<HomeChat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

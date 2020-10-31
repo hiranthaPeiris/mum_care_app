@@ -24,7 +24,6 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-  
     return Scaffold(
         key: _scaffoldKey,
         endDrawer: Drawer(
@@ -41,6 +40,13 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
         bottomNavigationBar: Bottom_nav(scaffoldKey: _scaffoldKey),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/chat');
+          },
+          child: Icon(Icons.message_sharp),
+          backgroundColor: kActiveIconColor,
+        ),
         body: FirebaseMessageWapper(Center(
           child: SafeArea(
             child: Stack(
@@ -190,7 +196,8 @@ class _DashboardState extends State<Dashboard> {
                                   heading: "Schedule Home Visits",
                                   svgSrc: "assets/icons/home-visits-sch.svg",
                                   press: () {
-                                    Navigator.pushNamed(context, '/sechHomeVisits');
+                                    Navigator.pushNamed(
+                                        context, '/sechHomeVisits');
                                   },
                                 ),
                                 Menu_card(
@@ -198,7 +205,8 @@ class _DashboardState extends State<Dashboard> {
                                   heading: "Schedule Clinics",
                                   svgSrc: "assets/icons/clinics-sch.svg",
                                   press: () {
-                                    Navigator.pushNamed(context, '/sechClinics');
+                                    Navigator.pushNamed(
+                                        context, '/sechClinics');
                                   },
                                 )
                               ]),

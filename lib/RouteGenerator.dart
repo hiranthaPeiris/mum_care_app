@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
-import 'package:mun_care_app/screens/Authentication/Authentication.dart';
+
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
-import 'package:mun_care_app/screens/login/Login_comp.dart';
+import 'package:mun_care_app/screens/chat/chatscreen.dart';
+import 'package:mun_care_app/screens/chat/homechat.dart';
+
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/reminders/ScheduleClinic.dart';
 import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
@@ -30,6 +32,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ScheduleHomeVisits());
       case '/sechClinics':
         return MaterialPageRoute(builder: (_) => ScheduleClinic());
+      case '/chat':
+        return MaterialPageRoute(builder: (_) => HomeChat());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/error':
