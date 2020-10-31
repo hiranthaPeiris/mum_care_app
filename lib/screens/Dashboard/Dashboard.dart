@@ -186,16 +186,20 @@ class _DashboardState extends State<Dashboard> {
                                   press: () {},
                                 ),
                                 Menu_card(
-                                  title: "Meditation",
-                                  heading: "Home Visits",
-                                  svgSrc: "assets/icons/Meditation.svg",
-                                  press: () {},
+                                  title: "Home visits",
+                                  heading: "Schedule Home Visits",
+                                  svgSrc: "assets/icons/home-visits-sch.svg",
+                                  press: () {
+                                    Navigator.pushNamed(context, '/sechHomeVisits');
+                                  },
                                 ),
                                 Menu_card(
-                                  title: "Yoga",
-                                  heading: "Home Visits",
-                                  svgSrc: "assets/icons/yoga.svg",
-                                  press: () {},
+                                  title: "Clinics",
+                                  heading: "Schedule Clinics",
+                                  svgSrc: "assets/icons/clinics-sch.svg",
+                                  press: () {
+                                    Navigator.pushNamed(context, '/sechClinics');
+                                  },
                                 )
                               ]),
                               gridDelegate:
