@@ -7,32 +7,8 @@ class ScheduleClinic extends StatefulWidget {
 }
 
 class _ScheduleClinicState extends State<ScheduleClinic> {
-  TimeOfDay _time = TimeOfDay.now();
-  TimeOfDay picked1;
-  Future<Null> selectTime(BuildContext context) async {
-    picked1 = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
-    setState(() {
-      _time = picked1;
-      print(_time);
-    });
-  }
-
-  DateTime selectedDate = DateTime.now();
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
+  DateTime _date;
+  TimeOfDay _time;
 
   TextEditingController description = TextEditingController();
   TextEditingController date = TextEditingController();
@@ -83,25 +59,101 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                           hintText: "Enter the description",
                         ),
                       ),
-                      TextFormField(
-                        controller: date,
-                        decoration: InputDecoration(
-                          labelText: "Date",
-                          hintText: "${selectedDate.toLocal()}".split(' ')[0],
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Date:             ",
+                              style: TextStyle(fontSize: 18.0),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(_date == null
+                                ? "Select Date"
+                                : _date.year.toString() +
+                                    "/" +
+                                    _date.month.toString() +
+                                    "/" +
+                                    _date.day.toString()),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            RaisedButton.icon(
+                              onPressed: () {
+                                showDatePicker(
+                                        context: context,
+                                        initialDate: new DateTime.now(),
+                                        firstDate: DateTime(1980),
+                                        lastDate: DateTime(2021))
+                                    .then((date) {
+                                  setState(() {
+                                    _date = date;
+                                  });
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              label: Text(
+                                '',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: Icon(
+                                Icons.event_available,
+                                color: Colors.white,
+                              ),
+                              textColor: Colors.white,
+                              splashColor: Colors.red,
+                              color: Colors.blue,
+                            ),
+                          ],
                         ),
-                        onTap: () => _selectDate(context),
                       ),
-                      /*RaisedButton(
-                        onPressed: () => _selectDate(context),
-                        child: Text('Select date'),
-                      ),*/
-                      TextFormField(
-                        controller: time,
-                        decoration: InputDecoration(
-                          labelText: "Time",
-                          hintText: "${_time.hour}:${_time.hour}",
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Time:             ",
+                              style: TextStyle(fontSize: 18.0),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(_time == null
+                                ? "Select Time"
+                                : _time.hour.toString() +
+                                    ":" +
+                                    _time.minute.toString()),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            RaisedButton.icon(
+                              onPressed: () {
+                                showTimePicker(
+                                  context: context,
+                                  initialTime: new TimeOfDay.now(),
+                                ).then((time) {
+                                  setState(() {
+                                    _time = time;
+                                  });
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              label: Text(
+                                '',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: Icon(
+                                Icons.alarm,
+                                color: Colors.white,
+                              ),
+                              textColor: Colors.white,
+                              splashColor: Colors.red,
+                              color: Colors.blue,
+                            ),
+                          ],
                         ),
-                        onTap: () => selectTime(context),
                       ),
                     ],
                   )

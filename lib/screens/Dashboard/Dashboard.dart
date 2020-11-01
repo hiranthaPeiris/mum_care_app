@@ -40,6 +40,13 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
         bottomNavigationBar: Bottom_nav(scaffoldKey: _scaffoldKey),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/chat');
+          },
+          child: Icon(Icons.message_sharp),
+          backgroundColor: kActiveIconColor,
+        ),
         body: FirebaseMessageWapper(Center(
           child: SafeArea(
             child: Stack(
@@ -170,31 +177,43 @@ class _DashboardState extends State<Dashboard> {
                                   title: "View Upcoming Home Visits",
                                   heading: "Home Visits",
                                   svgSrc: "assets/icons/home-visits.svg",
-                                  press: () {},
+                                  press: () {
+
+                                  },
                                 ),
                                 Menu_card(
                                   title: "Report private medications",
                                   heading: "Report Medications",
                                   svgSrc: "assets/icons/yoga.svg",
-                                  press: () {},
+                                  press: () {
+                                    Navigator.pushNamed(context, '/MedicalReport');
+                                  },
                                 ),
                                 Menu_card(
                                   title: "Report leaving residential area",
                                   heading: "Report Leaving",
                                   svgSrc: "assets/icons/yoga.svg",
-                                  press: () {},
+                                  press: () {
+                                    Navigator.pushNamed(context, '/leavingReport');
+                                  },
                                 ),
                                 Menu_card(
-                                  title: "Meditation",
-                                  heading: "Home Visits",
-                                  svgSrc: "assets/icons/Meditation.svg",
-                                  press: () {},
+                                  title: "Home visits",
+                                  heading: "Schedule Home Visits",
+                                  svgSrc: "assets/icons/home-visits-sch.svg",
+                                  press: () {
+                                    Navigator.pushNamed(
+                                        context, '/sechHomeVisits');
+                                  },
                                 ),
                                 Menu_card(
-                                  title: "Yoga",
-                                  heading: "Home Visits",
-                                  svgSrc: "assets/icons/yoga.svg",
-                                  press: () {},
+                                  title: "Clinics",
+                                  heading: "Schedule Clinics",
+                                  svgSrc: "assets/icons/clinics-sch.svg",
+                                  press: () {
+                                    Navigator.pushNamed(
+                                        context, '/sechClinics');
+                                  },
                                 )
                               ]),
                               gridDelegate:
