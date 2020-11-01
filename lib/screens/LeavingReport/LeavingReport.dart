@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/RouteGenerator.dart';
-void main()
-{
-   runApp(App());
-}
-class App extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LeavingReport(),
-    );
-  }
-}
+
 class LeavingReport extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
