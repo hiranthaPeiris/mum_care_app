@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_time_picker/date_time_picker.dart';
+
+import 'package:mun_care_app/models/homeShedule.dart';
+
 //import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class ScheduleHomeVisits extends StatefulWidget {
@@ -7,37 +12,107 @@ class ScheduleHomeVisits extends StatefulWidget {
 }
 
 class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
-  TimeOfDay _time = TimeOfDay.now();
-  TimeOfDay picked1;
-  Future<Null> selectTime(BuildContext context) async {
-    picked1 = await showTimePicker(
+  //DateTime selectedDate = DateTime.now();
+  //TimeOfDay selectedTime = TimeOfDay.now();
+  // final TimeOfDay picked1;
+
+  /*Future<Null> selectTime(BuildContext context) async {
+    final TimeOfDay picked1 = await showTimePicker(
       context: context,
-      initialTime: _time,
+      initialTime: selectedTime,
     );
     setState(() {
-      _time = picked1;
-      print(_time);
+      selectedTime = picked1;
+      print(selectedTime);
     });
-  }
+  }*/
 
-  DateTime selectedDate = DateTime.now();
-
-  Future<Null> _selectDate(BuildContext context) async {
+  /*Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
+        print(selectedDate);
       });
-  }
+  }*/
 
   TextEditingController description = TextEditingController();
-  TextEditingController date = TextEditingController();
-  TextEditingController time = TextEditingController();
-  TextEditingController venue = TextEditingController();
+  //TextEditingController date1 = TextEditingController();
+  //TextEditingController time = TextEditingController();
+  TextEditingController mothername = TextEditingController();
+  DateTime _date;
+  TimeOfDay _time;
+
+  bool textFieldVisibility = false;
+
+  String firestoreCollectionName = 'ShedulehomeVisit';
+  HomeShedule currentShedule;
+  String montherval = "Maala";
+  String selectedType;
+
+  /*addBook() async {
+    HomeShedule she1 = HomeShedule(
+        description: description.text,
+        date: _date.year.toString() +
+            "/" +
+            _date.month.toString() +
+            "/" +
+            _date.day.toString(),
+        time: _time.hour.toString() + ":" + _time.minute.toString(),
+        mothername: montherval);
+    try {
+      FirebaseFirestore.instance
+          .runTransaction((Transaction transaction) async {
+        await FirebaseFirestore.instance
+            .collection(firestoreCollectionName)
+            .doc()
+            .set(she1.toJson());
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }*/
+
+  List<String> _motherName = <String>[
+    'Maala',
+    'Seetha',
+    'Kamala',
+    'Nimali',
+  ];
+
+  Widget motherNameDropDownMenu() {
+    return DropdownButton<String>(
+      value: montherval,
+      icon: Icon(Icons.arrow_drop_down),
+      iconSize: 18,
+      elevation: 20,
+      isExpanded: true,
+      style: TextStyle(
+          color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18.0),
+      items: _motherName.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Text(
+              value,
+              //textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }).toList(),
+      onChanged: (String value) {
+        setState(() {
+          montherval = value;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,32 +157,125 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                           hintText: "Enter the description",
                         ),
                       ),
-                      TextFormField(
-                        controller: date,
-                        decoration: InputDecoration(
-                          labelText: "Date",
-                          hintText: "${selectedDate.toLocal()}".split(' ')[0],
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Date:             ",
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(_date == null
+                                ? "Select Date"
+                                : _date.year.toString() +
+                                    "/" +
+                                    _date.month.toString() +
+                                    "/" +
+                                    _date.day.toString()),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            RaisedButton.icon(
+                              onPressed: () {
+                                showDatePicker(
+                                        context: context,
+                                        initialDate: new DateTime.now(),
+                                        firstDate: DateTime(1980),
+                                        lastDate: DateTime(2021))
+                                    .then((date) {
+                                  setState(() {
+                                    _date = date;
+                                  });
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              label: Text(
+                                '',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: Icon(
+                                Icons.event_available,
+                                color: Colors.white,
+                              ),
+                              textColor: Colors.white,
+                              splashColor: Colors.red,
+                              color: Colors.blue,
+                            ),
+                          ],
                         ),
-                        onTap: () => _selectDate(context),
                       ),
-                      /*RaisedButton(
-                        onPressed: () => _selectDate(context),
-                        child: Text('Select date'),
-                      ),*/
-                      TextFormField(
-                        controller: time,
-                        decoration: InputDecoration(
-                          labelText: "Time",
-                          hintText: "${_time.hour}:${_time.hour}",
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Time:             ",
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(_time == null
+                                ? "Select Time"
+                                : _time.hour.toString() +
+                                    ":" +
+                                    _time.minute.toString()),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            RaisedButton.icon(
+                              onPressed: () {
+                                showTimePicker(
+                                  context: context,
+                                  initialTime: new TimeOfDay.now(),
+                                ).then((time) {
+                                  setState(() {
+                                    _time = time;
+                                  });
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              label: Text(
+                                '',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: Icon(
+                                Icons.alarm,
+                                color: Colors.white,
+                              ),
+                              textColor: Colors.white,
+                              splashColor: Colors.red,
+                              color: Colors.blue,
+                            ),
+                          ],
                         ),
-                        onTap: () => selectTime(context),
                       ),
-                      TextFormField(
-                        controller: venue,
-                        decoration: InputDecoration(
-                          labelText: "Venue",
-                          hintText: "Enter the venue",
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            height: 40.0,
+                            alignment: Alignment.bottomLeft,
+                            child: Text(
+                              "Mother Name:",
+                              style: TextStyle(
+                                  fontSize: 15.0, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(30, 10, 0, 0),
+                            child: motherNameDropDownMenu(),
+                            height: 35.0,
+                            width: 100.0,
+                            alignment: Alignment.topRight,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(0),
+                              color: Colors.white,
+                              //color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   )
@@ -128,7 +296,9 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                     fontSize: 20.0,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  //addBook();
+                },
               ),
             ),
           ],
