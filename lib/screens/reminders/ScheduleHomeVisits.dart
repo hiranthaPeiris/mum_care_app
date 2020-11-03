@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 
@@ -12,38 +13,7 @@ class ScheduleHomeVisits extends StatefulWidget {
 }
 
 class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
-  //DateTime selectedDate = DateTime.now();
-  //TimeOfDay selectedTime = TimeOfDay.now();
-  // final TimeOfDay picked1;
-
-  /*Future<Null> selectTime(BuildContext context) async {
-    final TimeOfDay picked1 = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-    setState(() {
-      selectedTime = picked1;
-      print(selectedTime);
-    });
-  }*/
-
-  /*Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        print(selectedDate);
-      });
-  }*/
-
   TextEditingController description = TextEditingController();
-  //TextEditingController date1 = TextEditingController();
-  //TextEditingController time = TextEditingController();
   TextEditingController mothername = TextEditingController();
   DateTime _date;
   TimeOfDay _time;
@@ -51,7 +21,11 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
   bool textFieldVisibility = false;
 
   String firestoreCollectionName = 'ShedulehomeVisit';
+
   HomeShedule currentShedule;
+
+  //HomeShedule currentShedule;
+
   String montherval = "Maala";
   String selectedType;
 
@@ -163,6 +137,7 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                           children: <Widget>[
                             Text(
                               "Date:             ",
+                              style: TextStyle(fontSize: 18.0),
                               textAlign: TextAlign.left,
                             ),
                             Text(_date == null
@@ -212,6 +187,7 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                           children: <Widget>[
                             Text(
                               "Time:             ",
+                              style: TextStyle(fontSize: 18.0),
                               textAlign: TextAlign.left,
                             ),
                             Text(_time == null
@@ -259,7 +235,9 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                             child: Text(
                               "Mother Name:",
                               style: TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.bold),
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                               textAlign: TextAlign.right,
                             ),
                           ),

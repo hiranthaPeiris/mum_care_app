@@ -11,8 +11,6 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
   TimeOfDay _time;
 
   TextEditingController description = TextEditingController();
-  TextEditingController date = TextEditingController();
-  TextEditingController time = TextEditingController();
   TextEditingController venue = TextEditingController();
 
   @override
@@ -65,6 +63,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                           children: <Widget>[
                             Text(
                               "Date:             ",
+                              style: TextStyle(fontSize: 18.0),
                               textAlign: TextAlign.left,
                             ),
                             Text(_date == null
@@ -114,6 +113,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                           children: <Widget>[
                             Text(
                               "Time:             ",
+                              style: TextStyle(fontSize: 18.0),
                               textAlign: TextAlign.left,
                             ),
                             Text(_time == null

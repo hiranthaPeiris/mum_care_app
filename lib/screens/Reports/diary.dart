@@ -3,49 +3,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/models/UserM.dart';
-//import 'package:mun_care_app/services/NotificationService.dart';
-//import 'package:uuid/uuid.dart';
-//import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-class DairlyReport extends StatefulWidget {
+class DairlyDiary extends StatefulWidget {
   @override
-  _DairlyReportState createState() => _DairlyReportState();
+  _DairlyDiaryState createState() => _DairlyDiaryState();
 }
 
-class _DairlyReportState extends State<DairlyReport> {
-  TimeOfDay _time = TimeOfDay.now();
-  TimeOfDay picked1;
-  Future<Null> selectTime(BuildContext context) async {
-    picked1 = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
-    setState(() {
-      _time = picked1;
-      print(_time);
-    });
-  }
-
-  DateTime selectedDate = DateTime.now();
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
-
-  TextEditingController date = TextEditingController();
+class _DairlyDiaryState extends State<DairlyDiary> {
   TextEditingController servicePlace = TextEditingController();
-  TextEditingController timeLeftTheHome = TextEditingController();
-  TextEditingController thimeArrivedHome = TextEditingController();
-  TextEditingController timeArrivedWorkPlace = TextEditingController();
-  TextEditingController timeLeftWorkPlace = TextEditingController();
   TextEditingController noOfHouses = TextEditingController();
 
   String eligibleFam = "eligible family";
@@ -59,6 +24,12 @@ class _DairlyReportState extends State<DairlyReport> {
 
   List<List<UserM>> lists;
   List<int> dropdownValues = [];
+
+  DateTime _date;
+  TimeOfDay _time1;
+  TimeOfDay _time2;
+  TimeOfDay _time3;
+  TimeOfDay _time4;
 
   int _currentStep = 0;
   StepperType _stepperType = StepperType.vertical;
@@ -371,13 +342,55 @@ class _DairlyReportState extends State<DairlyReport> {
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        TextFormField(
-                          controller: date,
-                          decoration: InputDecoration(
-                            labelText: "Date",
-                            hintText: "${selectedDate.toLocal()}".split(' ')[0],
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Date:             ",
+                                style: TextStyle(fontSize: 18.0),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(_date == null
+                                  ? "Select Date"
+                                  : _date.year.toString() +
+                                      "/" +
+                                      _date.month.toString() +
+                                      "/" +
+                                      _date.day.toString()),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              RaisedButton.icon(
+                                onPressed: () {
+                                  showDatePicker(
+                                          context: context,
+                                          initialDate: new DateTime.now(),
+                                          firstDate: DateTime(1980),
+                                          lastDate: DateTime(2021))
+                                      .then((date) {
+                                    setState(() {
+                                      _date = date;
+                                    });
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                label: Text(
+                                  '',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                icon: Icon(
+                                  Icons.event_available,
+                                  color: Colors.white,
+                                ),
+                                textColor: Colors.white,
+                                splashColor: Colors.red,
+                                color: Colors.blue,
+                              ),
+                            ],
                           ),
-                          onTap: () => _selectDate(context),
                         ),
                         TextFormField(
                           controller: servicePlace,
@@ -391,43 +404,196 @@ class _DairlyReportState extends State<DairlyReport> {
                         onPressed: () => _selectDate(context),
                         child: Text('Select date'),
                       ),*/
-                        TextFormField(
+                        /*TextFormField(
                           controller: timeLeftTheHome,
                           decoration: InputDecoration(
                             labelText: "Time Left the Home",
                             hintText: "${_time.hour}:${_time.hour}",
                           ),
                           onTap: () => selectTime(context),
-                        ),
-                        TextFormField(
-                          controller: timeArrivedWorkPlace,
-                          decoration: InputDecoration(
-                            labelText: "Time Arrived WorkPlace",
-                            hintText: "${_time.hour}:${_time.hour}",
+                        ),*/
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Time Left the Home",
+                                style: TextStyle(fontSize: 15.0),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(_time1 == null
+                                  ? "           Time"
+                                  : _time1.hour.toString() +
+                                      ":" +
+                                      _time1.minute.toString()),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              RaisedButton.icon(
+                                onPressed: () {
+                                  showTimePicker(
+                                    context: context,
+                                    initialTime: new TimeOfDay.now(),
+                                  ).then((time) {
+                                    setState(() {
+                                      _time1 = time;
+                                    });
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                label: Text(
+                                  '',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                icon: Icon(
+                                  Icons.alarm,
+                                  color: Colors.white,
+                                ),
+                                textColor: Colors.white,
+                                splashColor: Colors.red,
+                                color: Colors.blue,
+                              ),
+                            ],
                           ),
-                          onTap: () => selectTime(context),
                         ),
-                        TextFormField(
-                          controller: timeLeftWorkPlace,
-                          decoration: InputDecoration(
-                            labelText: "Time left the WorkPlace",
-                            hintText: "${_time.hour}:${_time.hour}",
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Time Arrived WorkPlace ",
+                                style: TextStyle(fontSize: 15.0),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(_time2 == null
+                                  ? "  Time"
+                                  : _time2.hour.toString() +
+                                      ":" +
+                                      _time2.minute.toString()),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              RaisedButton.icon(
+                                onPressed: () {
+                                  showTimePicker(
+                                    context: context,
+                                    initialTime: new TimeOfDay.now(),
+                                  ).then((time) {
+                                    setState(() {
+                                      _time2 = time;
+                                    });
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                label: Text(
+                                  '',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                icon: Icon(
+                                  Icons.alarm,
+                                  color: Colors.white,
+                                ),
+                                textColor: Colors.white,
+                                splashColor: Colors.red,
+                                color: Colors.blue,
+                              ),
+                            ],
                           ),
-                          onTap: () => selectTime(context),
                         ),
-                        TextFormField(
-                          controller: thimeArrivedHome,
-                          decoration: InputDecoration(
-                            labelText: "Time Arrived Home",
-                            hintText: "${_time.hour}:${_time.hour}",
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Time left the WorkPlace ",
+                                style: TextStyle(fontSize: 15.0),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(_time3 == null
+                                  ? "   Time"
+                                  : _time3.hour.toString() +
+                                      ":" +
+                                      _time3.minute.toString()),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              RaisedButton.icon(
+                                onPressed: () {
+                                  showTimePicker(
+                                    context: context,
+                                    initialTime: new TimeOfDay.now(),
+                                  ).then((time) {
+                                    setState(() {
+                                      _time3 = time;
+                                    });
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                label: Text(
+                                  '',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                icon: Icon(
+                                  Icons.alarm,
+                                  color: Colors.white,
+                                ),
+                                textColor: Colors.white,
+                                splashColor: Colors.red,
+                                color: Colors.blue,
+                              ),
+                            ],
                           ),
-                          onTap: () => selectTime(context),
                         ),
-                        TextFormField(
-                          controller: noOfHouses,
-                          decoration: InputDecoration(
-                            labelText: "Number Of Houses:",
-                            hintText: "Enter the Visited Number of Houses",
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Time Arrived Home",
+                                style: TextStyle(fontSize: 15.0),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(_time4 == null
+                                  ? "             Time"
+                                  : _time4.hour.toString() +
+                                      ":" +
+                                      _time4.minute.toString()),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              RaisedButton.icon(
+                                onPressed: () {
+                                  showTimePicker(
+                                    context: context,
+                                    initialTime: new TimeOfDay.now(),
+                                  ).then((time) {
+                                    setState(() {
+                                      _time4 = time;
+                                    });
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                label: Text(
+                                  '',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                icon: Icon(
+                                  Icons.alarm,
+                                  color: Colors.white,
+                                ),
+                                textColor: Colors.white,
+                                splashColor: Colors.red,
+                                color: Colors.blue,
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -728,15 +894,15 @@ class _DairlyReportState extends State<DairlyReport> {
     return _steps;
 
     /*Container(
-            child: SizedBox(
-              height: 300.0,
-            ),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(30.0),
-                  topLeft: Radius.circular(30.0),
-                )),
-          ),*/
+      child: SizedBox(
+        height: 300.0,
+      ),
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+        topRight: Radius.circular(30.0),
+        topLeft: Radius.circular(30.0),
+      )),
+    );*/
   }
 }
