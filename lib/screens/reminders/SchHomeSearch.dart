@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
+import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 
 class SchHomeVisitSearch extends StatefulWidget {
   @override
