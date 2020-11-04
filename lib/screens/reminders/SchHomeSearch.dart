@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
+import 'package:mun_care_app/models/UserM.dart';
 
 class SchHomeVisitSearch extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
   String searchPara = "";
   CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
+  UserM _userM = UserM.get();
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +83,18 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                         Expanded(
                           child: StreamBuilder<QuerySnapshot>(
                             stream: (searchPara == null || searchPara == '')
-                                ? collection.snapshots()
+                                ? collection
+                                    .where('midwifeID',
+                                        isEqualTo:
+                                            _userM.userCredential.user.uid)
+                                    .snapshots()
                                 : collection
                                     .where('nameSearch',
                                         arrayContains: searchPara)
-                                    .snapshots(),
+                                    .where('midwifeID',
+                                        isEqualTo:
+                                            _userM.userCredential.user.uid)
+                                    .snapshots(includeMetadataChanges: true),
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (snapshot.hasError) {
