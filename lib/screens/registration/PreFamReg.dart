@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -111,6 +113,7 @@ class _PreFamRegState extends State<PreFamReg> {
         onChanged: (String value) {
           setState(() {
             wombDropdownValue = value;
+            
           });
         },
       );
@@ -118,10 +121,23 @@ class _PreFamRegState extends State<PreFamReg> {
 
     stepOneReg() async{
       FirebaseAuth _auth=FirebaseAuth.instance;
-      PreStepOne preStepOne= PreStepOne(gnDivision: myController12.text,fcName: myController13.text,hcName: myController14.text,coName:myController15.text);
+      PreRegDB preRegDB= PreRegDB(
+        gnDivision: myController12.text,
+        fcName: myController13.text,
+        hcName: myController14.text,
+        coName:myController15.text,
+
+        pvb: myController21.text,
+        bloodPresure: myController22.text,
+        diabetic: diabetic_Yes,
+        maleria:maleria_Yes,
+        heartDisorder:heartDisorders_Yes,
+        kidneyDisorder:kidneyDisorders_Yes
+        
+        );
       try{
         Firestore.instance.runTransaction((Transaction transaction)async{
-            await Firestore.instance.collection("pre_step1").document(_auth.currentUser.uid).setData(preStepOne.toJson());
+            await Firestore.instance.collection("PreDatabase").document(_auth.currentUser.uid).setData(preRegDB.toJson());
         }
         );
       }
@@ -130,20 +146,7 @@ class _PreFamRegState extends State<PreFamReg> {
       }
 
     }
-    stepOneThree() async{
-      FirebaseAuth _auth=FirebaseAuth.instance;
-      PreStepThree preStepThree= PreStepThree(pvb: myController21.text,bloodPresure: myController22.text,diabetic: diabetic_Yes,maleria:maleria_Yes,heartDisorder:heartDisorders_Yes,kidneyDisorder:kidneyDisorders_Yes);
-      try{
-        Firestore.instance.runTransaction((Transaction transaction)async{
-            await Firestore.instance.collection("pre_step3").document(_auth.currentUser.uid).setData(preStepThree.toJson());
-        }
-        );
-      }
-      catch(e){
-        print(e.toString());
-      }
-
-    }
+    
 
 
 
@@ -317,6 +320,9 @@ class _PreFamRegState extends State<PreFamReg> {
               ),
             ),
             Container(
+              child: Text(wombDropdownValue.toString()+" Details",style: TextStyle(color:Colors.red,fontSize:20),),
+            ),
+            Container(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.05,
@@ -422,12 +428,39 @@ class _PreFamRegState extends State<PreFamReg> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
+                      MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Sex", "pohDetails",myController20),
+                  child: showTextField("Sex", "pohSex",myController20),
                 ),
               ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * 0.05,
+                      MediaQuery.of(context).size.height * 0.045,
+                      MediaQuery.of(context).size.width * 0.05,
+                      MediaQuery.of(context).size.height * 0.005),
+                  child: Row(
+                    children:<Widget>[
+                      Expanded(
+                        flex:50,
+                        child: Text("Are you "+wombDropdownValue.toString()+" fill is over...?",style: TextStyle(color:Colors.red,fontSize:15),)
+                        ),
+                      Expanded(
+                        flex: 30,
+                        child: FlatButton(
+                            color: Colors.redAccent,
+                            child: Text("Set"),
+                            onPressed: () {
+                              setState(() {
+
+                              });
+                            }),)
+                    ],
+                  ) ,
+                  ),
+              )
           ],
         ),
       ),
@@ -631,7 +664,6 @@ class _PreFamRegState extends State<PreFamReg> {
                               setState(() {
                                 complete = false;
                                 stepOneReg();
-                                stepOneThree();
                               });
                             }),
                         FlatButton(
