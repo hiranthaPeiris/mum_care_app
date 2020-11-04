@@ -39,7 +39,7 @@ class NotificationService {
         store(message);
         _messageStream.addMessage(message);
       },
-      onLaunch: (Map<String, dynamic> message) async {
+     onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         store(message);
       },
@@ -76,7 +76,6 @@ class NotificationService {
   void store(Map<String, dynamic> message) async {
     final notification = message['data'];
     var user = new UserM.get();
-
     String keyVal = uuid.v1();
     // Save it to Firestore
     if (notification != null) {
