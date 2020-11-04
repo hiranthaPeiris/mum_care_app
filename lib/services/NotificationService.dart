@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/helpers/MessageStream.dart';
+import 'package:mun_care_app/models/Notification.model.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
 import 'package:http/http.dart' as http;
@@ -13,18 +14,17 @@ import '../Locator.dart';
 
 var uuid = Uuid();
 
-
 class NotificationService {
 
-  //final List<Message> message = [];
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final NavigationService _navigationService = locator<NavigationService>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   MessageStream _messageStream = MessageStream.instance;
+  UserM _userM = new UserM.get();
 
   StreamSubscription iosSubscription;
   final String serverToken =
-      'AAAAqFEjYNg:APA91bGuprJ-teFPTKWvikO-2Fu98F1Ka0_7iBQmHRZT3bglGISOws_Iz1Hd0qyp6mEwxMRZoSjvg6HBDJH9l6GPd1VUZT7PL4muVH4Y7sofFbmVe0D9_UnS1kSP_GYloIiXFktKl6T_';
+      "AAAAqFEjYNg:APA91bE5WjAxNlmJyboK8iIQD8WCDRqleMfOQhBOuJJ0hHLe_cDGO__Qh0Q-bTnJt-JKd2MXIP71kGXCs1EWGqdIEGxkCaaonhlItDWiUhuaW7b3_MHkl_zj9yq0k1rQ4xRUwO-xucLf";
 
   Future InitalizeMessaging() async {
     if (Platform.isIOS) {
@@ -50,8 +50,30 @@ class NotificationService {
     );
   }
 
+  Future<List<NotificationM>> getNotifications() async {
+    String uid = _userM.uid;
+    List<NotificationM> notifications = [
+      new NotificationM("Test header1", "test Content 1", new DateTime(2000))
+    ];
+    await _firestore
+        .collection('notifications')
+        .doc(uid)
+        .collection('received')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.size > 0) {
+        querySnapshot.docs.forEach((doc) {
+          notifications.add(
+              new NotificationM(doc['title'], doc['body'], new DateTime.now()));
+          //print(doc["createdAt"]);
+        });
+        //print(notifications.length);
+      }
+    });
+    return notifications;
+  }
 
-  void store( Map<String, dynamic> message) async {
+  void store(Map<String, dynamic> message) async {
     final notification = message['data'];
     var user = new UserM.get();
     String keyVal = uuid.v1();
@@ -59,7 +81,9 @@ class NotificationService {
     if (notification != null) {
       var notifi = _firestore
           .collection('notifications')
-          .doc(user.uid).collection("received").doc(keyVal);
+          .doc(user.uid)
+          .collection("received")
+          .doc(keyVal);
 
       await notifi.set({
         'title': notification['title'],
@@ -69,8 +93,7 @@ class NotificationService {
       });
     }
   }
-
-
+/*
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
     await _firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(
@@ -104,12 +127,12 @@ class NotificationService {
         Completer<Map<String, dynamic>>();
 
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async => completer.complete(message),
+      onMessage: (Map<String, dynamic> message) async =>
+          completer.complete(message),
     );
-
     return completer.future;
   }
-
+*/
   void _NavigateToNotification(Map<String, dynamic> message) {
     _navigationService.navigateTo('/notification');
   }
