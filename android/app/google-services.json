@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "722915778776",
+    "firebase_url": "https://mumcare-cbff3.firebaseio.com",
+    "project_id": "mumcare-cbff3",
+    "storage_bucket": "mumcare-cbff3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722915778776:android:7632f24be40702172b77ad",
+        "android_client_info": {
+          "package_name": "com.dev.mun_care_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722915778776-qn12v83i4dapo6ml397ol7tusn4e12bl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQk2SUVh1Qq91sFgY0OgiSMejfPsINwCI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722915778776-qn12v83i4dapo6ml397ol7tusn4e12bl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

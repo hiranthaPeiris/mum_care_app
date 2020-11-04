@@ -14,59 +14,61 @@ class Menu_liner_card extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-      padding: EdgeInsets.all(14),
-      height: 60,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          SvgPicture.asset(
-            "assets/icons/important.svg",
-            height: 40,
-            width: 40,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  heading,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  content,
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+        padding: EdgeInsets.all(14),
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SvgPicture.asset(
+              "assets/icons/important.svg",
+              height: 40,
+              width: 40,
             ),
-          ),
-          Expanded(
-            child: Row(mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SvgPicture.asset(
-                  "assets/icons/arrow.svg",
-                  height: 20,
-                  width: 40,
-                  color: Colors.black26,
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    heading,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    content,
+                    style: TextStyle(fontSize: 10),
+                  )
+                ],
+              ),
             ),
-          )
-        ],
-      ),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: new BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 17),
-              blurRadius: 17,
-              spreadRadius: -23,
-              color: kShadowColor,
-            ),
-          ]),
+            Expanded(
+              child: Row(mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SvgPicture.asset(
+                    "assets/icons/arrow.svg",
+                    height: 20,
+                    width: 40,
+                    color: Colors.black26,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.circular(12.0),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 17),
+                blurRadius: 17,
+                spreadRadius: -23,
+                color: kShadowColor,
+              ),
+            ]),
+      ),onTap: press,
     );
   }
 }

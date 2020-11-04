@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
+
+
 class Bottom_nav extends StatelessWidget {
-  const Bottom_nav({
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  Bottom_nav({
     Key key,
+    this.scaffoldKey
   }) : super(key: key);
+
+  void _openDrawer(){
+    scaffoldKey.currentState.openEndDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
       height: 80,
       color: Colors.white,
       child: Row(
@@ -16,16 +27,18 @@ class Bottom_nav extends StatelessWidget {
           BottomNavItem(
             title: "Today",
             svgScr: "assets/icons/calendar.svg",
-
           ),
           BottomNavItem(
             title: "Menu",
             svgScr: "assets/icons/menu-bottom.svg",
             isActive: true,
+            press: () {
+              Navigator.pushNamed(context, '/dashboard');
+            },
           ),
           BottomNavItem(
             title: "Settings",
-            svgScr: "assets/icons/Settings.svg",
+            svgScr: "assets/icons/Settings.svg",press: _openDrawer,
           ),
         ],
       ),
@@ -48,18 +61,20 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press,
+    return InkWell(onTap: press,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           SvgPicture.asset(
-            svgScr,width: 25,height: 25,
+            svgScr,
+            width: 25,
+            height: 25,
             color: isActive ? kActiveIconColor : kMenuTextColor,
           ),
           Text(
             title,
-            style: TextStyle(color: isActive ? kActiveIconColor : kMenuTextColor),
+            style:
+                TextStyle(color: isActive ? kActiveIconColor : kMenuTextColor),
           ),
         ],
       ),
