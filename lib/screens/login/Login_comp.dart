@@ -36,7 +36,8 @@ class _LoginCompState extends State<LoginComp> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserM>(context);
-    return pending
+    return MaterialApp(
+      home: pending
           ? Loading()
           : Scaffold(
               body: Padding(
@@ -206,6 +207,7 @@ class _LoginCompState extends State<LoginComp> {
                   ],
                 ),
               ),
+            ),
     );
   }
 }

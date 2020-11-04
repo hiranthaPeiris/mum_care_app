@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
 
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -43,6 +44,7 @@ class AuthService {
 
       new UserM(user: userCredential, data: userRole);
       return _userFromFirebase(userCredential.user);
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -65,7 +67,7 @@ class AuthService {
         // Get the token for this device
 
         String uid = user.uid;
-        new UserM.setUID(uid: user.uid);
+        new UserM.setUID(uid:user.uid);
         //getting firebase message token
         String fcmToken = await _firebaseMessaging.getToken();
 
@@ -88,7 +90,6 @@ class AuthService {
       }
     });
   }
-
   //sign out
   Future SignOut() async {
     try {
@@ -100,12 +101,12 @@ class AuthService {
   }
 
   //register
-  Future Register(String email, String password, String name) async {
+  Future Register(String email, String password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       await setUserMessageToken();
-      await setUserRole(userCredential.user.uid, name);
+      await setUserRole(userCredential.user.uid);
 
       print(userCredential.user.uid);
       return (_userFromFirebase(userCredential.user));
@@ -116,18 +117,11 @@ class AuthService {
   }
 
 //set user role
-  Future<void> setUserRole(String uid, String name) async {
+  Future<void> setUserRole(String uid) async {
     await _firestore
         .collection('users')
         .doc(uid)
-        .set({
-          'name': name,
-          'role': 'user',
-          'competencyFam': false,
-          'PregnanctFam': false,
-          'midwifeID':'null',
-          'nameSearch':getSearchParam(name)
-        })
+        .set({'role': 'user'})
         .then((value) => print("user role added"))
         .catchError((err) => print(err));
   }
@@ -157,14 +151,5 @@ class AuthService {
         return null;
       }
     });
-  }
-  List<String> getSearchParam(String param){
-    List <String> searchList = List();
-    String temp = "";
-    for(int i=0;i<param.length;i++){
-      temp = temp+ param[i];
-      searchList.add(temp);
-    }
-    return searchList;
   }
 }
