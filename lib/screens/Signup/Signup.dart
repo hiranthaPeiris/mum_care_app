@@ -5,7 +5,7 @@ import 'package:sign_button/sign_button.dart';
 class Signup extends StatefulWidget {
   final Function toggleView;
 
-  Signup ({ this.toggleView });
+  Signup({this.toggleView});
 
   @override
   _SignupState createState() => _SignupState();
@@ -17,17 +17,23 @@ class _SignupState extends State<Signup> {
   bool _termsAgreed = false;
   bool newValue = true;
   String error = "";
+  String name = "";
   String email = "";
+  String confPassword = "";
   String password = "";
   final _formKey = GlobalKey<FormState>();
 
   bool validate() {
-    if (email.isEmpty && password.isEmpty) {
-      print("empty");
+    if (email.isEmpty && password.isEmpty && name.isEmpty && confPassword.isEmpty) {
+      print("fields empty");
       return false;
     }
-    print("not");
-    return true;
+    if(confPassword==password){
+      print("pass match");
+      return true;
+    }
+    print("else");
+    return false;
   }
 
   @override
@@ -59,7 +65,7 @@ class _SignupState extends State<Signup> {
             ),
 
             Container(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+              padding: EdgeInsets.all(10),
               alignment: Alignment.center,
               child: Text(
                 'Enter via Social Networks',
@@ -73,7 +79,7 @@ class _SignupState extends State<Signup> {
             Center(
               child: Container(
                 alignment: Alignment.center,
-                child: Row(
+                child: Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SignInButton.mini(
                       buttonType: ButtonType.google,
@@ -113,9 +119,28 @@ class _SignupState extends State<Signup> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
                       decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(20.0)),
+                        labelText: 'Name',
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          name = val;
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(16),
                         border: OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(20.0)),
                         labelText: 'Email',
@@ -128,18 +153,39 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
                       decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(16),
                         border: OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(20.0)),
                         labelText: 'Password',
                       ),
                       onChanged: (val) {
                         setState(() {
-                          password = val;
+                          password=val;
                         });
                       },
+                      obscureText: true,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(20.0)),
+                        labelText: 'Confirm Password',
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          confPassword = val;
+                        });
+                      },
+                      obscureText: true,
                     ),
                   ),
                 ],
@@ -152,7 +198,7 @@ class _SignupState extends State<Signup> {
                   Row(
                     children: <Widget>[
                       SizedBox(
-                        width: 10,
+                        width: 5,
                       ),
                       Checkbox(
                           value: _termsAgreed,
@@ -163,7 +209,7 @@ class _SignupState extends State<Signup> {
                             });
                           }),
                       Text(
-                        'I agree with private policy',
+                        'I agree with privacy policy',
                         textAlign: TextAlign.right,
                       ),
                     ],
@@ -172,7 +218,7 @@ class _SignupState extends State<Signup> {
               ),
             ), ///////////
             Container(
-              height: 50.0,
+              height: 45.0,
               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: RaisedButton(
                 shape: StadiumBorder(),
@@ -184,17 +230,21 @@ class _SignupState extends State<Signup> {
                     )),
                 onPressed: () {
                   if (validate()) {
-                    dynamic result = _auth.Register(email, password);
+                    dynamic result = _auth.Register(email, password,name);
                     if (result == null) {
                       setState(() {
                         error = 'Please supply a valid email';
                       });
                     }
+                  }else{
+                    setState(() {
+                      error = 'Please check the details again';
+                    });
                   }
                 },
               ),
             ),
-            SizedBox(height: 12.0),
+
             Text(
               error,
               style: TextStyle(color: Colors.red, fontSize: 14.0),
