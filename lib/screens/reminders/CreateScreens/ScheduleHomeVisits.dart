@@ -82,187 +82,196 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
     //debugShowCheckedModeBanner:false;
     return pending
         ? Loading()
-        : Scaffold(
-            appBar: AppBar(
-              title: Text(widget.document['name']),
-            ),
-            body: Padding(
-              padding: EdgeInsets.all(30),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    child: Text(
-                      'Create New Home Visit',
-                      style: TextStyle(
-                        color: Colors.lightBlue,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          TextFormField(
-                            controller: description,
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                              hintText: "Enter the description",
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Please Enter a description";
-                              }
-                              return null;
-                            },
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Date:             ",
-                                  style: TextStyle(fontSize: 18.0),
-                                  textAlign: TextAlign.left,
-                                ),
-                                Text(_date == null
-                                    ? "Select Date"
-                                    : _date.year.toString() +
-                                        "/" +
-                                        _date.month.toString() +
-                                        "/" +
-                                        _date.day.toString()),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                RaisedButton.icon(
-                                  onPressed: () {
-                                    showDatePicker(
-                                            context: context,
-                                            initialDate: new DateTime.now(),
-                                            firstDate: DateTime(1980),
-                                            lastDate: DateTime(2021))
-                                        .then((date) {
-                                      setState(() {
-                                        _date = date;
-                                      });
-                                    });
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  label: Text(
-                                    '',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  icon: Icon(
-                                    Icons.event_available,
-                                    color: Colors.white,
-                                  ),
-                                  textColor: Colors.white,
-                                  splashColor: Colors.red,
-                                  color: Colors.blue,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Time:             ",
-                                  style: TextStyle(fontSize: 18.0),
-                                  textAlign: TextAlign.left,
-                                ),
-                                Text(_time == null
-                                    ? "Select Time"
-                                    : _time.hour.toString() +
-                                        ":" +
-                                        _time.minute.toString()),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                RaisedButton.icon(
-                                  onPressed: () {
-                                    showTimePicker(
-                                      context: context,
-                                      initialTime: new TimeOfDay.now(),
-                                    ).then((time) {
-                                      setState(() {
-                                        _time = time;
-                                      });
-                                    });
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  label: Text(
-                                    '',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  icon: Icon(
-                                    Icons.alarm,
-                                    color: Colors.white,
-                                  ),
-                                  textColor: Colors.white,
-                                  splashColor: Colors.red,
-                                  color: Colors.blue,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    height: 50.0,
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    alignment: Alignment.bottomRight,
-                    child: RaisedButton(
-                      shape: StadiumBorder(),
-                      textColor: Colors.white,
-                      color: Colors.lightBlue,
+        : GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(widget.document['name']),
+              ),
+              body: Padding(
+                padding: EdgeInsets.all(30),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(15),
                       child: Text(
-                        'Create',
+                        'Create New Home Visit',
                         style: TextStyle(
-                          fontSize: 20.0,
+                          color: Colors.lightBlue,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onPressed: () async {
-                        if (_formKey.currentState.validate() && validate()) {
-                          setState(() {
-                            pending = true;
-                          });
-                          String dateSlug = getDateSlug();
-                          //print(' Data : $des , $_date, $_time, $dateslug');
-                          dynamic result = addBook(description.text, dateSlug);
-                          if (result == null) {
-                            setState(() {
-                              pending = false;
-                              print("dynamic failed");
-                            });
-                          }else{
-                            setState(() {
-                              pending = false;
-                              Navigator.pop(context);
-                            });
-                          }
-                        } else {
-                          print("validate failed");
-                        }
-                        //addBook();
-                      },
                     ),
-                  ),
-                ],
+                    Container(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            TextFormField(
+                              controller: description,
+                              decoration: InputDecoration(
+                                labelText: "Description",
+                                hintText: "Enter the description",
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return "Please Enter a description";
+                                }
+                                return null;
+                              },
+                            ),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Date:             ",
+                                    style: TextStyle(fontSize: 18.0),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  Text(_date == null
+                                      ? "Select Date"
+                                      : _date.year.toString() +
+                                          "/" +
+                                          _date.month.toString() +
+                                          "/" +
+                                          _date.day.toString()),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  RaisedButton.icon(
+                                    onPressed: () {
+                                      showDatePicker(
+                                              context: context,
+                                              initialDate: new DateTime.now(),
+                                              firstDate: DateTime(1980),
+                                              lastDate: DateTime(2021))
+                                          .then((date) {
+                                        setState(() {
+                                          _date = date;
+                                        });
+                                      });
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    label: Text(
+                                      '',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    icon: Icon(
+                                      Icons.event_available,
+                                      color: Colors.white,
+                                    ),
+                                    textColor: Colors.white,
+                                    splashColor: Colors.red,
+                                    color: Colors.blue,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Time:             ",
+                                    style: TextStyle(fontSize: 18.0),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  Text(_time == null
+                                      ? "Select Time"
+                                      : _time.hour.toString() +
+                                          ":" +
+                                          _time.minute.toString()),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  RaisedButton.icon(
+                                    onPressed: () {
+                                      showTimePicker(
+                                        context: context,
+                                        initialTime: new TimeOfDay.now(),
+                                      ).then((time) {
+                                        setState(() {
+                                          _time = time;
+                                        });
+                                      });
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    label: Text(
+                                      '',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    icon: Icon(
+                                      Icons.alarm,
+                                      color: Colors.white,
+                                    ),
+                                    textColor: Colors.white,
+                                    splashColor: Colors.red,
+                                    color: Colors.blue,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      height: 50.0,
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      alignment: Alignment.bottomRight,
+                      child: RaisedButton(
+                        shape: StadiumBorder(),
+                        textColor: Colors.white,
+                        color: Colors.lightBlue,
+                        child: Text(
+                          'Create',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate() && validate()) {
+                            setState(() {
+                              pending = true;
+                            });
+                            String dateSlug = getDateSlug();
+                            //print(' Data : $des , $_date, $_time, $dateslug');
+                            dynamic result =
+                                addBook(description.text, dateSlug);
+                            if (result == null) {
+                              setState(() {
+                                pending = false;
+                                print("dynamic failed");
+                              });
+                            } else {
+                              setState(() {
+                                pending = false;
+                                Navigator.pop(context);
+                              });
+                            }
+                          } else {
+                            print("validate failed");
+                          }
+                          //addBook();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
