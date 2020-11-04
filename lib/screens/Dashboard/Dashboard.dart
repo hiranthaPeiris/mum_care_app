@@ -177,25 +177,19 @@ class _DashboardState extends State<Dashboard> {
                                   title: "View Upcoming Home Visits",
                                   heading: "Home Visits",
                                   svgSrc: "assets/icons/home-visits.svg",
-                                  press: () {
-
-                                  },
+                                  press: () {},
                                 ),
                                 Menu_card(
                                   title: "Report private medications",
                                   heading: "Report Medications",
                                   svgSrc: "assets/icons/yoga.svg",
-                                  press: () {
-                                    Navigator.pushNamed(context, '/MedicalReport');
-                                  },
+                                  press: () {},
                                 ),
                                 Menu_card(
                                   title: "Report leaving residential area",
                                   heading: "Report Leaving",
                                   svgSrc: "assets/icons/yoga.svg",
-                                  press: () {
-                                    Navigator.pushNamed(context, '/leavingReport');
-                                  },
+                                  press: () {},
                                 ),
                                 Menu_card(
                                   title: "Home visits",
