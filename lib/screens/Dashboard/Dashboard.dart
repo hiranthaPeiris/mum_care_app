@@ -181,7 +181,9 @@ class _DashboardState extends State<Dashboard> {
                                       title: "View Upcoming Clinics",
                                       heading: "Clinics",
                                       svgSrc: "assets/icons/clinics.svg",
-                                      press: () {},
+                                      press: () {
+                                        Navigator.pushNamed(context, '/viewupcomingclinic');
+                                      },
                                     ),
                                     Menu_card(
                                       title: "View Upcoming Home Visits",
