@@ -1,3 +1,6 @@
+//import 'dart:html';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
 
@@ -15,6 +18,9 @@ import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/screens/Reports/dairlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/monthlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/diary.dart';
+import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
+//import 'package:mun_care_app/screens/upcomingHomevisits/sub.dart';
+import 'package:mun_care_app/screens/login/Login_comp.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -43,14 +49,18 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
-      case '/login':
-        return MaterialPageRoute(builder: (_) => DairlyReport());
+
       case '/diary':
         return MaterialPageRoute(builder: (_) => DairlyDiary());
       case '/dailyRepo':
         return MaterialPageRoute(builder: (_) => DairlyReport());
       case '/monthlyRepo':
         return MaterialPageRoute(builder: (_) => MonthlyReport());
+      // case '/sub':
+      //return MaterialPageRoute(builder: (_) => SubCategoery(String));
+      case '/upcomingHomevisit':
+        return MaterialPageRoute(
+            builder: (_) => UpcomingHomeVisitFirebaseDemo());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/RouteGenerator.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:mun_care_app/models/homeVisitModel.dart';
+
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
           textTheme:
               Theme.of(context).textTheme.apply(displayColor: kTextColor),
         ),
-        initialRoute: '/sechHomeVisits',
+        initialRoute: '/upcomingHomevisit',
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );

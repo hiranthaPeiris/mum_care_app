@@ -8,6 +8,8 @@ import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
+import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
+import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -178,7 +180,8 @@ class _DashboardState extends State<Dashboard> {
                                   heading: "Home Visits",
                                   svgSrc: "assets/icons/home-visits.svg",
                                   press: () {
-
+                                    Navigator.pushNamed(
+                                        context, '/upcomingHomevisit');
                                   },
                                 ),
                                 Menu_card(
@@ -186,7 +189,8 @@ class _DashboardState extends State<Dashboard> {
                                   heading: "Report Medications",
                                   svgSrc: "assets/icons/yoga.svg",
                                   press: () {
-                                    Navigator.pushNamed(context, '/MedicalReport');
+                                    Navigator.pushNamed(
+                                        context, '/MedicalReport');
                                   },
                                 ),
                                 Menu_card(
@@ -194,7 +198,8 @@ class _DashboardState extends State<Dashboard> {
                                   heading: "Report Leaving",
                                   svgSrc: "assets/icons/yoga.svg",
                                   press: () {
-                                    Navigator.pushNamed(context, '/leavingReport');
+                                    Navigator.pushNamed(
+                                        context, '/leavingReport');
                                   },
                                 ),
                                 Menu_card(
@@ -203,7 +208,7 @@ class _DashboardState extends State<Dashboard> {
                                   svgSrc: "assets/icons/home-visits-sch.svg",
                                   press: () {
                                     Navigator.pushNamed(
-                                        context, '/sechHomeVisits');
+                                        context, '/upcomingHomevisit');
                                   },
                                 ),
                                 Menu_card(
