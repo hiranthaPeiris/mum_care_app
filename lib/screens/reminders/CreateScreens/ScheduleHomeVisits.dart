@@ -65,10 +65,11 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
     //     description: description.text,
     //     dateTime: _
     //     mothername: montherval);
+    //widget.document.id
     try {
       var homeVisit = _firestore
           .collection("Bookings")
-          .doc(widget.document.id)
+          .doc('IhiVRXSUfZPKoKpaNZgFtlPosj22')
           .collection('HomeVisits');
 
       await homeVisit.add({'description': desc, 'dateTime': dateTime});

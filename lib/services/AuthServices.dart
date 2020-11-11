@@ -101,12 +101,12 @@ class AuthService {
   }
 
   //register
-  Future Register(String email, String password) async {
+  Future Register(String email, String password, String name) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       await setUserMessageToken();
-      await setUserRole(userCredential.user.uid);
+      await setUserRole(userCredential.user.uid, name);
 
       print(userCredential.user.uid);
       return (_userFromFirebase(userCredential.user));
@@ -117,11 +117,18 @@ class AuthService {
   }
 
 //set user role
-  Future<void> setUserRole(String uid) async {
+  Future<void> setUserRole(String uid, String name) async {
     await _firestore
         .collection('users')
         .doc(uid)
-        .set({'role': 'user'})
+        .set({
+          'name': name,
+          'role': 'user',
+          'competencyFam': false,
+          'PregnanctFam': false,
+          'midwifeID': 'null',
+          'nameSearch': getSearchParam(name)
+        })
         .then((value) => print("user role added"))
         .catchError((err) => print(err));
   }
@@ -151,5 +158,15 @@ class AuthService {
         return null;
       }
     });
+  }
+
+  List<String> getSearchParam(String param) {
+    List<String> searchList = List();
+    String temp = "";
+    for (int i = 0; i < param.length; i++) {
+      temp = temp + param[i];
+      searchList.add(temp);
+    }
+    return searchList;
   }
 }
