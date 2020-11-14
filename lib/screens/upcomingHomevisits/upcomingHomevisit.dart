@@ -1,16 +1,8 @@
-//import 'dart:html';
-
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-//import 'package:device_preview/device_preview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mun_care_app/models/homeVisitModel.dart';
 import 'package:mun_care_app/models/UserM.dart';
-import 'package:flutter/foundation.dart';
-//import 'package:mun_care_app/models/user.dart';
-//import 'package:mun_care_app/services/AuthServices.dart';
 
 var uuid = Uuid();
 
@@ -405,10 +397,6 @@ class _UpcomingHomeVisitFirebaseDemoState
                             onPressed: () {
                               Text('A HomeVisit Successfully Created');
                               Navigator.pushNamed(context, '/notification');
-                              return gt;
-                              //Navigator.push(context, route)
-
-                              //addBook();
                             },
                           ),
                         ),
