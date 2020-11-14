@@ -73,9 +73,17 @@ class _UpcomingHomeVisitFirebaseDemoState
                       ),
                       Spacer(),
                       CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.add),
-                      )
+                          backgroundColor: Colors.white,
+                          child: IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              Text('A HomeVisit Successfully Created');
+                              Navigator.pushNamed(context, '/sechHomeVisits');
+                            },
+                          )
+                          // Icon(Icons.add),
+
+                          )
                     ],
                   ),
                 ),
@@ -373,11 +381,7 @@ class _UpcomingHomeVisitFirebaseDemoState
                                 fontSize: 20.0,
                               ),
                             ),
-                            onPressed: () {
-                              Text('A HomeVisit Successfully Created');
-                              // Navigator.pushNamed(context, '/upcomingHomevisit');
-                              //addBook();
-                            },
+                            onPressed: () {},
                           ),
                         ),
                         Container(
