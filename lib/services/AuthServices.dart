@@ -9,6 +9,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  var userInstance = new UserM.get();
 
   UserM _userFromFirebase(User user) {
     return user != null ? UserM.setUID(uid: user.uid) : null;
@@ -39,9 +40,10 @@ class AuthService {
     try {
       UserCredential userCredential =
           await _auth.signInWithEmailAndPassword(email: email, password: pass);
-      var userRole = await getUserRole(userCredential.user.uid);
+      var customData = await getUserCustomData(userCredential.user.uid);
 
-      new UserM(user: userCredential, data: userRole);
+      new UserM(user: userCredential, data: customData);
+
       return _userFromFirebase(userCredential.user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -125,8 +127,8 @@ class AuthService {
           'role': 'user',
           'competencyFam': false,
           'PregnanctFam': false,
-          'midwifeID':'null',
-          'nameSearch':getSearchParam(name)
+          'midwifeID': 'null',
+          'nameSearch': getSearchParam(name)
         })
         .then((value) => print("user role added"))
         .catchError((err) => print(err));
@@ -143,8 +145,8 @@ class AuthService {
   }
 
   //get user role
-  Future<Map<String, dynamic>> getUserRole(String uid) async {
-    await _firestore
+  Future<Map<String, dynamic>> getUserCustomData(String uid) async {
+    return await _firestore
         .collection('users')
         .doc(uid)
         .get()
@@ -158,13 +160,30 @@ class AuthService {
       }
     });
   }
-  List<String> getSearchParam(String param){
-    List <String> searchList = List();
+
+  //search data creator
+  List<String> getSearchParam(String param) {
+    List<String> searchList = List();
     String temp = "";
-    for(int i=0;i<param.length;i++){
-      temp = temp+ param[i];
+    for (int i = 0; i < param.length; i++) {
+      temp = temp + param[i];
       searchList.add(temp);
     }
     return searchList;
   }
+
+  Future<List<String>> getMyAssigns(String uid) async {
+    List<String> mumIds = List();
+    await _firestore
+        .collection('users')
+        .where('midwifeID', isEqualTo: uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        print(element.id);
+        mumIds.add(element.id);
+      });
+    }).catchError((onError) => print(onError));
+  }
+
 }

@@ -13,7 +13,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
   String searchPara = "";
   CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
-  UserM _userM = UserM.get();
+  final UserM _userM = UserM.get();
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +201,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
             context,
             new MaterialPageRoute(
                 builder: (context) => ScheduleHomeVisits(
-                      document: document,
+                      document: document,midwifeId: _userM.uid,
                     )));
       },
     );

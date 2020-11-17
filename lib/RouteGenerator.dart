@@ -8,11 +8,11 @@ import 'package:mun_care_app/screens/MedicationReport/MedicationReport.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
+import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
-import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleClinic.dart';
-import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
+import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -39,6 +39,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => LeavingReport());
       case '/MedicalReport':
         return MaterialPageRoute(builder: (_) => MedicationReport());
+      case '/UpcomingClinics':
+        return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/error':

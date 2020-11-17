@@ -17,12 +17,20 @@ class ClinicService {
     QuerySnapshot query = await getMotherList(midUID);
     query.docs.forEach((doc) async {
       try {
-        var clinic = _firestore
-            .collection("Bookings")
-            .doc(doc.id)
-            .collection('Clinics');
-        await clinic.add({'description': desc, 'dateTime': dateTime});
+        var clinic =
+            _firestore.collection("Bookings").doc(doc.id).collection('Clinics');
 
+        var midwifeVisit = _firestore
+            .collection('Bookings')
+            .doc(midUID)
+            .collection('Clinics');
+
+        await clinic.add({
+          'description': desc,
+          'dateTime': dateTime,
+          'status': "pending",
+          'confirmation': 'pending'
+        });
       } catch (err) {
         print(err);
       }
