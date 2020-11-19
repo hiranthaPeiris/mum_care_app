@@ -1,5 +1,6 @@
 import 'dart:math';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ComRegDB {
@@ -61,58 +62,59 @@ class ComRegDB {
 
   DocumentReference documentReference;
 
-  ComRegDB(
-      {this.husbandName,
-      this.wifeName,
-      this.address,
-      this.nic,
-      this.mohDropDownValue,
-      this.phmDropDownValue,
-      this.dateDOB,
-      this.contactNum,
-      this.email,
-      this.job,
-      this.eduDropDownValue,
-      this.marrageDate,
-      this.md1,
-      this.md2,
-      this.md3,
-      this.md4,
-      this.md5,
-      this.md6,
-      this.md7,
-      this.md8,
-      this.md9,
-      this.md10,
-      this.md11,
-      this.md12,
-      this.md13,
-      this.md14,
-      this.md15,
-      this.wd1,
-      this.wd2,
-      this.wd3,
-      this.wd4,
-      this.wd5,
-      this.wd6,
-      this.wd7,
-      this.wd8,
-      this.wd9,
-      this.wd10,
-      this.wd11,
-      this.wd12,
-      this.wd13,
-      this.wd14,
-      this.wd15,
-      this.rubellaDropDownValue,
-      this.formicDropDownValue,
-      this.conDropDownValue,
-      this.womenWeight,
-      this.menWeight,
-      this.womenHeight,
-      this.menHeight,
-      this.womenBloodDropDownValue,
-      this.menBloodDropDownValue});
+  ComRegDB({
+    this.husbandName,
+    this.wifeName,
+    this.address,
+    this.nic,
+    this.mohDropDownValue,
+    this.phmDropDownValue,
+    this.dateDOB,
+    this.contactNum,
+    this.email,
+    this.job,
+    this.eduDropDownValue,
+    this.marrageDate,
+    this.md1,
+    this.md2,
+    this.md3,
+    this.md4,
+    this.md5,
+    this.md6,
+    this.md7,
+    this.md8,
+    this.md9,
+    this.md10,
+    this.md11,
+    this.md12,
+    this.md13,
+    this.md14,
+    this.md15,
+    this.wd1,
+    this.wd2,
+    this.wd3,
+    this.wd4,
+    this.wd5,
+    this.wd6,
+    this.wd7,
+    this.wd8,
+    this.wd9,
+    this.wd10,
+    this.wd11,
+    this.wd12,
+    this.wd13,
+    this.wd14,
+    this.wd15,
+    this.rubellaDropDownValue,
+    this.formicDropDownValue,
+    this.conDropDownValue,
+    this.womenWeight,
+    this.menWeight,
+    this.womenHeight,
+    this.menHeight,
+    this.womenBloodDropDownValue,
+    this.menBloodDropDownValue,
+  });
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
     mohDropDownValue = map["_mohDropDownValue"];
@@ -226,7 +228,7 @@ class ComRegDB {
       '_womenHeight': womenHeight,
       '_menHeight': menHeight,
       '_womenBloodDropDownValue': womenBloodDropDownValue,
-      '_menBloodDropDownValue': menBloodDropDownValue
+      '_menBloodDropDownValue': menBloodDropDownValue,
     };
   }
 }
@@ -300,12 +302,12 @@ class PreRegDB {
       '_fcName': fcName,
       '_hcName': hcName,
       '_coName': coName,
-      '_womb':womb,
-      '_result':result,
-      '_details':details,
-      '_kgWeight':kgWeight,
-      '_gWeight':gWeight,
-      '_sex':sex,
+      '_womb': womb,
+      '_result': result,
+      '_details': details,
+      '_kgWeight': kgWeight,
+      '_gWeight': gWeight,
+      '_sex': sex,
       '_pvb': pvb,
       '_bloodPresure': bloodPresure,
       '_diabetic': diabetic,
@@ -326,37 +328,112 @@ class WombPreRegDB {
 
   DocumentReference documentReference;
 
-  WombPreRegDB(
-      {
-      this.womb,
-      this.result,
-      this.details,
-      this.kgWeight,
-      this.gWeight,
-      this.sex,
-      });
+  WombPreRegDB({
+    this.womb,
+    this.result,
+    this.details,
+    this.kgWeight,
+    this.gWeight,
+    this.sex,
+  });
 
   WombPreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
-
     womb = map["_womb"];
     result = map["_result"];
     details = map["_details"];
     kgWeight = map["_kgWeight"];
     gWeight = map["_gWeight"];
     sex = map["_sex"];
-
   }
   WombPreRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
 
   toJson() {
     return {
-      '_womb':womb,
-      '_result':result,
-      '_details':details,
-      '_kgWeight':kgWeight,
-      '_gWeight':gWeight,
-      '_sex':sex,
+      '_womb': womb,
+      '_result': result,
+      '_details': details,
+      '_kgWeight': kgWeight,
+      '_gWeight': gWeight,
+      '_sex': sex,
     };
   }
 }
+
+class ComSetState {
+  bool allreadyComReg;
+
+  DocumentReference documentReference;
+
+  ComSetState({
+    this.allreadyComReg,
+  });
+
+  ComSetState.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    allreadyComReg = map["_allreadyComReg"];
+  }
+  ComSetState.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
+
+  toJson() {
+    return {
+      '_allreadyComReg': allreadyComReg,
+    };
+  }
+}
+
+Widget getG1(BuildContext context) {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  return StreamBuilder(
+    stream: FirebaseFirestore.instance
+        .collection("PreDatabase")
+        .doc(_auth.currentUser.uid)
+        .collection("G1")
+        .doc("G1")
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        var value = snapshot.data;
+        return ListView(
+          children: [
+            Text(value["_womb"].toString()),
+            Text(value["_details"].toString()),
+            Text(value["_kgWeight"].toString()),
+            Text(value["_gWeight"].toString()),
+            Text(value["_result"].toString()),
+            Text(value["_sex"].toString()),
+          ],
+        );
+      }
+    },
+  );
+}
+
+Widget getG2(BuildContext context) {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  return StreamBuilder(
+    stream: FirebaseFirestore.instance
+        .collection("PreDatabase")
+        .doc(_auth.currentUser.uid)
+        .collection("G2")
+        .doc("G2")
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        var value = snapshot.data;
+        return ListView(
+          children: [
+            Text(value["_womb"].toString()),
+            Text(value["_details"].toString()),
+            Text(value["_kgWeight"].toString()),
+            Text(value["_gWeight"].toString()),
+            Text(value["_result"].toString()),
+            Text(value["_sex"].toString()),
+          ],
+        );
+      }
+    },
+  );
+}
+
+

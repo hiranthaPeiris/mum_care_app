@@ -99,6 +99,7 @@ class _ComFamRegState extends State<ComFamReg> {
   DateTime _dateDOB;
   DateTime _dateMarrage;
   bool _set = false;
+  bool allreadyComReg;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +112,7 @@ class _ComFamRegState extends State<ComFamReg> {
         decoration: InputDecoration(
           //hintText: hintText,
           labelText: hintText,
-          errorText: _validater?'This can\'t be empty':null,
+          errorText: _validater ? 'This can\'t be empty' : null,
         ),
         // ignore: missing_return
         validator: (controller) {
@@ -136,10 +137,16 @@ class _ComFamRegState extends State<ComFamReg> {
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
         items: <String>[
           'Select Area',
-          'One',
-          'Two',
-          'Happy New Year mmmmmm',
-          'Four'
+          'Ambalangoda',
+          'Hikkaduwa',
+          'Rathgama',
+          'Habaraduwa',
+          'Mirissa',
+          'Weligama',
+          'Dodanduwa',
+          'Balapitiya',
+          'Ahangama',
+          'Thalgaswala'
         ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -168,7 +175,7 @@ class _ComFamRegState extends State<ComFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>['Select Area', 'Five', 'Six', 'Seven', 'Eight']
+        items: <String>['Select Area', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10']
             .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -376,57 +383,59 @@ class _ComFamRegState extends State<ComFamReg> {
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       ComRegDB comRegDB = ComRegDB(
-          husbandName: myController1.text,
-          wifeName: myController2.text,
-          address: myController3.text,
-          nic: myController4.text,
-          mohDropDownValue: mohDropdownValue,
-          phmDropDownValue: phmDropdownValue,
-          dateDOB: _dateDOB.toString(),
-          contactNum: myController5.text,
-          email: myController6.text,
-          job: myController7.text,
-          eduDropDownValue: eduDropdownValue,
-          marrageDate: _dateMarrage.toString(),
-          md1: d1_Yes,
-          md2: d2_Yes,
-          md3: d3_Yes,
-          md4: d4_Yes,
-          md5: d5_Yes,
-          md6: d6_Yes,
-          md7: d7_Yes,
-          md8: d8_Yes,
-          md9: d9_Yes,
-          md10: d10_Yes,
-          md11: d11_Yes,
-          md12: d12_Yes,
-          md13: d13_Yes,
-          md14: d14_Yes,
-          md15: d15_Yes,
-          wd1: d1_No,
-          wd2: d2_No,
-          wd3: d3_No,
-          wd4: d4_No,
-          wd5: d5_No,
-          wd6: d6_No,
-          wd7: d7_No,
-          wd8: d8_No,
-          wd9: d9_No,
-          wd10: d10_No,
-          wd11: d11_No,
-          wd12: d12_No,
-          wd13: d13_No,
-          wd14: d14_No,
-          wd15: d15_No,
-          rubellaDropDownValue: rubellaDropdownValue,
-          formicDropDownValue: formicDropdownValue,
-          womenWeight: myController8.text,
-          menWeight: myController9.text,
-          womenHeight: myController10.text,
-          menHeight: myController11.text,
-          womenBloodDropDownValue: womenBloodDropdownValue,
-          menBloodDropDownValue: menBloodDropdownValue
+        husbandName: myController1.text,
+        wifeName: myController2.text,
+        address: myController3.text,
+        nic: myController4.text,
+        mohDropDownValue: mohDropdownValue,
+        phmDropDownValue: phmDropdownValue,
+        dateDOB: _dateDOB.toString(),
+        contactNum: myController5.text,
+        email: myController6.text,
+        job: myController7.text,
+        eduDropDownValue: eduDropdownValue,
+        marrageDate: _dateMarrage.toString(),
+        md1: d1_Yes,
+        md2: d2_Yes,
+        md3: d3_Yes,
+        md4: d4_Yes,
+        md5: d5_Yes,
+        md6: d6_Yes,
+        md7: d7_Yes,
+        md8: d8_Yes,
+        md9: d9_Yes,
+        md10: d10_Yes,
+        md11: d11_Yes,
+        md12: d12_Yes,
+        md13: d13_Yes,
+        md14: d14_Yes,
+        md15: d15_Yes,
+        wd1: d1_No,
+        wd2: d2_No,
+        wd3: d3_No,
+        wd4: d4_No,
+        wd5: d5_No,
+        wd6: d6_No,
+        wd7: d7_No,
+        wd8: d8_No,
+        wd9: d9_No,
+        wd10: d10_No,
+        wd11: d11_No,
+        wd12: d12_No,
+        wd13: d13_No,
+        wd14: d14_No,
+        wd15: d15_No,
+        rubellaDropDownValue: rubellaDropdownValue,
+        formicDropDownValue: formicDropdownValue,
+        conDropDownValue: conDropdownValue,
+        womenWeight: myController8.text,
+        menWeight: myController9.text,
+        womenHeight: myController10.text,
+        menHeight: myController11.text,
+        womenBloodDropDownValue: womenBloodDropdownValue,
+        menBloodDropDownValue: menBloodDropdownValue,
       );
+
       try {
         FirebaseFirestore.instance
             .runTransaction((Transaction transaction) async {
@@ -434,6 +443,24 @@ class _ComFamRegState extends State<ComFamReg> {
               .collection("ComDatabase")
               .doc(_auth.currentUser.uid)
               .set(comRegDB.toJson());
+
+
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+
+    comRegComfirm() async {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      ComSetState comSetState = ComSetState(allreadyComReg: allreadyComReg);
+      try {
+        FirebaseFirestore.instance
+            .runTransaction((Transaction transaction) async {
+          await FirebaseFirestore.instance
+              .collection("ComDatabase")
+              .doc(_auth.currentUser.uid).collection("State").doc(_auth.currentUser.uid)
+              .set(comSetState.toJson());
         });
       } catch (e) {
         print(e.toString());
@@ -478,7 +505,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     padding: EdgeInsets.fromLTRB(
                         MediaQuery.of(context).size.width * 0.05,
                         MediaQuery.of(context).size.height * 0.016,
-                        MediaQuery.of(context).size.width * 0.4,
+                        MediaQuery.of(context).size.width * 0.3,
                         MediaQuery.of(context).size.height * 0.01),
                     child: Text(
                       "Competency Family",
@@ -1789,8 +1816,25 @@ class _ComFamRegState extends State<ComFamReg> {
                             onPressed: () {
                               setState(() {
                                 complete = false;
-                                stepOneReg();
+                                allreadyComReg = true;
                               });
+                                stepOneReg();
+                                comRegComfirm();
+                                Navigator.pushNamed(context, '/dashboard');
+                                myController1.clear();
+                                myController2.clear();
+                                myController3.clear();
+                                myController4.clear();
+                                myController5.clear();
+                                myController6.clear();
+                                myController7.clear();
+                                myController8.clear();
+                                myController9.clear();
+                                myController10.clear();
+                                myController11.clear();
+
+                                
+
                             }),
                         FlatButton(
                             child: Text("Cancel"),

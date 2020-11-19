@@ -155,7 +155,7 @@ class _PreFamRegState extends State<PreFamReg> {
               .collection("PreDatabase")
               .document(_auth.currentUser.uid)
               .collection(wombDropdownValue)
-              .doc(_auth.currentUser.uid)
+              .doc(wombDropdownValue)
               .set(wombPreRegDB.toJson());
         });
       } catch (e) {
@@ -201,7 +201,7 @@ class _PreFamRegState extends State<PreFamReg> {
                     padding: EdgeInsets.fromLTRB(
                         MediaQuery.of(context).size.width * 0.05,
                         MediaQuery.of(context).size.height * 0.016,
-                        MediaQuery.of(context).size.width * 0.4,
+                        MediaQuery.of(context).size.width * 0.3,
                         MediaQuery.of(context).size.height * 0.01),
                     child: Text(
                       "Pregnency Family",
@@ -648,6 +648,7 @@ class _PreFamRegState extends State<PreFamReg> {
           ? goto(currentStep + 1)
           : setState(() {
               complete = true;
+              
             });
     }
 
@@ -679,6 +680,18 @@ class _PreFamRegState extends State<PreFamReg> {
                               setState(() {
                                 complete = false;
                                 stepOneReg();
+                                Navigator.pushNamed(context, '/dashboard');
+                                myController12.clear();
+                                myController13.clear();
+                                myController14.clear();
+                                myController15.clear();
+                                myController16.clear();
+                                myController17.clear();
+                                myController18.clear();
+                                myController19.clear();
+                                myController20.clear();
+                                myController21.clear();
+                                myController22.clear();
                               });
                             }),
                         FlatButton(

@@ -7,8 +7,6 @@ import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
-import 'package:mun_care_app/screens/registration/RenderData.dart';
-
 
 class Dashboard extends StatefulWidget {
   @override
@@ -187,7 +185,7 @@ class _DashboardState extends State<Dashboard> {
                               heading: "Home Visits",
                               svgSrc: "assets/icons/Meditation.svg",
                               press: () {
-                                 Navigator.pushNamed(context, '/renderData');
+                                Navigator.pushNamed(context, '/renderData');
                               },
                             ),
                             Menu_card(
@@ -195,7 +193,7 @@ class _DashboardState extends State<Dashboard> {
                               heading: "Home Visits",
                               svgSrc: "assets/icons/yoga.svg",
                               press: () {
-                                
+                                Navigator.pushNamed(context, '/motherAssign');
                               },
                             )
                           ]),
@@ -218,8 +216,7 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-class RenderData {
-}
+class RenderData {}
 /*
 
 * */
