@@ -81,10 +81,20 @@ class _ComFamRegState extends State<ComFamReg> {
   bool d9_No = false;
   bool d10_Yes = false;
   bool d10_No = false;
-  String rubellaDropdownValue = null;
-  String formicDropdownValue = null;
-  String conDropdownValue = null;
-  String bloodDropdownValue = null;
+  bool d11_Yes = false;
+  bool d11_No = false;
+  bool d12_Yes = false;
+  bool d12_No = false;
+  bool d13_Yes = false;
+  bool d13_No = false;
+  bool d14_Yes = false;
+  bool d14_No = false;
+  bool d15_Yes = false;
+  bool d15_No = false;
+  
+  String rubellaDropdownValue = 'Yes';
+  String formicDropdownValue =  'Yes';
+  String conDropdownValue =  'Yes';
   DateTime _dateDOB;
   DateTime _dateMarrage;
   bool _set = false;
@@ -357,10 +367,66 @@ class _ComFamRegState extends State<ComFamReg> {
     }
     stepOneReg() async{
       FirebaseAuth _auth=FirebaseAuth.instance;
-      ComStepOne comStepOne= ComStepOne(husbandName: myController1.text,wifeName: myController2.text,address: myController3.text,nic:myController4.text, mohDropDownValue: mohDropdownValue,phmDropDownValue: phmDropdownValue);
+      ComRegDB comRegDB= ComRegDB(
+        husbandName: myController1.text,
+        wifeName: myController2.text,
+        address: myController3.text,
+        nic:myController4.text, 
+        mohDropDownValue: mohDropdownValue,
+        phmDropDownValue: phmDropdownValue,
+
+        dateDOB: _dateDOB.toString(),
+        contactNum: myController5.text,
+        email: myController6.text,
+        job:myController7.text, 
+        eduDropDownValue: eduDropdownValue,
+        marrageDate: _dateMarrage.toString(),
+
+        md1: d1_Yes,
+        md2: d2_Yes,
+        md3: d3_Yes,
+        md4: d4_Yes,
+        md5: d5_Yes,
+        md6: d6_Yes,
+        md7: d7_Yes,
+        md8: d8_Yes,
+        md9: d9_Yes,
+        md10: d10_Yes,
+        md11: d11_Yes,
+        md12: d12_Yes,
+        md13: d13_Yes,
+        md14: d14_Yes,
+        md15: d15_Yes,
+
+        wd1: d1_No,
+        wd2: d2_No,
+        wd3: d3_No,
+        wd4: d4_No,
+        wd5: d5_No,
+        wd6: d6_No,
+        wd7: d7_No,
+        wd8: d8_No,
+        wd9: d9_No,
+        wd10: d10_No,
+        wd11: d11_No,
+        wd12: d12_No,
+        wd13: d13_No,
+        wd14: d14_No,
+        wd15: d15_No,
+
+        rubellaDropDownValue: rubellaDropdownValue,
+        formicDropDownValue: formicDropdownValue,
+        womenWeight: myController8.text,
+        menWeight:myController9.text,
+        womenHeight:myController10.text,
+        menHeight:myController11.text,
+        womenBloodDropDownValue: womenBloodDropdownValue,
+        menBloodDropDownValue: menBloodDropdownValue
+
+        );
       try{
-        Firestore.instance.runTransaction((Transaction transaction)async{
-            await Firestore.instance.collection("com_step1").document(_auth.currentUser.uid).setData(comStepOne.toJson());
+        FirebaseFirestore.instance.runTransaction((Transaction transaction)async{
+            await FirebaseFirestore.instance.collection("ComDatabase").doc(_auth.currentUser.uid).set(comRegDB.toJson());
         }
         );
       }
@@ -370,66 +436,7 @@ class _ComFamRegState extends State<ComFamReg> {
 
     }
 
-    stepTwoReg() async{
-      FirebaseAuth _auth=FirebaseAuth.instance;
-      ComStepTwo comStepTwo= ComStepTwo(dateDOB: _dateDOB.toString(),contactNum: myController5.text,email: myController6.text,job:myController7.text, eduDropDownValue: eduDropdownValue,marrageDate: _dateMarrage.toString());
-      try{
-        Firestore.instance.runTransaction((Transaction transaction)async{
-            await Firestore.instance.collection("com_step2").document(_auth.currentUser.uid).setData(comStepTwo.toJson());
-        }
-        );
-      }
-      catch(e){
-        print(e.toString());
-      }
-
-    }
-
-    stepThreeRegMen() async{
-      FirebaseAuth _auth=FirebaseAuth.instance;
-      ComStepThreeMen comStepThreeMen= ComStepThreeMen(d1: d1_Yes,d2: d2_Yes,d3: d3_Yes,d4: d4_Yes,d5: d5_Yes,d6: d6_Yes,d7: d7_Yes,d8: d8_Yes,d9: d9_Yes,d10: d10_Yes);
-      try{
-        Firestore.instance.runTransaction((Transaction transaction)async{
-            await Firestore.instance.collection("com_step3").document(_auth.currentUser.uid).collection("men_d").document(_auth.currentUser.uid).setData(comStepThreeMen.toJson());
-        }
-        );
-      }
-      catch(e){
-        print(e.toString());
-      }
-
-    }
-
-    stepThreeRegWomen() async{
-      FirebaseAuth _auth=FirebaseAuth.instance;
-      ComStepThreeWomen comStepThreeWomen= ComStepThreeWomen(d1: d1_No,d2: d2_No,d3: d3_No,d4: d4_No,d5: d5_No,d6: d6_No,d7: d7_No,d8: d8_No,d9: d9_No,d10: d10_No);
-      try{
-        Firestore.instance.runTransaction((Transaction transaction)async{
-            await Firestore.instance.collection("com_step3").document(_auth.currentUser.uid).collection("women_d").document(_auth.currentUser.uid).setData(comStepThreeWomen.toJson());
-        }
-        );
-      }
-      catch(e){
-        print(e.toString());
-      }
-
-    }
-
-    stepFourReg() async{
-      FirebaseAuth _auth=FirebaseAuth.instance;
-      ComStepFour comStepFour= ComStepFour(rubellaDropDownValue: rubellaDropdownValue,formicDropDownValue: formicDropdownValue,womenWeight: myController8.text,menWeight:myController9.text,womenHeight:myController10.text,menHeight:myController11.text,womenBloodDropDownValue: womenBloodDropdownValue,menBloodDropDownValue: menBloodDropdownValue);
-      try{
-        Firestore.instance.runTransaction((Transaction transaction)async{
-            await Firestore.instance.collection("com_step4").document(_auth.currentUser.uid).setData(comStepFour.toJson());
-        }
-        );
-      }
-      catch(e){
-        print(e.toString());
-      }
-
-    }
-
+ 
 
     List<Step> steps = [
       Step(
@@ -916,7 +923,7 @@ class _ComFamRegState extends State<ComFamReg> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("01.Diabetes")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -941,7 +948,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("02.Hypertension")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -966,7 +973,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("03.Cardiac Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -991,7 +998,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("04.Renal Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1016,7 +1023,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("05.Hepatic Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1041,7 +1048,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("06.Psychiatric Illnesses")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1066,7 +1073,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("07.Epilepsy")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1091,7 +1098,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("08.Malignancies")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1116,7 +1123,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("09.Haematological Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1141,7 +1148,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("10.Tuberculosis")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1159,6 +1166,131 @@ class _ComFamRegState extends State<ComFamReg> {
                                 onChanged: (bool value) {
                                   setState(() {
                                     d10_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("11.Thyroid Diseases")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d11_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d11_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d11_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d11_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("12.Bronchial Asthma")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d12_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d12_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d12_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d12_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("13.Previous DVT")),
+                        Expanded( 
+                            flex: 20,
+                            child: Checkbox(
+                                value: d13_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d13_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d13_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d13_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("14.Surgeries other than LSCS")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d14_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d14_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d14_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d14_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("15.HIV")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d15_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d15_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d15_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d15_No = value;
                                     print(value);
                                   });
                                 })),
@@ -1657,10 +1789,6 @@ class _ComFamRegState extends State<ComFamReg> {
                               setState(() {
                                 complete = false;
                                 stepOneReg();
-                                stepTwoReg();
-                                stepThreeRegMen();
-                                stepThreeRegWomen();
-                                stepFourReg();
                               });
                             }),
                         FlatButton(
