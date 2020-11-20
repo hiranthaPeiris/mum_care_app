@@ -9,10 +9,16 @@ import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
+import 'package:mun_care_app/screens/leavingForm/leaveForm.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
-import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleClinic.dart';
-import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
+import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
+import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
+import 'package:mun_care_app/screens/viewHomeVisit/viewUpcomingHomeVisit.dart';
+import 'package:mun_care_app/screens/reports/dairlyDiry.dart';
+import 'package:mun_care_app/screens/reports/dairlyReport.dart';
+import 'package:mun_care_app/screens/reports/monthlyReport.dart';
+import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -41,6 +47,19 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
+      case '/dairlyDiary':
+        return MaterialPageRoute(builder: (_) => DairlyDiary());
+      case '/dairlyReport':
+        return MaterialPageRoute(builder: (_) => DairlyReport());
+      case '/dairlyReportView':
+        return MaterialPageRoute(builder: (_) => DairlyReportView());
+      case '/monthlyReport':
+        return MaterialPageRoute(builder: (_) => MonthlyReport());
+      case '/leaveForm':
+        return MaterialPageRoute(builder: (_) => LeaveForm());
+      case '/upcomingHomeVisit':
+        return MaterialPageRoute(
+            builder: (_) => UpcomingHomeVisitFirebaseDemo());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));
