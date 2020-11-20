@@ -1617,34 +1617,35 @@ class _ComFamRegState extends State<ComFamReg> {
                                   ),
                                 )),
                             Expanded(
-                                flex: 50,
-                                child: Container(
-                                  alignment: Alignment.centerRight,
-                                  child: RaisedButton(
-                                    color: Color.fromARGB(500, 21, 166, 211),
-                                    textColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        side: BorderSide(color: Colors.white)),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          new BoxShadow(
-                                              color: Colors.black,
-                                              blurRadius: 30.0),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        "Continue",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                              flex: 50,
+                              child: Container(
+                                alignment: Alignment.centerRight,
+                                child: RaisedButton(
+                                  color: Color.fromARGB(500, 21, 166, 211),
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: BorderSide(color: Colors.white)),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        new BoxShadow(
+                                            color: Colors.black,
+                                            blurRadius: 30.0),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      "Continue",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    onPressed: onStepContinue,
                                   ),
-                                ))
+                                  onPressed: onStepContinue,
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),

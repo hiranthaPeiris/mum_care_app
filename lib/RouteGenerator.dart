@@ -1,3 +1,5 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
 
@@ -11,8 +13,13 @@ import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
+import 'package:mun_care_app/screens/Reports/dairlyRepo.dart';
+import 'package:mun_care_app/screens/Reports/monthlyRepo.dart';
+import 'package:mun_care_app/screens/Reports/diary.dart';
+import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
+import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -41,8 +48,21 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
+      case '/UpcomingHome':
+        return MaterialPageRoute(builder: (_) => UpcomingHomeVisitFirebaseDemo());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
+      case '/diary':
+        return MaterialPageRoute(builder: (_) => DairlyDiary());
+      case '/dailyRepo':
+        return MaterialPageRoute(builder: (_) => DairlyReport());
+      case '/monthlyRepo':
+        return MaterialPageRoute(builder: (_) => MonthlyReport());
+      // case '/sub':
+      //return MaterialPageRoute(builder: (_) => SubCategoery(String));
+      case '/upcomingHomevisit':
+        return MaterialPageRoute(
+            builder: (_) => UpcomingHomeVisitFirebaseDemo());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));

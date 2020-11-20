@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
+import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/models/UserM.dart';
 
 class SchHomeVisitSearch extends StatefulWidget {
@@ -18,7 +18,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
@@ -68,8 +68,8 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 15),
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 5),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(29.5),
@@ -77,7 +77,8 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "Search",
-                                icon: SvgPicture.asset("assets/icons/search.svg"),
+                                icon:
+                                    SvgPicture.asset("assets/icons/search.svg"),
                                 border: InputBorder.none,
                               ),
                               onChanged: (val) {

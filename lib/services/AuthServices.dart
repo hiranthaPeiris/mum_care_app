@@ -67,6 +67,7 @@ class AuthService {
         // Get the token for this device
 
         String uid = user.uid;
+
         new UserM.setUID(uid: user.uid);
         //getting firebase message token
         String fcmToken = await _firebaseMessaging.getToken();
