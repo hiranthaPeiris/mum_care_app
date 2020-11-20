@@ -107,6 +107,10 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               String itemTitle = snapshot.data.documents[index]["description"];
+              String itemStatus = snapshot.data.documents[index]["status"];
+              String itemDate = snapshot.data.documents[index]["dateTime"].toString();
+              String numOfuser = snapshot.data.documents[index]["count"].toString();
+
               return Column(
                 children: <Widget>[
                   SingleChildScrollView(
@@ -115,7 +119,17 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                         InkWell(
                           onTap: ()
                           {
-                            openBottomSheet(itemTitle);
+                            /*if(user.userCustomData['role'] == "midwife")
+                                    {
+                                      openBottomSheet(itemTitle);
+                                    }
+                                    else if(user.userCustomData['role'] == "user")
+                                    {
+                                      openBottomSheet1(itemTitle);
+                                    }*/
+
+                            // forUser(itemTitle,itemStatus,itemDate);
+                            forMidwife(itemTitle,itemStatus,itemDate,numOfuser);
                           },
                           child: Stack(
                             alignment: Alignment.center,
@@ -230,14 +244,10 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
     ),
   ],
     ),
-
-
-
-
     );
   }
 
-  void openBottomSheet(String itemTitle) {
+  void forUser(String itemTitle,String itemStatus, String itemDate) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -269,7 +279,7 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                                 Row(
                                   children: <Widget>[
                                     Text(
-                                      "Dear,",
+                                      "Dear your clinic,",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -286,7 +296,22 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                                     ),
                                   ],
                                 ),
-                                Text(itemTitle),
+                                SizedBox(height: 30.0,),
+
+                                Text(itemTitle, style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0)),
+                                SizedBox(height: 10.0,),
+                                Text(itemStatus, style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
+                                SizedBox(height: 10.0,),
+                                Text(itemDate, style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
                               ],
                             ),
                           ),
@@ -296,14 +321,10 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
 
                     SizedBox(height: 20.0,),
                     SizedBox(height: 10.0,),
-                    Text("If you can participate this clinic response this. ", style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0
-                    ),),
+
                     SizedBox(height: 10.0,),
                     Text("Thank you,", style: TextStyle(
                         color: Colors.black,
-                        fontWeight: FontWeight.bold,
                         fontSize: 18.0
                     ),),
                     SizedBox(height: 5.0,),
@@ -311,27 +332,165 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                     SizedBox(height: 15.0,),
 
                     Container(
-                      decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(8.0)
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child:
-                        TextField(
-                          decoration: InputDecoration(
-                            // border: InputBorder.none,
-                            // hintText: 'Reply'
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.send),
-                              //onPressed: (),
-                            ),
+                      child: Row(
+                        children: <Widget>[
+                          FlatButton(
+                            child: Text("Accept" ,style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0),),
+                            onPressed: () {
+                              //Put your code here which you want to execute on Yes button click.
+                              Navigator.of(context).pop();
+                            },
                           ),
-                        ),
+
+                          FlatButton(
+                            child: Text("Deny",style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0),),
+                            onPressed: () {
+                              //Put your code here which you want to execute on No button click.
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
+              ),
+            ),
+          );
+        });
+  }
+
+
+  void forMidwife(String itemTitle,String itemStatus, String itemDate,String numOfuser) {
+    showModalBottomSheet(
+        context: context,
+        // backgroundColor: Colors.blue,
+        builder: (BuildContext bc) {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ListView(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        height:MediaQuery.of(context).copyWith().size.height/8,
+                        width: MediaQuery.of(context).copyWith().size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.lightBlue,
+                        ),
+
+                        child: Container(
+                          child:  Text("CLINIC", style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0)),
+                          padding: const EdgeInsets.all(20.0),
+                        ),
+                      ),
+                      Container(
+                        //height: 800.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          // borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(itemTitle, style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0)),
+                                          SizedBox(height: 10.0,),
+                                          Text(itemStatus, style: TextStyle(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0)),
+                                          SizedBox(height: 10.0,),
+                                          Text(itemDate, style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0)),
+                                          SizedBox(height: 30.0,),
+                                          Row(
+                                              children: <Widget>[
+                                                Text("Accepted number of users : ", style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16.0)),
+                                                Text(numOfuser, style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16.0)),
+                                              ]
+                                          ),
+
+                                          SizedBox(height: 20.0,),
+
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 20.0,),
+                              SizedBox(height: 10.0,),
+                              Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    FlatButton(
+                                      child: Text("Reschdule" ,style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),),
+                                      onPressed: () {
+                                        //Put your code here which you want to execute on Yes button click.
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+
+                                    FlatButton(
+                                      child: Text("Cancel",style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),),
+                                      onPressed: () {
+                                        //Put your code here which you want to execute on No button click.
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );

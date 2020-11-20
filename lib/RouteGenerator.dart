@@ -6,9 +6,11 @@ import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
+import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 import 'package:mun_care_app/screens/chat/chatscreen.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinic/ViewUpcomingClinic.dart';
+import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/reminders/ScheduleClinic.dart';
 import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
@@ -38,6 +40,8 @@ class RouteGenerator {
           return MaterialPageRoute(builder: (_) => Profile());
       case '/viewupcomingclinic':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
+      case '/viewupcominghomevisit':
+        return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));
