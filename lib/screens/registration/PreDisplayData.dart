@@ -9,26 +9,39 @@ class PreGetIdDetails extends StatelessWidget {
   PreGetIdDetails(this.documentId);
   @override
   Widget build(BuildContext context) {
-    Widget getState(BuildContext context) {
+    Widget getState(BuildContext context, String wombNum) {
       FirebaseAuth _auth = FirebaseAuth.instance;
       return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("PreDatabase")
-            .doc(_auth.currentUser.uid)
-            .collection("G1")
-            .doc("G1")
+            .doc(documentId)
+            .collection(wombNum)
+            .doc(wombNum)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var value = snapshot.data;
-              return ListView(
+            return ListView(
               children: [
-                Text(value["_womb"].toString()),
-                Text(value["_details"].toString()),
-                Text(value["_womb"].toString()),
-                Text(value["_womb"].toString()),
-                Text(value["_womb"].toString()),
+                Container(
+                    child: Text(value["_womb"].toString(),
+                        textAlign: TextAlign.center)),
+                        Divider(
+                      height: 5,
+                    ),
+                Container(child: Text(value["_details"].toString())),
+                Container(child: Text(value["_result"].toString())),
+                Container(child: Text(value["_sex"].toString())),
+                Container(
+                    child: Text(value["_kgWeight"].toString() +
+                        " Kg  " +
+                        value["_gWeight"].toString() +
+                        " g")),
               ],
+            );
+          } else {
+            return Container(
+              child: Text("No data"),
             );
           }
         },
@@ -65,7 +78,7 @@ class PreGetIdDetails extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        'Registration Details',
+                        'Pregnancy Registration Details',
                         style: TextStyle(
                           fontSize: 20,
                           color: Color.fromARGB(500, 21, 166, 211),
@@ -95,7 +108,6 @@ class PreGetIdDetails extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -105,11 +117,11 @@ class PreGetIdDetails extends StatelessWidget {
                             child: Text('Grama Niladari Division :'),
                           ),
                           Expanded(
-                              flex: 50, child: Text(" ${data['_gnDivision']} "))
+                              flex: 50,
+                              child: Text(data['_gnDivision'].toString()))
                         ],
                       ),
                     ),
-                    
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -118,8 +130,7 @@ class PreGetIdDetails extends StatelessWidget {
                             flex: 50,
                             child: Text('Field Clinic :'),
                           ),
-                          Expanded(
-                              flex: 50, child: Text(" ${data['_fcName']} "))
+                          Expanded(flex: 50, child: Text(data['_fcName']))
                         ],
                       ),
                     ),
@@ -131,8 +142,7 @@ class PreGetIdDetails extends StatelessWidget {
                             flex: 50,
                             child: Text('Hospital in Clinic :'),
                           ),
-                          Expanded(
-                              flex: 50, child: Text(" ${data['_hcName']} "))
+                          Expanded(flex: 50, child: Text(data['_hcName']))
                         ],
                       ),
                     ),
@@ -144,8 +154,7 @@ class PreGetIdDetails extends StatelessWidget {
                             flex: 50,
                             child: Text('Consultant Obstetrician :'),
                           ),
-                          Expanded(
-                              flex: 50, child: Text(" ${data['_coName']} "))
+                          Expanded(flex: 50, child: Text(data['_coName']))
                         ],
                       ),
                     ),
@@ -153,42 +162,50 @@ class PreGetIdDetails extends StatelessWidget {
                       height: 5,
                     ),
                     Container(
-                      height: 200,
+                      height: MediaQuery.of(context).size.height * 0.2,
                       width: MediaQuery.of(context).size.width,
-                      child: Padding(padding: const EdgeInsets.all(8.0),
-                      child:ListView(
-                        scrollDirection: Axis.horizontal,
-                        children:<Widget> [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width*0.8,
-                              child: getG1(context),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width*0.8,
-                              child: getG2(context),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width*0.8,
-                              //child: getG3(context),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width*0.8,
-                              //child: getG4(context),
-                            ),
-                          ),
-                        ],
-                      )),
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: getState(context, "G1"),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: getState(context, "G2"),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: getState(context, "G1"),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: getState(context, "G1"),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                    Divider(
+                      height: 5,
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(
@@ -202,11 +219,14 @@ class PreGetIdDetails extends StatelessWidget {
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             //fontWeight: FontWeight.bold,
-                            // color: Color.fromARGB(500, 21, 166, 211),
+                             color: Color.fromARGB(500, 21, 166, 211),
                             fontSize: 15,
                           ),
                         ),
                       ),
+                    ),
+                    Divider(
+                      height: 5,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -216,7 +236,7 @@ class PreGetIdDetails extends StatelessWidget {
                             flex: 50,
                             child: Text('Present vaginal bleeding :'),
                           ),
-                          Expanded(flex: 50, child: Text(" ${data['_pvb']} "))
+                          Expanded(flex: 50, child: Text(data['_pvb']))
                         ],
                       ),
                     ),
@@ -228,7 +248,99 @@ class PreGetIdDetails extends StatelessWidget {
                             flex: 50,
                             child: Text('Blood Plessure :'),
                           ),
-                          Expanded(flex: 50, child: Text(" ${data['_pvb']} "))
+                          Expanded(flex: 50, child: Text(data['_pvb']))
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width * 0.001,
+                          MediaQuery.of(context).size.height * 0.02,
+                          MediaQuery.of(context).size.width * 0.03,
+                          MediaQuery.of(context).size.height * 0.01),
+                      child: Container(
+                        child: Text(
+                          "Diseases",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            //fontWeight: FontWeight.bold,
+                             color: Color.fromARGB(500, 21, 166, 211),
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(flex: 60, child: Text("01.Diabetes")),
+                          Expanded(
+                              flex: 40,
+                              child: (data['_diabetic'])
+                                  ? Container(
+                                      child: Text("Yes"),
+                                    )
+                                  : Container(
+                                      child: Text("No"),
+                                    )),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(flex: 60, child: Text("02.Maleria")),
+                          Expanded(
+                              flex: 40,
+                              child: (data['_maleria'])
+                                  ? Container(
+                                      child: Text("Yes"),
+                                    )
+                                  : Container(
+                                      child: Text("No"),
+                                    )),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(flex: 60, child: Text("03.Heart Disorder")),
+                          Expanded(
+                              flex: 40,
+                              child: (data['_heartDisorder'])
+                                  ? Container(
+                                      child: Text("Yes"),
+                                    )
+                                  : Container(
+                                      child: Text("No"),
+                                    )),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(flex: 60, child: Text("04.Kidney Disorder")),
+                          Expanded(
+                              flex: 40,
+                              child: (data['_kidneyDisorder'])
+                                  ? Container(
+                                      child: Text("Yes"),
+                                    )
+                                  : Container(
+                                      child: Text("No"),
+                                    )),
                         ],
                       ),
                     ),

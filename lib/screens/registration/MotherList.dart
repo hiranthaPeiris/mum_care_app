@@ -1,46 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mun_care_app/screens/registration/MotherList.dart';
+import 'package:mun_care_app/models/UserReg.dart';
+import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
 
-class MotherAssign extends StatefulWidget {
+import 'ComDisplayData.dart';
+
+class MotherList extends StatefulWidget {
   @override
-  _MotherAssignState createState() => _MotherAssignState();
+  _MotherListState createState() => _MotherListState();
 }
 
-class _MotherAssignState extends State<MotherAssign> {
-  String val1, val2, val3, name, id;
+class _MotherListState extends State<MotherList> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  
-getData02() {
+  getData01(String area) {
     return FirebaseFirestore.instance
-                .collection("users")
-                .where('role', isEqualTo: "midwife")
+        .collection("ComDatabase")
+        .where('_phmDropDownValue', isEqualTo: area)
         .snapshots();
   }
 
-  Widget buildBody02(BuildContext context) {
+  Widget buildBody01(BuildContext context, String abc) {
     return StreamBuilder(
-        stream: getData02(),
+        stream: getData01(abc),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
           }
           if (snapshot.hasData) {
             print("Document -> ${snapshot.data.documents.length}");
-            return buildList02(context, snapshot.data.documents);
+            return buildList01(context, snapshot.data.documents);
           }
         });
   }
 
-  Widget buildList02(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget buildList01(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
-      children: snapshot.map((data) => listItemBuild02(context, data)).toList(),
+      children: snapshot.map((data) => listItemBuild01(context, data)).toList(),
     );
   }
 
-  Widget listItemBuild02(BuildContext context, DocumentSnapshot data) {
+  Widget listItemBuild01(BuildContext context, DocumentSnapshot data) {
+    final comRegBD = ComRegDB.fromSnapshot(data);
     return Padding(
       //key: ValueKey(comStep1.husbandName),
       padding: EdgeInsets.symmetric(vertical: 19, horizontal: 19),
@@ -57,11 +59,11 @@ getData02() {
                 children: [
                   ListTile(
                     leading: Icon(Icons.arrow_drop_down_circle),
-                    title: data['name'] != ""
-                        ? Text("${data['name']} Details")
+                    title: data['_wifeName'] != ""
+                        ? Text("${data['_wifeName']} Details")
                         : Text('No Details'),
                     subtitle: Text(
-                      "${data['midwifeID']}",
+                      "${data['_nic']}",
                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
                     ),
                   ),
@@ -71,20 +73,23 @@ getData02() {
                       FlatButton(
                         textColor: const Color(0xFF6200EE),
                         onPressed: () {
-                          
+                          Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ComGetIdDetails(comRegBD.documentReference.id)),
+                                      );
                         },
-                        child: const Text('Check Mother list'),
-                      ),/*
+                        child: const Text('Competency'),
+                      ),
                       FlatButton(
                         textColor: const Color(0xFF6200EE),
                         onPressed: () {
                           Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => MotherList(data['area01'])),
+                                        MaterialPageRoute(builder: (context) => PreGetIdDetails(comRegBD.documentReference.id)),
                                       );
                         },
                         child: const Text('Pregnancy'),
-                      ),*/
+                      ),
                     ],
                   ),
                 ],
@@ -95,54 +100,28 @@ getData02() {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     Widget getState(BuildContext context) {
       return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection("ComDatabase")
+            .collection("users")
             .doc(_auth.currentUser.uid)
             .snapshots(),
         builder: (context, snapshot) {
+          var value = snapshot.data;
+          String area = value['area01'].toString();
+          print(area);
           if (snapshot.hasData) {
-            var value = snapshot.data;
-            FirebaseFirestore.instance
-                .collection("users")
-                .where('role', isEqualTo: "midwife")
-                .get()
-                .then((querySnapshot) {
-              querySnapshot.docs.forEach((result) {
-                val1 = result.data()["area01"];
-                name = result.data()["name"];
-                id = result.data()["midwifeID"];
-
-                print(result.data()["area01"]);
-                if (value["_phmDropDownValue"].toString() ==
-                    result.data()["area01"]) {
-                  //print(value["_phmDropDownValue"].toString());
-                  //String val = result.data()["_phmDropDownValue"];
-                  // print( result.data()["_wifeName"]+" Your area midwife is "+name);
-                  return ListView(
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      Text(value["_wifeName"].toString() +
-                          " your midwife name is " +
-                          name),
-                      Text(id),
-                    ],
-                  );
-                } else {
-                  return Text("Not Match");
-                }
-              });
-            });
+            return buildBody01(context, area);
           }
         },
       );
     }
 
     return Scaffold(
-      body: buildBody02(context),
+      body: getState(context),
     );
   }
 }

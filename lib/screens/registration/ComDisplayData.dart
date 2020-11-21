@@ -31,7 +31,7 @@ class ComGetIdDetails extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Text('Registration Details',style: TextStyle(fontSize: 20,color: Color.fromARGB(500, 21, 166, 211),),),
+                      child: Text('Competancy Registration Details',style: TextStyle(fontSize: 20,color: Color.fromARGB(500, 21, 166, 211),),),
                     ),
                     Divider(height: 5,),
                     Padding(

@@ -185,7 +185,6 @@ class _DashboardState extends State<Dashboard> {
                               heading: "Home Visits",
                               svgSrc: "assets/icons/Meditation.svg",
                               press: () {
-                                Navigator.pushNamed(context, '/renderData');
                               },
                             ),
                             Menu_card(
@@ -193,7 +192,6 @@ class _DashboardState extends State<Dashboard> {
                               heading: "Home Visits",
                               svgSrc: "assets/icons/yoga.svg",
                               press: () {
-                                Navigator.pushNamed(context, '/motherAssign');
                               },
                             )
                           ]),
