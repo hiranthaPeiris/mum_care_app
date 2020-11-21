@@ -1,25 +1,13 @@
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ComFamReg extends StatefulWidget {
   @override
   _ComFamRegState createState() => _ComFamRegState();
-}
-
-Widget showTextField(String hintText, String inputName) {
-  return TextFormField(
-    maxLines: 1,
-    decoration: InputDecoration(
-      hintText: hintText,
-    ),
-    // ignore: missing_return
-    validator: (input) {
-      if (input.isEmpty) {
-        return 'This can\'t be empty';
-      }
-    },
-    onSaved: (input) => inputName = input,
-  );
 }
 
 class ShapePainter extends CustomPainter {
@@ -46,6 +34,34 @@ class _ComFamRegState extends State<ComFamReg> {
   String womenBloodDropdownValue = 'A+';
   String menBloodDropdownValue = 'A+';
 
+  TextEditingController myController1 = new TextEditingController();
+  TextEditingController myController2 = new TextEditingController();
+  TextEditingController myController3 = new TextEditingController();
+  TextEditingController myController4 = new TextEditingController();
+  TextEditingController myController5 = new TextEditingController();
+  TextEditingController myController6 = new TextEditingController();
+  TextEditingController myController7 = new TextEditingController();
+  TextEditingController myController8 = new TextEditingController();
+  TextEditingController myController9 = new TextEditingController();
+  TextEditingController myController10 = new TextEditingController();
+  TextEditingController myController11 = new TextEditingController();
+  bool _validater = false;
+
+  void dispose() {
+    super.dispose();
+    myController1.dispose();
+    myController2.dispose();
+    myController3.dispose();
+    myController4.dispose();
+    myController5.dispose();
+    myController6.dispose();
+    myController7.dispose();
+    myController8.dispose();
+    myController9.dispose();
+    myController10.dispose();
+    myController11.dispose();
+  }
+
   bool d1_Yes = false;
   bool d1_No = false;
   bool d2_Yes = false;
@@ -66,16 +82,51 @@ class _ComFamRegState extends State<ComFamReg> {
   bool d9_No = false;
   bool d10_Yes = false;
   bool d10_No = false;
-  String rubellaDropdownValue = null;
-  String formicDropdownValue = null;
-  String conDropdownValue = null;
-  String bloodDropdownValue = null;
+  bool d11_Yes = false;
+  bool d11_No = false;
+  bool d12_Yes = false;
+  bool d12_No = false;
+  bool d13_Yes = false;
+  bool d13_No = false;
+  bool d14_Yes = false;
+  bool d14_No = false;
+  bool d15_Yes = false;
+  bool d15_No = false;
+
+  String rubellaDropdownValue = 'Yes';
+  String formicDropdownValue = 'Yes';
+  String conDropdownValue = 'Yes';
   DateTime _dateDOB;
   DateTime _dateMarrage;
   bool _set = false;
+  bool allreadyComReg;
 
   @override
   Widget build(BuildContext context) {
+    Widget showTextField(
+        String hintText, String inputName, TextEditingController controller) {
+      return TextFormField(
+        maxLines: 1,
+        controller: controller,
+        autofocus: true,
+        decoration: InputDecoration(
+          //hintText: hintText,
+          labelText: hintText,
+          errorText: _validater ? 'This can\'t be empty' : null,
+        ),
+        // ignore: missing_return
+        validator: (controller) {
+          if (controller.isEmpty) {
+            setState(() {
+              _validater = true;
+            });
+          }
+        },
+
+        onSaved: (input) => inputName = input,
+      );
+    }
+
     Widget mohDropDownMenu() {
       return DropdownButton<String>(
         value: mohDropdownValue,
@@ -86,10 +137,16 @@ class _ComFamRegState extends State<ComFamReg> {
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
         items: <String>[
           'Select Area',
-          'One',
-          'Two',
-          'Happy New Year mmmmmm',
-          'Four'
+          'Ambalangoda',
+          'Hikkaduwa',
+          'Rathgama',
+          'Habaraduwa',
+          'Mirissa',
+          'Weligama',
+          'Dodanduwa',
+          'Balapitiya',
+          'Ahangama',
+          'Thalgaswala'
         ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -118,7 +175,7 @@ class _ComFamRegState extends State<ComFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>['Select Area', 'Five', 'Six', 'Seven', 'Eight']
+        items: <String>['Select Area', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10']
             .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -323,6 +380,95 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
+
+    stepOneReg() async {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      ComRegDB comRegDB = ComRegDB(
+        husbandName: myController1.text,
+        wifeName: myController2.text,
+        address: myController3.text,
+        nic: myController4.text,
+        mohDropDownValue: mohDropdownValue,
+        phmDropDownValue: phmDropdownValue,
+        dateDOB: _dateDOB.toString(),
+        contactNum: myController5.text,
+        email: myController6.text,
+        job: myController7.text,
+        eduDropDownValue: eduDropdownValue,
+        marrageDate: _dateMarrage.toString(),
+        md1: d1_Yes,
+        md2: d2_Yes,
+        md3: d3_Yes,
+        md4: d4_Yes,
+        md5: d5_Yes,
+        md6: d6_Yes,
+        md7: d7_Yes,
+        md8: d8_Yes,
+        md9: d9_Yes,
+        md10: d10_Yes,
+        md11: d11_Yes,
+        md12: d12_Yes,
+        md13: d13_Yes,
+        md14: d14_Yes,
+        md15: d15_Yes,
+        wd1: d1_No,
+        wd2: d2_No,
+        wd3: d3_No,
+        wd4: d4_No,
+        wd5: d5_No,
+        wd6: d6_No,
+        wd7: d7_No,
+        wd8: d8_No,
+        wd9: d9_No,
+        wd10: d10_No,
+        wd11: d11_No,
+        wd12: d12_No,
+        wd13: d13_No,
+        wd14: d14_No,
+        wd15: d15_No,
+        rubellaDropDownValue: rubellaDropdownValue,
+        formicDropDownValue: formicDropdownValue,
+        conDropDownValue: conDropdownValue,
+        womenWeight: myController8.text,
+        menWeight: myController9.text,
+        womenHeight: myController10.text,
+        menHeight: myController11.text,
+        womenBloodDropDownValue: womenBloodDropdownValue,
+        menBloodDropDownValue: menBloodDropdownValue,
+      );
+
+      try {
+        FirebaseFirestore.instance
+            .runTransaction((Transaction transaction) async {
+          await FirebaseFirestore.instance
+              .collection("ComDatabase")
+              .doc(_auth.currentUser.uid)
+              .set(comRegDB.toJson());
+
+
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+
+    comRegComfirm() async {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      ComSetState comSetState = ComSetState(allreadyComReg: allreadyComReg);
+      try {
+        FirebaseFirestore.instance
+            .runTransaction((Transaction transaction) async {
+          await FirebaseFirestore.instance
+              .collection("ComDatabase")
+              .doc(_auth.currentUser.uid).collection("State").doc(_auth.currentUser.uid)
+              .set(comSetState.toJson());
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+
+
     List<Step> steps = [
       Step(
           title: const Text(
@@ -361,7 +507,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     padding: EdgeInsets.fromLTRB(
                         MediaQuery.of(context).size.width * 0.05,
                         MediaQuery.of(context).size.height * 0.016,
-                        MediaQuery.of(context).size.width * 0.4,
+                        MediaQuery.of(context).size.width * 0.3,
                         MediaQuery.of(context).size.height * 0.01),
                     child: Text(
                       "Competency Family",
@@ -471,7 +617,8 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Husbond\'s Name", "_husbondName"),
+                  child: showTextField(
+                      "Husbond\'s Name", "_husbondName", myController1),
                 ),
               ),
               Container(
@@ -481,7 +628,8 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Wife\'s Name", "_wifeName"),
+                  child:
+                      showTextField("Wife\'s Name", "_wifeName", myController2),
                 ),
               ),
               Container(
@@ -491,7 +639,7 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("Address", "_address"),
+                  child: showTextField("Address", "_address", myController3),
                 ),
               ),
               Container(
@@ -501,7 +649,7 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField("NIC Number", "_nic"),
+                  child: showTextField("NIC Number", "_nic", myController4),
                 ),
               ),
             ],
@@ -549,19 +697,15 @@ class _ComFamRegState extends State<ComFamReg> {
                             width: 20,
                           ),
                           SizedBox(
-                            width: 20,
+                            width: 60,
                             height: 30,
                             child: RaisedButton(
-                                child: Text(
-                                  ".",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(fontSize: 35),
-                                ),
-                                shape: RoundedRectangleBorder(
+                                child: Icon(Icons.calendar_today),
+                                /* shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                     side: BorderSide(
                                       color: Color.fromARGB(500, 21, 166, 211),
-                                    )),
+                                    )),*/
                                 onPressed: () {
                                   showDatePicker(
                                           context: context,
@@ -589,7 +733,8 @@ class _ComFamRegState extends State<ComFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
-                child: showTextField("Contact Number", "_contactNumber"),
+                child: showTextField(
+                    "Contact Number", "_contactNumber", myController5),
               ),
             ),
             Container(
@@ -599,7 +744,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
-                child: showTextField("Email", "_email"),
+                child: showTextField("Email", "_email", myController6),
               ),
             ),
             Container(
@@ -609,7 +754,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.05),
-                child: showTextField("Job", "_job"),
+                child: showTextField("Job", "_job", myController7),
               ),
             ),
             Container(
@@ -660,14 +805,14 @@ class _ComFamRegState extends State<ComFamReg> {
             Container(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width * 0.1,
+                    MediaQuery.of(context).size.width * 0.03,
                     MediaQuery.of(context).size.height * 0.05,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      flex: 37,
+                      flex: 45,
                       child: Text(
                         "Marriage Date",
                         style: TextStyle(fontSize: 16),
@@ -675,7 +820,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Container(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(_dateMarrage == null
                               ? "Select Marriage Date"
@@ -688,19 +833,10 @@ class _ComFamRegState extends State<ComFamReg> {
                             width: 20,
                           ),
                           SizedBox(
-                            width: 20,
+                            width: 60,
                             height: 30,
                             child: RaisedButton(
-                                child: Text(
-                                  ".",
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(fontSize: 35),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    side: BorderSide(
-                                      color: Color.fromARGB(500, 21, 166, 211),
-                                    )),
+                                child: Icon(Icons.calendar_today),
                                 onPressed: () {
                                   showDatePicker(
                                           context: context,
@@ -776,7 +912,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     Expanded(
                         flex: 20,
                         child: Text(
-                          "Women's",
+                          "Men's",
                           style: TextStyle(
                               color: Color.fromARGB(500, 21, 166, 211),
                               fontWeight: FontWeight.bold,
@@ -786,7 +922,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     Expanded(
                         flex: 20,
                         child: Text(
-                          "Men's",
+                          "Women's",
                           style: TextStyle(
                               color: Color.fromARGB(500, 21, 166, 211),
                               fontWeight: FontWeight.bold,
@@ -808,7 +944,7 @@ class _ComFamRegState extends State<ComFamReg> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("01.Diabetes")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -833,7 +969,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("02.Hypertension")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -858,7 +994,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("03.Cardiac Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -883,7 +1019,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("04.Renal Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -908,7 +1044,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("05.Hepatic Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -933,7 +1069,8 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(
+                            flex: 60, child: Text("06.Psychiatric Illnesses")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -958,7 +1095,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("07.Epilepsy")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -983,7 +1120,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("08.Malignancies")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1008,7 +1145,9 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(
+                            flex: 60,
+                            child: Text("09.Haematological Diseases")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1033,7 +1172,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     ),
                     Row(
                       children: <Widget>[
-                        Expanded(flex: 60, child: Text("HIV")),
+                        Expanded(flex: 60, child: Text("10.Tuberculosis")),
                         Expanded(
                             flex: 20,
                             child: Checkbox(
@@ -1051,6 +1190,133 @@ class _ComFamRegState extends State<ComFamReg> {
                                 onChanged: (bool value) {
                                   setState(() {
                                     d10_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("11.Thyroid Diseases")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d11_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d11_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d11_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d11_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("12.Bronchial Asthma")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d12_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d12_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d12_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d12_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("13.Previous DVT")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d13_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d13_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d13_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d13_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            flex: 60,
+                            child: Text("14.Surgeries other than LSCS")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d14_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d14_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d14_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d14_No = value;
+                                    print(value);
+                                  });
+                                })),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("15.HIV")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d15_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d15_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d15_No,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    d15_No = value;
                                     print(value);
                                   });
                                 })),
@@ -1292,7 +1558,8 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Container(
                               height: 30,
                               alignment: Alignment.center,
-                              child: showTextField("", "kgWeight"),
+                              child: showTextField(
+                                  "", "womenWeight", myController8),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -1316,7 +1583,8 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Container(
                               height: 30,
                               alignment: Alignment.center,
-                              child: showTextField("", "gWeight"),
+                              child:
+                                  showTextField("", "menWeight", myController9),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -1373,7 +1641,8 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                child: showTextField("", "womenHeight"),
+                                child: showTextField(
+                                    "", "womenHeight", myController10),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
@@ -1397,7 +1666,8 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                child: showTextField("", "menHeight"),
+                                child: showTextField(
+                                    "", "menHeight", myController11),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
@@ -1548,7 +1818,25 @@ class _ComFamRegState extends State<ComFamReg> {
                             onPressed: () {
                               setState(() {
                                 complete = false;
+                                allreadyComReg = true;
                               });
+                                stepOneReg();
+                                comRegComfirm();
+                                Navigator.pushNamed(context, '/dashboard');
+                                myController1.clear();
+                                myController2.clear();
+                                myController3.clear();
+                                myController4.clear();
+                                myController5.clear();
+                                myController6.clear();
+                                myController7.clear();
+                                myController8.clear();
+                                myController9.clear();
+                                myController10.clear();
+                                myController11.clear();
+
+                                
+
                             }),
                         FlatButton(
                             child: Text("Cancel"),

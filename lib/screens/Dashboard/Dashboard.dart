@@ -137,6 +137,100 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ],
                           ),
+
+                          onTap: () =>
+                              {Navigator.pushNamed(context, '/profile')},
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "Good Morning",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        color: kTextColor,
+                        fontFamily: "Roboto-Light",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  Text("Elizabeth",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: kTextColor,
+                          fontSize: 36,
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.w800)),
+                  Search_bar(),
+                  Expanded(
+                      child: CustomScrollView(
+                    slivers: <Widget>[
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          Menu_liner_card(
+                              heading: "Complete Registration",
+                              content:
+                                  "Complete the competency family registration",
+                              svgSrc: "assets/icons/Hamburger.svg",
+                              press: () {
+                                Navigator.pushNamed(context, '/comReg');
+                              }),
+                          Menu_liner_card(
+                              heading: "Pregnancy Registration",
+                              content: "Complete the pregnancy registration",
+                              svgSrc: "assets/icons/Hamburger.svg",
+                              press: () {
+                                Navigator.pushNamed(context, '/preReg');
+                              }),
+                        ]),
+                      ),
+                      SliverGrid(
+                          delegate: SliverChildListDelegate([
+                            Menu_card(
+                              title: "View Upcoming Clinics",
+                              heading: "Clinics",
+                              svgSrc: "assets/icons/clinics.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "View Upcoming Home Visits",
+                              heading: "Home Visits",
+                              svgSrc: "assets/icons/home-visits.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "Report private medications",
+                              heading: "Report Medications",
+                              svgSrc: "assets/icons/yoga.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "Report leaving residential area",
+                              heading: "Report Leaving",
+                              svgSrc: "assets/icons/yoga.svg",
+                              press: () {},
+                            ),
+                            Menu_card(
+                              title: "Meditation",
+                              heading: "Home Visits",
+                              svgSrc: "assets/icons/Meditation.svg",
+                              press: () {
+                              },
+                            ),
+                            Menu_card(
+                              title: "Yoga",
+                              heading: "Home Visits",
+                              svgSrc: "assets/icons/yoga.svg",
+                              press: () {
+                              },
+                            )
+                          ]),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: .85,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+=======
                           Text(
                             "Good Morning",
                             textAlign: TextAlign.left,
@@ -235,6 +329,7 @@ class _DashboardState extends State<Dashboard> {
                                     mainAxisSpacing: 20,
                                   ))
                             ],
+
                           ))
                         ],
                       ),
@@ -245,3 +340,10 @@ class _DashboardState extends State<Dashboard> {
             )));
   }
 }
+
+
+class RenderData {}
+/*
+
+* */
+
