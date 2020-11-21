@@ -170,7 +170,7 @@ class _PreFamRegState extends State<PreFamReg> {
             style: TextStyle(
                 fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
           ),
-          isActive: true,
+          isActive: currentStep >= 0,
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -221,8 +221,11 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
+
                   child: showTextField(
                       "Grama Niladhari Division", "gnDivision", myController12),
+
+
                 ),
               ),
               Container(
@@ -243,6 +246,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.height * 0.025,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
+
                   child: showTextField(
                       "Hospital in Clinic", "hcName", myController14),
                 ),
@@ -255,7 +259,10 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
                   child: showTextField(
+
                       "Consultant Obstetrician", "coName", myController15),
+
+
                 ),
               ),
             ],
@@ -266,7 +273,7 @@ class _PreFamRegState extends State<PreFamReg> {
           style:
               TextStyle(fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
         ),
-        isActive: true,
+        isActive: currentStep >= 1,
         state: StepState.indexed,
         content: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -336,19 +343,25 @@ class _PreFamRegState extends State<PreFamReg> {
               ),
             ),
             Container(
+
               child: Text(
                 wombDropdownValue.toString() + " Details",
                 style: TextStyle(color: Colors.red, fontSize: 20),
               ),
             ),
             Container(
+
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.025,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
+
                 child: showTextField("Result", "pohResult", myController16),
+
+           
+
               ),
             ),
             Container(
@@ -358,7 +371,9 @@ class _PreFamRegState extends State<PreFamReg> {
                     MediaQuery.of(context).size.height * 0.025,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
+
                 child: showTextField("Details", "pohDetails", myController17),
+
               ),
             ),
             Padding(
@@ -395,8 +410,10 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                               height: 30,
                               alignment: Alignment.center,
+
                               child:
                                   showTextField("", "kgWeight", myController18),
+
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -420,8 +437,10 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                               height: 30,
                               alignment: Alignment.center,
+
                               child:
                                   showTextField("", "gWeight", myController19),
+
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
@@ -443,6 +462,7 @@ class _PreFamRegState extends State<PreFamReg> {
                     ),
                   ],
                 ),
+
               ),
             ),
             Container(
@@ -453,12 +473,15 @@ class _PreFamRegState extends State<PreFamReg> {
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
                 child: showTextField("Sex", "pohSex", myController20),
+
+
               ),
             ),
             Container(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width * 0.05,
+
                     MediaQuery.of(context).size.height * 0.045,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
@@ -487,6 +510,14 @@ class _PreFamRegState extends State<PreFamReg> {
                 ),
               ),
             )
+
+                    MediaQuery.of(context).size.height * 0.025,
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: showTextField("Sex", "pohDetails"),
+              ),
+            ),
+
           ],
         ),
       ),
@@ -496,7 +527,7 @@ class _PreFamRegState extends State<PreFamReg> {
             style: TextStyle(
                 fontSize: 10, color: Color.fromARGB(500, 21, 166, 211)),
           ),
-          isActive: true,
+          isActive: currentStep >= 2,
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -600,6 +631,7 @@ class _PreFamRegState extends State<PreFamReg> {
                   ),
                   Row(
                     children: <Widget>[
+
                       Expanded(flex: 40, child: Text("Heart Disorders")),
                       Expanded(
                           flex: 20,

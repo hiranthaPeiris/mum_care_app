@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
-import 'package:mun_care_app/screens/Authentication/Authentication.dart';
+
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
+import 'package:mun_care_app/screens/LeavingReport/LeavingReport.dart';
+import 'package:mun_care_app/screens/MedicationReport/MedicationReport.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
-import 'package:mun_care_app/screens/login/Login_comp.dart';
+import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
+
 import 'package:mun_care_app/screens/registration/MotherList.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/ScheduleClinic.dart';
 import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
+
+import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
+import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleClinic.dart';
+import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
+
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -36,9 +44,15 @@ class RouteGenerator {
       case '/notification':
         return MaterialPageRoute(builder: (_) => NotificationScreen());
       case '/sechHomeVisits':
-        return MaterialPageRoute(builder: (_) => ScheduleHomeVisits());
+        return MaterialPageRoute(builder: (_) => SchHomeVisitSearch());
       case '/sechClinics':
         return MaterialPageRoute(builder: (_) => ScheduleClinic());
+      case '/chat':
+        return MaterialPageRoute(builder: (_) => HomeChat());
+      case '/leavingReport':
+        return MaterialPageRoute(builder: (_) => LeavingReport());
+      case '/MedicalReport':
+        return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/error':
