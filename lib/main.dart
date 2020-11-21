@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/RouteGenerator.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
-import 'package:mun_care_app/models/homeVisitModel.dart';
-
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
@@ -14,14 +12,11 @@ import 'package:provider/provider.dart';
 import 'Locator.dart';
 import 'helpers/Constants.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(AppFire());
 }
-
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -33,14 +28,14 @@ class _MyAppState extends State<MyApp> {
       new GlobalKey<NavigatorState>();
   final NotificationService _notificationService = NotificationService();
 
-  Future Startup()async{
+  Future startUp() async {
     await _notificationService.InitalizeMessaging();
     print("notifi start");
   }
 
   @override
   Widget build(BuildContext context) {
-    Startup();
+    startUp();
     return StreamProvider<UserM>.value(
       value: AuthService().user,
       child: MaterialApp(
@@ -65,13 +60,12 @@ class AppFire extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
       // Initialize FlutterFire:
       future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         // Check for errors
-        //Startup();
+        //startUp();
         if (snapshot.hasError) {
           String tostring = snapshot.error.toString();
           print(tostring);

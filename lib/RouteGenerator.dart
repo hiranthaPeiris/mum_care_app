@@ -19,9 +19,8 @@ import 'package:mun_care_app/screens/Reports/monthlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/diary.dart';
 import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
-import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
-import 'package:mun_care_app/screens/reminders/ScheduleClinic.dart';
-import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
+import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
+
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -39,7 +38,7 @@ class RouteGenerator {
       case '/notification':
         return MaterialPageRoute(builder: (_) => NotificationScreen());
       case '/sechHomeVisits':
-        return MaterialPageRoute(builder: (_) => ScheduleHomeVisits());
+        return MaterialPageRoute(builder: (_) => SchHomeVisitSearch());
       case '/sechClinics':
         return MaterialPageRoute(builder: (_) => ScheduleClinic());
       case '/chat':
@@ -52,7 +51,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':
         return MaterialPageRoute(
-            builder: (_) => UpcomingHomeVisitFirebaseDemo());
+            builder: (_) => ViewUpcomingHomevisit());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/diary':
@@ -61,13 +60,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => DairlyReport());
       case '/monthlyRepo':
         return MaterialPageRoute(builder: (_) => MonthlyReport());
-      // case '/sub':
-      //return MaterialPageRoute(builder: (_) => SubCategoery(String));
-      
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
-      case '/viewupcomingclinic':
-        return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/viewupcominghomevisit':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
       case '/error':

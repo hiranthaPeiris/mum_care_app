@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum HOMEVISITSTATE { active, done, cancle, rescheduled }
-enum HOMEVISITCONFM {accept,deny}
+enum HOMEVISITCONFM { accept, deny }
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class HomeVisitService {
@@ -17,20 +17,23 @@ class HomeVisitService {
           .collection('HomeVisits');
 
       DocumentReference userDocRef = _firestore.collection('users').doc(uid);
-      //data for user's home visit collection
-      await homeVisit.add({
-        'description': desc,
-        'dateTime': dateTime,
-        'status': "pending",
-        'confirmation': 'pending'
-      });
       //data for midwife's home visit collection
-      await midwifeVisit.add({
+      String midDocID = await midwifeVisit.add({
         'description': desc,
         'dateTime': dateTime,
         'status': "pending",
         'confirmation': 'pending',
         'userDocRef': userDocRef
+      }).then((value) {
+        return value.id;
+      });
+      //data for user's home visit collection
+      await homeVisit.add({
+        'description': desc,
+        'dateTime': dateTime,
+        'status': "pending",
+        'confirmation': 'pending',
+        'midDocID': midDocID
       });
     } catch (e) {
       print(e.toString());
@@ -38,7 +41,7 @@ class HomeVisitService {
   }
 
   Future<void> chageStatus(
-      HOMEVISITSTATE state, String uid, String docID, String midwifeID) async {
+      HOMEVISITSTATE state, String uid, String docID,String midDocID, String midwifeID) async {
     DocumentReference userDocRef = _firestore
         .collection('bookings')
         .doc(uid)
@@ -75,24 +78,28 @@ class HomeVisitService {
       default:
         print("switch default");
     }
-    await batch.commit();
+    await batch
+        .commit()
+        .then((value) => print("updated home visit status"))
+        .catchError((err) => print(err));
   }
 
-  Future<void> changeConfirmation(HOMEVISITCONFM confm,String uid, String docID, String midwifeID) async {
+  Future<void> changeConfirmation(HOMEVISITCONFM confm, String uid,
+      String docID, String midDocID, String midwifeID) async {
     DocumentReference userDocRef = _firestore
-        .collection('bookings')
+        .collection('Bookings')
         .doc(uid)
-        .collection('HomeVisit')
+        .collection('HomeVisits')
         .doc(docID);
 
     //midwife doc
     DocumentReference midwifeDocRef = _firestore
-        .collection('bookings')
+        .collection('Bookings')
         .doc(midwifeID)
-        .collection("HomeVisit")
-        .doc(docID);
+        .collection('HomeVisits')
+        .doc(midDocID);
 
-        WriteBatch batch = _firestore.batch();
+    WriteBatch batch = _firestore.batch();
 
     switch (confm) {
       case HOMEVISITCONFM.accept:
@@ -103,10 +110,13 @@ class HomeVisitService {
         batch.update(userDocRef, {'confirmation': 'deny'});
         batch.update(midwifeDocRef, {'confirmation': 'deny'});
         break;
-      
+
       default:
         print("switch default");
     }
-    await batch.commit();
+    await batch
+        .commit()
+        .then((value) => print("updated home visit confm"))
+        .catchError((err) => print(err));
   }
 }
