@@ -66,19 +66,20 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
               ],
             ),
           ),
-           Expanded(
+          Expanded(
             flex: 1,
             child: StreamBuilder<QuerySnapshot>(
-              stream: (user.userCustomData['role']=='midwife')?widget._firestore
-                  .collection('Bookings')
-                  .doc(user.uid)
-                  .collection('Clinics')
-                  .snapshots()
+              stream: (user.userCustomData['role'] == 'midwife')
+                  ? widget._firestore
+                      .collection('Bookings')
+                      .doc(user.uid)
+                      .collection('Clinics')
+                      .snapshots()
                   : widget._firestore
-                  .collection('Bookings')
-                  .doc(user.uid)
-                  .collection('Clinics')
-                  .snapshots(),
+                      .collection('Bookings')
+                      .doc(user.uid)
+                      .collection('Clinics')
+                      .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Text('Loding...');
@@ -345,6 +346,274 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                     ),
                   ],
                 ),
+              ),
+            ),
+          );
+        });
+  }
+
+  void forUser(String itemTitle, String itemStatus, String itemDate) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc) {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              height: 500.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Container(),
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      "Dear your clinic,",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.blue[700],
+                                    ),
+                                    Icon(
+                                      Icons.more_vert,
+                                      color: Colors.blue[700],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 30.0,
+                                ),
+                                Text(itemTitle,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0)),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(itemStatus,
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0)),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(itemDate,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0)),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      "Thank you,",
+                      style: TextStyle(color: Colors.black, fontSize: 18.0),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          FlatButton(
+                            child: Text(
+                              "Accept",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0),
+                            ),
+                            onPressed: () {
+                              //Put your code here which you want to execute on Yes button click.
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text(
+                              "Deny",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0),
+                            ),
+                            onPressed: () {
+                              //Put your code here which you want to execute on No button click.
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  
+  void forMidwife(String itemTitle,String itemStatus, String itemDate,String numOfuser) {
+    showModalBottomSheet(
+        context: context,
+        // backgroundColor: Colors.blue,
+        builder: (BuildContext bc) {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ListView(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        height:MediaQuery.of(context).copyWith().size.height/8,
+                        width: MediaQuery.of(context).copyWith().size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.lightBlue,
+                        ),
+
+                        child: Container(
+                          child:  Text("CLINIC", style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0)),
+                          padding: const EdgeInsets.all(20.0),
+                        ),
+                      ),
+                      Container(
+                        //height: 800.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          // borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(itemTitle, style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0)),
+                                          SizedBox(height: 10.0,),
+                                          Text(itemStatus, style: TextStyle(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0)),
+                                          SizedBox(height: 10.0,),
+                                          Text(itemDate, style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0)),
+                                          SizedBox(height: 30.0,),
+                                          Row(
+                                              children: <Widget>[
+                                                Text("Accepted number of users : ", style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16.0)),
+                                                Text(numOfuser, style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16.0)),
+                                              ]
+                                          ),
+
+                                          SizedBox(height: 20.0,),
+
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 20.0,),
+                              SizedBox(height: 10.0,),
+                              Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    FlatButton(
+                                      child: Text("Reschdule" ,style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),),
+                                      onPressed: () {
+                                        //Put your code here which you want to execute on Yes button click.
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+
+                                    FlatButton(
+                                      child: Text("Cancel",style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),),
+                                      onPressed: () {
+                                        //Put your code here which you want to execute on No button click.
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );

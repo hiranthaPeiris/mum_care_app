@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
 
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -45,6 +46,7 @@ class AuthService {
       new UserM(user: userCredential, data: customData);
 
       return _userFromFirebase(userCredential.user);
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -91,7 +93,6 @@ class AuthService {
       }
     });
   }
-
   //sign out
   Future SignOut() async {
     try {
@@ -102,7 +103,7 @@ class AuthService {
     }
   }
 
-  //register
+ //register
   Future Register(String email, String password, String name) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -117,7 +118,6 @@ class AuthService {
       return null;
     }
   }
-
 //set user role
   Future<void> setUserRole(String uid, String name) async {
     await _firestore
@@ -128,8 +128,8 @@ class AuthService {
           'role': 'user',
           'competencyFam': false,
           'PregnanctFam': false,
-          'midwifeID': 'null',
-          'nameSearch': getSearchParam(name)
+          'midwifeID':'null',
+          'nameSearch':getSearchParam(name)
         })
         .then((value) => print("user role added"))
         .catchError((err) => print(err));

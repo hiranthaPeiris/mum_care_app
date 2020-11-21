@@ -12,14 +12,16 @@ import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
+import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/Reports/dairlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/monthlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/diary.dart';
 import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
-import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
 import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
+import 'package:mun_care_app/screens/reminders/ScheduleClinic.dart';
+import 'package:mun_care_app/screens/reminders/ScheduleHomeVisits.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -37,7 +39,7 @@ class RouteGenerator {
       case '/notification':
         return MaterialPageRoute(builder: (_) => NotificationScreen());
       case '/sechHomeVisits':
-        return MaterialPageRoute(builder: (_) => SchHomeVisitSearch());
+        return MaterialPageRoute(builder: (_) => ScheduleHomeVisits());
       case '/sechClinics':
         return MaterialPageRoute(builder: (_) => ScheduleClinic());
       case '/chat':
@@ -49,7 +51,8 @@ class RouteGenerator {
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':
-        return MaterialPageRoute(builder: (_) => UpcomingHomeVisitFirebaseDemo());
+        return MaterialPageRoute(
+            builder: (_) => UpcomingHomeVisitFirebaseDemo());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/diary':
@@ -60,9 +63,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MonthlyReport());
       // case '/sub':
       //return MaterialPageRoute(builder: (_) => SubCategoery(String));
-      case '/upcomingHomevisit':
-        return MaterialPageRoute(
-            builder: (_) => UpcomingHomeVisitFirebaseDemo());
+      
+      case '/profile':
+        return MaterialPageRoute(builder: (_) => Profile());
+      case '/viewupcomingclinic':
+        return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
+      case '/viewupcominghomevisit':
+        return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));
