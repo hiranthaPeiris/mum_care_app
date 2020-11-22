@@ -17,9 +17,12 @@ import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/Reports/dairlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/monthlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/diary.dart';
-import 'package:mun_care_app/screens/upcomingHomevisits/upcomingHomevisit.dart';
+import 'package:mun_care_app/screens/registration/MotherList.dart';
+import 'package:mun_care_app/screens/registration/PreFamReg.dart';
+import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
+
 
 
 class RouteGenerator {
@@ -33,6 +36,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Dashboard());
       case '/comReg':
         return MaterialPageRoute(builder: (_) => ComFamReg());
+      case '/preReg':
+        return MaterialPageRoute(builder: (_) => PreFamReg());
+      case '/renderData':
+        return MaterialPageRoute(builder: (_) => ComRenderData());
+      case '/motherAssign':
+        return MaterialPageRoute(builder: (_) => MotherList());
       case '/signup':
         return MaterialPageRoute(builder: (_) => Signup());
       case '/notification':
