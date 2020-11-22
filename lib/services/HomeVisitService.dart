@@ -7,41 +7,41 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 class HomeVisitService {
   Future<void> addHomeVisit(
       String desc, String dateTime, String uid, String midwifeID) async {
-    try {
-      CollectionReference homeVisit =
-          _firestore.collection("Bookings").doc(uid).collection('HomeVisits');
+    CollectionReference homeVisit = _firestore.collection('HomeVisits');
+    DocumentReference userDocRef = _firestore.collection('users').doc(uid);
+    // CollectionReference midwifeVisit = _firestore
+    //     .collection('Bookings')
+    //     .doc(midwifeID)
+    //     .collection('HomeVisits');
 
-      CollectionReference midwifeVisit = _firestore
-          .collection('Bookings')
-          .doc(midwifeID)
-          .collection('HomeVisits');
-
-      DocumentReference userDocRef = _firestore.collection('users').doc(uid);
-      //data for midwife's home visit collection
-      String midDocID = await midwifeVisit.add({
-        'description': desc,
-        'dateTime': dateTime,
-        'status': "pending",
-        'confirmation': 'pending',
-        'userDocRef': userDocRef
-      }).then((value) {
-        return value.id;
-      });
-      //data for user's home visit collection
-      await homeVisit.add({
-        'description': desc,
-        'dateTime': dateTime,
-        'status': "pending",
-        'confirmation': 'pending',
-        'midDocID': midDocID
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+    // DocumentReference userDocRef = _firestore.collection('users').doc(uid);
+    // //data for midwife's home visit collection
+    // String midDocID = await midwifeVisit.add({
+    //   'description': desc,
+    //   'dateTime': dateTime,
+    //   'status': "pending",
+    //   'confirmation': 'pending',
+    //   'userDocRef': userDocRef
+    // }).then((value) {
+    //   return value.id;
+    // });
+    //data for user's home visit collection
+    await homeVisit
+        .add({
+          'description': desc,
+          'dateTime': dateTime,
+          'status': "pending",
+          'confirmation': 'pending',
+          'midwifeID': midwifeID,
+          'userID':uid,
+          'userDocRef': userDocRef
+        })
+        .then((value) => print("home visit added $value"))
+        .catchError((err) => print(err));
   }
 
-  Future<void> chageStatus(
-      HOMEVISITSTATE state, String uid, String docID,String midDocID, String midwifeID) async {
+  Future<void> chageStatus(HOMEVISITSTATE state, String uid, String docID,
+      String midDocID, String midwifeID) async {
     DocumentReference userDocRef = _firestore
         .collection('bookings')
         .doc(uid)
@@ -84,31 +84,29 @@ class HomeVisitService {
         .catchError((err) => print(err));
   }
 
-  Future<void> changeConfirmation(HOMEVISITCONFM confm, String uid,
-      String docID, String midDocID, String midwifeID) async {
+  Future<void> changeConfirmation(HOMEVISITCONFM confm, 
+      String docID, String midwifeID) async {
     DocumentReference userDocRef = _firestore
-        .collection('Bookings')
-        .doc(uid)
         .collection('HomeVisits')
         .doc(docID);
 
     //midwife doc
-    DocumentReference midwifeDocRef = _firestore
-        .collection('Bookings')
-        .doc(midwifeID)
-        .collection('HomeVisits')
-        .doc(midDocID);
+    // DocumentReference midwifeDocRef = _firestore
+    //     .collection('Bookings')
+    //     .doc(midwifeID)
+    //     .collection('HomeVisits')
+    //     .doc(midDocID);
 
     WriteBatch batch = _firestore.batch();
 
     switch (confm) {
       case HOMEVISITCONFM.accept:
         batch.update(userDocRef, {'confirmation': 'accept'});
-        batch.update(midwifeDocRef, {'confirmation': 'accept'});
+        //batch.update(midwifeDocRef, {'confirmation': 'accept'});
         break;
       case HOMEVISITCONFM.deny:
         batch.update(userDocRef, {'confirmation': 'deny'});
-        batch.update(midwifeDocRef, {'confirmation': 'deny'});
+        //batch.update(midwifeDocRef, {'confirmation': 'deny'});
         break;
 
       default:

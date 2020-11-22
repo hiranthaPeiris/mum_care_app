@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/services/HomeVisitService.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -77,11 +79,16 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
           Expanded(
             flex: 1,
             child: StreamBuilder<QuerySnapshot>(
-              stream: widget._firestore
-                  .collection('Bookings')
-                  .doc(user.uid)
-                  .collection('HomeVisits')
-                  .snapshots(),
+              stream: (user.userCustomData['role'] == 'user')
+                  ? widget._firestore
+                      .collection('HomeVisits')
+                      .where('userID', isEqualTo: user.userCredential.user.uid)
+                      .snapshots()
+                  : widget._firestore
+                      .collection('HomeVisits')
+                      .where('midwifeID',
+                          isEqualTo: user.userCredential.user.uid)
+                      .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Text('Loding...');
@@ -266,9 +273,9 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
   void forUser(
       QueryDocumentSnapshot documentSnapshot, GlobalKey<ScaffoldState> scaf) {
     String id = documentSnapshot.id;
-    String uid = user.userCredential.user.uid;
+    //String uid = user.userCredential.user.uid;
     String midID = user.userCustomData['midwifeID'];
-    String midDocID = documentSnapshot['midDocID'];
+    //String midDocID = documentSnapshot['midDocID'];
 
     String itemTitle = documentSnapshot["description"];
     String itemStatus = documentSnapshot["status"];
@@ -396,11 +403,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                   //Put your code here which you want to execute on Yes button click.
                                   setState(() {
                                     _homeVisitService.changeConfirmation(
-                                        HOMEVISITCONFM.deny,
-                                        uid,
-                                        id,
-                                        midDocID,
-                                        midID);
+                                        HOMEVISITCONFM.deny, id, midID);
                                   });
                                   final snackBar = SnackBar(
                                     content: Text('Successfully Updated'),
@@ -430,11 +433,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                   //Put your code here which you want to execute on No button click.
                                   setState(() {
                                     _homeVisitService.changeConfirmation(
-                                        HOMEVISITCONFM.accept,
-                                        uid,
-                                        id,
-                                        midDocID,
-                                        midID);
+                                        HOMEVISITCONFM.accept, id, midID);
                                   });
                                   //Navigator.of(context).pop();
                                 },
@@ -455,12 +454,12 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
 
   void forMidwife(QueryDocumentSnapshot documentSnapshot) async {
     DocumentReference userRef = documentSnapshot['userDocRef'];
-    Map<String, dynamic> userData =
+    DocumentSnapshot userData =
         await userRef.get().then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        return documentSnapshot.data();
+        return documentSnapshot;
       } else {
-        return {'name': 'not found'};
+        return null;
       }
     });
     String itemTitle = documentSnapshot["description"];
@@ -491,7 +490,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                         width: MediaQuery.of(context).copyWith().size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.lightBlue,
+                          color: kBackground,
                         ),
                         child: Container(
                           child: Text("HOME VISIT",
@@ -607,20 +606,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                   children: <Widget>[
                                     FlatButton(
                                       child: Text(
-                                        "Reschdule",
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16.0),
-                                      ),
-                                      onPressed: () {
-                                        //Put your code here which you want to execute on Yes button click.
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text(
-                                        "Cancel",
+                                        "Close",
                                         style: TextStyle(
                                             color: Colors.blue,
                                             fontWeight: FontWeight.bold,
@@ -629,6 +615,27 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                       onPressed: () {
                                         //Put your code here which you want to execute on No button click.
                                         Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    RaisedButton(
+                                      color: kBackground,
+                                      child: Text(
+                                        "Reschdule",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0),
+                                      ),
+                                      onPressed: () {
+                                        //Put your code here which you want to execute on Yes button click.
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ScheduleHomeVisits(
+                                                      document: userData,
+                                                      midwifeId: user.uid,
+                                                    )));
                                       },
                                     ),
                                   ],
