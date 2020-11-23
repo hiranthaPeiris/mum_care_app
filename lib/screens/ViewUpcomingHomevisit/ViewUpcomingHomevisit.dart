@@ -413,6 +413,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                         // Some code to undo the change.
                                       },
                                     ),
+                                    duration: Duration(seconds: 2),
                                   );
 
                                   // Find the Scaffold in the widget tree and use
@@ -435,7 +436,21 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                     _homeVisitService.changeConfirmation(
                                         HOMEVISITCONFM.accept, id, midID);
                                   });
-                                  //Navigator.of(context).pop();
+                                  final snackBar = SnackBar(
+                                    content: Text('Successfully Updated'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () {
+                                        // Some code to undo the change.
+                                      },
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                  );
+
+                                  // Find the Scaffold in the widget tree and use
+                                  // it to show a SnackBar.
+                                  scaf.currentState.showSnackBar(snackBar);
+                                  Navigator.of(context).pop();
                                 },
                               ),
                             ],
