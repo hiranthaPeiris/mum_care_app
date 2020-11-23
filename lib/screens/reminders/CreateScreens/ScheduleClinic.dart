@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/ClinicService.dart';
+
 //import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 class ScheduleClinic extends StatefulWidget {
+  final bool rescheduleFLAG;
+  final String docID;
+  final List<DocumentReference> userClinicRefList;
+  const ScheduleClinic(
+      {Key key, this.rescheduleFLAG, this.docID, this.userClinicRefList})
+      : super(key: key);
   @override
   _ScheduleClinicState createState() => _ScheduleClinicState();
 }
@@ -27,7 +34,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
   @override
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;
-
+    bool flag = widget.rescheduleFLAG;
     return pending
         ? Loading()
         : GestureDetector(
@@ -221,10 +228,18 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                                 });
                                 String dateSlug = getDateSlug();
                                 //print(' Data : $des , $_date, $_time, $dateslug');
-                                dynamic result = _clinicService.SaveClinic(
-                                    description.text,
-                                    dateSlug,
-                                    _userM.userCredential.user.uid);
+                                dynamic result;
+                                (flag)
+                                    ? result = _clinicService.clinicReschedule(
+                                        _userM.userCredential.user.uid,
+                                        widget.docID,
+                                        description.text,
+                                        dateSlug,
+                                        widget.userClinicRefList)
+                                    : result = _clinicService.saveClinics(
+                                        description.text,
+                                        dateSlug,
+                                        _userM.userCredential.user.uid);
 
                                 if (result == null) {
                                   setState(() {

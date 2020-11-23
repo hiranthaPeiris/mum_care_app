@@ -49,7 +49,7 @@ class RouteGenerator {
       case '/sechHomeVisits':
         return MaterialPageRoute(builder: (_) => SchHomeVisitSearch());
       case '/sechClinics':
-        return MaterialPageRoute(builder: (_) => ScheduleClinic());
+        return MaterialPageRoute(builder: (_) => ScheduleClinic(rescheduleFLAG: false));
       case '/chat':
         return MaterialPageRoute(builder: (_) => HomeChat());
       case '/leavingReport':
