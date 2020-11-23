@@ -185,6 +185,7 @@ class AuthService {
         mumIds.add(element.id);
       });
     }).catchError((onError) => print(onError));
+   return mumIds;
   }
 
 }

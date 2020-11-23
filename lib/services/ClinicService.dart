@@ -1,4 +1,3 @@
-import 'dart:wasm';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -130,9 +129,6 @@ class ClinicService {
   Future<void> clinicReschedule(String midUID, String docID, String desc,
       String dateTime, List<DocumentReference> userClinicRefList) async {
     //docID - midwife's clinic record id
-
-    //get list of mother assigned for midwife
-    QuerySnapshot query = await getMotherList(midUID);
 
     WriteBatch batch = _firestore.batch();
     DocumentReference midwifeClinic = _firestore
