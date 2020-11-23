@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
+import 'package:mun_care_app/models/UserReg.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -21,7 +23,7 @@ class _DashboardState extends State<Dashboard> {
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
-
+  var user = new UserM.get();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -157,24 +159,56 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              SliverList(
-                                delegate: SliverChildListDelegate([
-                                  Menu_liner_card(
-                                      heading: "Complete Registration",
-                                      content:
-                                          "Complete the competency family registration",
-                                      svgSrc: "assets/icons/Hamburger.svg",
-                                      press: () {
-                                        Navigator.pushNamed(context, '/comReg');
-                                      }),
+                              (user.userCustomData['role'] != 'midwife')
+                                  ? SliverList(
+                                      delegate: SliverChildListDelegate([
+                                        Menu_liner_card(
+                                            heading: "Mother List",
+                                            content: "List of your mothers",
+                                            svgSrc:
+                                                "assets/icons/Hamburger.svg",
+                                            press: () {
+                                              Navigator.pushNamed(
+                                                  context, '/motherAssign');
+                                            }),
+                                        /*
                                   Menu_liner_card(
                                       heading: "Pregnancy Registration",
                                       content:
                                           "Complete the pregnancy registration",
                                       svgSrc: "assets/icons/Hamburger.svg",
-                                      press: () {}),
-                                ]),
-                              ),
+                                      press: () {
+                                        
+                                      }),
+                                      */
+                                      ]),
+                                    )
+                                  : SliverList(
+                                      delegate: SliverChildListDelegate([
+                                        Menu_liner_card(
+                                            heading: "Complete Registration",
+                                            content:
+                                                "Complete the competency family registration",
+                                            svgSrc:
+                                                "assets/icons/Hamburger.svg",
+                                            press: () {
+                                              Navigator.pushNamed(
+                                                  context, '/comReg');
+                                              DateTime now = DateTime.now();
+                                              print(now);
+                                            }),
+                                        Menu_liner_card(
+                                            heading: "Pregnancy Registration",
+                                            content:
+                                                "Complete the pregnancy registration",
+                                            svgSrc:
+                                                "assets/icons/Hamburger.svg",
+                                            press: () {
+                                              Navigator.pushNamed(
+                                                  context, '/preReg');
+                                            }),
+                                      ]),
+                                    ),
                               SliverGrid(
                                   delegate: SliverChildListDelegate([
                                     Menu_card(
