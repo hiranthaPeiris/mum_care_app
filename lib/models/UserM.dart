@@ -12,8 +12,9 @@ class UserM {
   }
 
 //set constructor for uid
-  factory UserM.setUID({String uid}) {
+  factory UserM.setUID({String uid,User user}) {
     _userM.uid = uid;
+    _userM.user = user;
     return _userM;
   }
 
@@ -26,6 +27,7 @@ class UserM {
 
   //properties
   String uid;
+  User user;
   UserCredential userCredential;
   var userCustomData = new Map<String,dynamic>();
 }

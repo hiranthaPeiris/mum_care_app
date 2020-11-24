@@ -5,15 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
 
-
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   var userInstance = new UserM.get();
 
+
   UserM _userFromFirebase(User user) {
-    return user != null ? UserM.setUID(uid: user.uid) : null;
+    return user != null ? UserM.setUID(uid: user.uid,user: user) : null;
   }
 
   //auth change user stream
@@ -24,29 +24,28 @@ class AuthService {
         .map(_userFromFirebase);
   }
 
-  //sign in anaon - not using
-  Future signAnon() async {
-    try {
-      UserCredential userCredential = await _auth.signInAnonymously();
-      User user = userCredential.user;
-      return _userFromFirebase(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
+  // //sign in anaon - not using
+  // Future signAnon() async {
+  //   try {
+  //     UserCredential userCredential = await _auth.signInAnonymously();
+  //     User user = userCredential.user;
+  //     return _userFromFirebase(user);
+  //   } catch (e) {
+  //     print(e.toString());
+  //     return null;
+  //   }
+  // }
 
   //sign in email pass
   Future signIn(String email, String pass) async {
     try {
       UserCredential userCredential =
           await _auth.signInWithEmailAndPassword(email: email, password: pass);
-      var customData = await getUserCustomData(userCredential.user.uid);
+      Map<String, dynamic> customData =
+          await getUserCustomData(userCredential.user.uid);
 
       new UserM(user: userCredential, data: customData);
-
       return _userFromFirebase(userCredential.user);
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -93,6 +92,7 @@ class AuthService {
       }
     });
   }
+
   //sign out
   Future SignOut() async {
     try {
@@ -103,7 +103,7 @@ class AuthService {
     }
   }
 
- //register
+  //register
   Future Register(String email, String password, String name) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -118,6 +118,7 @@ class AuthService {
       return null;
     }
   }
+
 //set user role
   Future<void> setUserRole(String uid, String name) async {
     await _firestore
@@ -128,8 +129,8 @@ class AuthService {
           'role': 'user',
           'competencyFam': false,
           'PregnanctFam': false,
-          'midwifeID':'null',
-          'nameSearch':getSearchParam(name)
+          'midwifeID': 'null',
+          'nameSearch': getSearchParam(name)
         })
         .then((value) => print("user role added"))
         .catchError((err) => print(err));
@@ -185,7 +186,6 @@ class AuthService {
         mumIds.add(element.id);
       });
     }).catchError((onError) => print(onError));
-   return mumIds;
+    return mumIds;
   }
-
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:provider/provider.dart';
 
 class SchHomeVisitSearch extends StatefulWidget {
   @override
@@ -13,10 +14,11 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
   String searchPara = "";
   CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
-  final UserM _userM = UserM.get();
+  UserM _user;
 
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<UserM>(context);
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -93,15 +95,13 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                               stream: (searchPara == null || searchPara == '')
                                   ? collection
                                       .where('midwifeID',
-                                          isEqualTo:
-                                              _userM.userCredential.user.uid)
+                                          isEqualTo: _user.user.uid)
                                       .snapshots()
                                   : collection
                                       .where('nameSearch',
                                           arrayContains: searchPara)
                                       .where('midwifeID',
-                                          isEqualTo:
-                                              _userM.userCredential.user.uid)
+                                          isEqualTo: _user.user.uid)
                                       .snapshots(includeMetadataChanges: true),
                               builder: (BuildContext context,
                                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -187,7 +187,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
       } else {
         state = "competency Family";
       }
-    }else{
+    } else {
       state = "Not Applied";
     }
 
@@ -204,7 +204,8 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
             context,
             new MaterialPageRoute(
                 builder: (context) => ScheduleHomeVisits(
-                      document: document,midwifeId: _userM.uid,
+                      document: document,
+                      midwifeId: _user.uid,
                     )));
       },
     );

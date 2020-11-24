@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/ClinicService.dart';
+import 'package:provider/provider.dart';
 
 //import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 class ScheduleClinic extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
   final ClinicService _clinicService = ClinicService();
   final _formKey = GlobalKey<FormState>();
   bool pending = false;
-  UserM _userM = UserM.get();
+  UserM _user;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   DateTime _date;
   TimeOfDay _time;
@@ -34,6 +35,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
   @override
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;
+    _user = Provider.of<UserM>(context);
     bool flag = widget.rescheduleFLAG;
     return pending
         ? Loading()
@@ -231,7 +233,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                                 dynamic result;
                                 (flag)
                                     ? result = _clinicService.clinicReschedule(
-                                        _userM.userCredential.user.uid,
+                                        _user.user.uid,
                                         widget.docID,
                                         description.text,
                                         dateSlug,
@@ -239,7 +241,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                                     : result = _clinicService.saveClinics(
                                         description.text,
                                         dateSlug,
-                                        _userM.userCredential.user.uid);
+                                        _user.user.uid);
 
                                 if (result == null) {
                                   setState(() {
@@ -270,7 +272,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                             stream: _firestore
                                 .collection('users')
                                 .where('midwifeID',
-                                    isEqualTo: _userM.userCredential.user.uid)
+                                    isEqualTo: _user.user.uid)
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
