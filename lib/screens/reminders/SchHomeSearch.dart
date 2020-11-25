@@ -19,6 +19,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
   @override
   Widget build(BuildContext context) {
     _user = Provider.of<UserM>(context);
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);

@@ -13,7 +13,11 @@ class AuthService {
 
 
   UserM _userFromFirebase(User user) {
-    return user != null ? UserM.setUID(uid: user.uid,user: user) : null;
+    if(user != null){
+      return UserM.setUID(uid: user.uid,user: user);
+    }
+    return null;
+    //return user != null ? UserM.setUID(uid: user.uid,user: user) : null;
   }
 
   //auth change user stream
@@ -37,7 +41,7 @@ class AuthService {
   // }
 
   //sign in email pass
-  Future signIn(String email, String pass) async {
+  Future<UserM> signIn(String email, String pass) async {
     try {
       UserCredential userCredential =
           await _auth.signInWithEmailAndPassword(email: email, password: pass);
@@ -49,6 +53,7 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
+        return null;
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
         return null;
@@ -69,7 +74,7 @@ class AuthService {
 
         String uid = user.uid;
 
-        new UserM.setUID(uid: user.uid);
+        new UserM.setUID(uid: user.uid,user: user);
         //getting firebase message token
         String fcmToken = await _firebaseMessaging.getToken();
 

@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/services/HomeVisitService.dart';
 import 'package:uuid/uuid.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +29,6 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
 
   Widget build(BuildContext context) {
     _user = Provider.of<UserM>(context);
-
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -89,8 +87,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                       .snapshots()
                   : widget._firestore
                       .collection('HomeVisits')
-                      .where('midwifeID',
-                          isEqualTo: _user.uid)
+                      .where('midwifeID', isEqualTo: _user.uid)
                       .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -108,6 +105,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                               children: <Widget>[
                                 InkWell(
                                   onTap: () {
+                                    print(_user.userCustomData['role']);
                                     if (_user.userCustomData['role'] ==
                                         "midwife") {
                                       //forUser(itemTitle,itemStatus,itemDate);

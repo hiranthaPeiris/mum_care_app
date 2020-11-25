@@ -30,4 +30,5 @@ class UserM {
   User user;
   UserCredential userCredential;
   var userCustomData = new Map<String,dynamic>();
+
 }

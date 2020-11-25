@@ -36,6 +36,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;
     _user = Provider.of<UserM>(context);
+  
     bool flag = widget.rescheduleFLAG;
     return pending
         ? Loading()

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
+import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -21,11 +23,11 @@ class _DashboardState extends State<Dashboard> {
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
-
+  UserM _user;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    _user = Provider.of<UserM>(context);
     return pending
         ? Loading()
         : Scaffold(
@@ -33,7 +35,15 @@ class _DashboardState extends State<Dashboard> {
             endDrawer: Drawer(
               child: ListView(
                 children: [
-                  DrawerHeader(child: Text("Settings")),
+                  DrawerHeader(child: Text("MUM & CARE")),
+                  ListTile(
+                    title: Text("Help"),
+                    onTap: () async {},
+                  ),
+                  ListTile(
+                    title: Text("Settings"),
+                    onTap: () async {},
+                  ),
                   ListTile(
                     title: Text("Sign out"),
                     onTap: () async {
@@ -159,7 +169,7 @@ class _DashboardState extends State<Dashboard> {
                             slivers: <Widget>[
                               SliverList(
                                 delegate: SliverChildListDelegate([
-                                  Menu_liner_card(
+                                  Menu_liner_card(                            
                                       heading: "Complete Registration",
                                       content:
                                           "Complete the competency family registration",

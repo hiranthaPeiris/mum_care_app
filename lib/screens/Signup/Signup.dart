@@ -204,10 +204,12 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
                       controller: myController2,
                       decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(16),
                         border: OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(20.0)),
                         labelText: 'Comfirm Password',
@@ -222,7 +224,6 @@ class _SignupState extends State<Signup> {
                 ],
               ),
             ),
-
             Container(
               child: Column(
                 children: <Widget>[
@@ -247,9 +248,9 @@ class _SignupState extends State<Signup> {
                   ),
                 ],
               ),
-            ), ///////////
+            ),
             Container(
-              height: 45.0,
+              height: 40.0,
               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: RaisedButton(
                 shape: StadiumBorder(),
@@ -257,7 +258,7 @@ class _SignupState extends State<Signup> {
                 color: Colors.lightBlue,
                 child: Text('Sign Up',
                     style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 20.0,
                     )),
                 onPressed: () {
                   if (validate()) {
@@ -275,7 +276,6 @@ class _SignupState extends State<Signup> {
                 },
               ),
             ),
-
             Text(
               error,
               style: TextStyle(color: Colors.red, fontSize: 14.0),
