@@ -20,6 +20,8 @@ import 'package:mun_care_app/screens/reports/dairlyReport.dart';
 import 'package:mun_care_app/screens/reports/monthlyReport.dart';
 import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
 
+import 'screens/reports/ReportSearch.dart';
+
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -55,6 +57,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => DairlyReportView());
       case '/monthlyReport':
         return MaterialPageRoute(builder: (_) => MonthlyReport());
+      case '/searchReport':
+        return MaterialPageRoute(builder: (_) => ReportSearch());
       case '/leaveForm':
         return MaterialPageRoute(builder: (_) => LeaveForm());
       case '/upcomingHomeVisit':

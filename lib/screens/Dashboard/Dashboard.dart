@@ -228,7 +228,17 @@ class _DashboardState extends State<Dashboard> {
                                         Navigator.pushNamed(
                                             context, '/sechClinics');
                                       },
-                                    )
+                                    ),
+                                    Menu_card(
+                                      title: "Reports",
+                                      heading: "Monthly and Daily Report",
+                                      svgSrc:
+                                          "assets/icons/home-visits-sch.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/searchReport');
+                                      },
+                                    ),
                                   ]),
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
