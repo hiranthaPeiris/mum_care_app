@@ -19,7 +19,6 @@ import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit
 
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/Reports/dairlyRepo.dart';
-import 'package:mun_care_app/screens/Reports/monthlyRepo.dart';
 import 'package:mun_care_app/screens/Reports/diary.dart';
 import 'package:mun_care_app/screens/registration/MotherList.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
@@ -30,7 +29,6 @@ import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/screens/viewHomeVisit/viewUpcomingHomeVisit.dart';
 import 'package:mun_care_app/screens/reports/dairlyDiry.dart';
-import 'package:mun_care_app/screens/reports/dairlyReport.dart';
 import 'package:mun_care_app/screens/reports/monthlyReport.dart';
 import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
 
