@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
 
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  var userInstance = new UserM.get();
 
   UserM _userFromFirebase(User user) {
     return user != null ? UserM.setUID(uid: user.uid) : null;
@@ -39,10 +41,12 @@ class AuthService {
     try {
       UserCredential userCredential =
           await _auth.signInWithEmailAndPassword(email: email, password: pass);
-      var userRole = await getUserRole(userCredential.user.uid);
+      var customData = await getUserCustomData(userCredential.user.uid);
 
-      new UserM(user: userCredential, data: userRole);
+      new UserM(user: userCredential, data: customData);
+
       return _userFromFirebase(userCredential.user);
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -65,6 +69,7 @@ class AuthService {
         // Get the token for this device
 
         String uid = user.uid;
+
         new UserM.setUID(uid: user.uid);
         //getting firebase message token
         String fcmToken = await _firebaseMessaging.getToken();
@@ -88,7 +93,6 @@ class AuthService {
       }
     });
   }
-
   //sign out
   Future SignOut() async {
     try {
@@ -99,7 +103,7 @@ class AuthService {
     }
   }
 
-  //register
+ //register
   Future Register(String email, String password, String name) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -114,7 +118,6 @@ class AuthService {
       return null;
     }
   }
-
 //set user role
   Future<void> setUserRole(String uid, String name) async {
     await _firestore
@@ -143,8 +146,8 @@ class AuthService {
   }
 
   //get user role
-  Future<Map<String, dynamic>> getUserRole(String uid) async {
-    await _firestore
+  Future<Map<String, dynamic>> getUserCustomData(String uid) async {
+    return await _firestore
         .collection('users')
         .doc(uid)
         .get()
@@ -158,13 +161,31 @@ class AuthService {
       }
     });
   }
-  List<String> getSearchParam(String param){
-    List <String> searchList = List();
+
+  //search data creator
+  List<String> getSearchParam(String param) {
+    List<String> searchList = List();
     String temp = "";
-    for(int i=0;i<param.length;i++){
-      temp = temp+ param[i];
+    for (int i = 0; i < param.length; i++) {
+      temp = temp + param[i];
       searchList.add(temp);
     }
     return searchList;
   }
+
+  Future<List<String>> getMyAssigns(String uid) async {
+    List<String> mumIds = List();
+    await _firestore
+        .collection('users')
+        .where('midwifeID', isEqualTo: uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        print(element.id);
+        mumIds.add(element.id);
+      });
+    }).catchError((onError) => print(onError));
+   return mumIds;
+  }
+
 }

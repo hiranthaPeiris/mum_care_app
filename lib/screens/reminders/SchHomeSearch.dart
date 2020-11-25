@@ -13,7 +13,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
   String searchPara = "";
   CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
-  UserM _userM = UserM.get();
+  final UserM _userM = UserM.get();
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                                     children: snapshot.data.docs
                                         .map((DocumentSnapshot document) {
                                   //refe from below
-                                  return ListItem(document);
+                                  return listItem(document);
                                   /*new ListTile(
                                     leading: Icon(Icons.person_rounded),
                                     title: new Text(document['name']),
@@ -179,7 +179,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
     );
   }
 
-  Widget ListItem(DocumentSnapshot document) {
+  Widget listItem(DocumentSnapshot document) {
     String state = "null";
     if (document['competencyFam'] == true) {
       if (document['PregnanctFam'] == true) {
@@ -187,6 +187,8 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
       } else {
         state = "competency Family";
       }
+    }else{
+      state = "Not Applied";
     }
 
     return new ListTile(
@@ -202,7 +204,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
             context,
             new MaterialPageRoute(
                 builder: (context) => ScheduleHomeVisits(
-                      document: document,
+                      document: document,midwifeId: _userM.uid,
                     )));
       },
     );

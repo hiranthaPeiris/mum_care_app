@@ -21,14 +21,27 @@ class _SignupState extends State<Signup> {
   String email = "";
   String confPassword = "";
   String password = "";
+  String _comfirmPassword = "";
+  TextEditingController myController1 = new TextEditingController();
+  TextEditingController myController2 = new TextEditingController();
+
+  void dispose() {
+    super.dispose();
+    myController1.dispose();
+    myController2.dispose();
+  }
+
   final _formKey = GlobalKey<FormState>();
 
   bool validate() {
-    if (email.isEmpty && password.isEmpty && name.isEmpty && confPassword.isEmpty) {
+    if (email.isEmpty &&
+        password.isEmpty &&
+        name.isEmpty &&
+        confPassword.isEmpty) {
       print("fields empty");
       return false;
     }
-    if(confPassword==password){
+    if (confPassword == password) {
       print("pass match");
       return true;
     }
@@ -79,7 +92,8 @@ class _SignupState extends State<Signup> {
             Center(
               child: Container(
                 alignment: Alignment.center,
-                child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SignInButton.mini(
                       buttonType: ButtonType.google,
@@ -117,7 +131,7 @@ class _SignupState extends State<Signup> {
             Form(
               key: _formKey,
               child: Column(
-                children: [
+                children: <Widget>[
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
@@ -155,6 +169,7 @@ class _SignupState extends State<Signup> {
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
+                      controller: myController1,
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding: EdgeInsets.all(16),
@@ -164,7 +179,7 @@ class _SignupState extends State<Signup> {
                       ),
                       onChanged: (val) {
                         setState(() {
-                          password=val;
+                          password = val;
                         });
                       },
                       obscureText: true,
@@ -188,6 +203,22 @@ class _SignupState extends State<Signup> {
                       obscureText: true,
                     ),
                   ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: TextField(
+                      controller: myController2,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(20.0)),
+                        labelText: 'Comfirm Password',
+                      ),
+                      onChanged: (val) {
+                        setState(() {
+                          _comfirmPassword = val;
+                        });
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
@@ -230,13 +261,13 @@ class _SignupState extends State<Signup> {
                     )),
                 onPressed: () {
                   if (validate()) {
-                    dynamic result = _auth.Register(email, password,name);
+                    dynamic result = _auth.Register(email, password, name);
                     if (result == null) {
                       setState(() {
                         error = 'Please supply a valid email';
                       });
                     }
-                  }else{
+                  } else {
                     setState(() {
                       error = 'Please check the details again';
                     });

@@ -28,14 +28,14 @@ class _MyAppState extends State<MyApp> {
       new GlobalKey<NavigatorState>();
   final NotificationService _notificationService = NotificationService();
 
-  Future Startup() async {
+  Future startUp() async {
     await _notificationService.InitalizeMessaging();
     print("notifi start");
   }
 
   @override
   Widget build(BuildContext context) {
-    Startup();
+    startUp();
     return StreamProvider<UserM>.value(
       value: AuthService().user,
       child: MaterialApp(
@@ -65,7 +65,7 @@ class AppFire extends StatelessWidget {
       future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         // Check for errors
-        //Startup();
+        //startUp();
         if (snapshot.hasError) {
           String tostring = snapshot.error.toString();
           print(tostring);
