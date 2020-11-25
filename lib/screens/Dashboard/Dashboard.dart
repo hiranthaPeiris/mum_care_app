@@ -192,11 +192,7 @@ class _DashboardState extends State<Dashboard> {
                                       svgSrc: "assets/icons/home-visits.svg",
                                       press: () {
                                         Navigator.pushNamed(
-<<<<<<< HEAD
                                             context, '/upcomingHomeVisit');
-=======
-                                            context, '/UpcomingHome');
->>>>>>> bd5a098a8df1401710c3c087145552bd0aaf1eff
                                       },
                                     ),
                                     Menu_card(

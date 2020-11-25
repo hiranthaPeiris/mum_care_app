@@ -72,7 +72,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                               children: [
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
-                                                  child: Text('Daily Report',style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.white),textAlign: TextAlign.center,),
+                                                  child: Text('Select Your Date',style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.white),textAlign: TextAlign.center,),
                                                 ),
                                                 Container(
                                                   width: 100,
