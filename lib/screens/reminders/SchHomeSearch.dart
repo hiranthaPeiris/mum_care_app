@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'file:///F:/group-6/mun_care_app/lib/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
+import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/models/UserM.dart';
 
 class SchHomeVisitSearch extends StatefulWidget {
@@ -13,12 +13,12 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
   String searchPara = "";
   CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
-  UserM _userM = UserM.get();
+  final UserM _userM = UserM.get();
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
@@ -68,8 +68,8 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 15),
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 5),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(29.5),
@@ -77,7 +77,8 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "Search",
-                                icon: SvgPicture.asset("assets/icons/search.svg"),
+                                icon:
+                                    SvgPicture.asset("assets/icons/search.svg"),
                                 border: InputBorder.none,
                               ),
                               onChanged: (val) {
@@ -119,7 +120,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                                     children: snapshot.data.docs
                                         .map((DocumentSnapshot document) {
                                   //refe from below
-                                  return ListItem(document);
+                                  return listItem(document);
                                   /*new ListTile(
                                     leading: Icon(Icons.person_rounded),
                                     title: new Text(document['name']),
@@ -178,7 +179,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
     );
   }
 
-  Widget ListItem(DocumentSnapshot document) {
+  Widget listItem(DocumentSnapshot document) {
     String state = "null";
     if (document['competencyFam'] == true) {
       if (document['PregnanctFam'] == true) {
@@ -186,6 +187,8 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
       } else {
         state = "competency Family";
       }
+    }else{
+      state = "Not Applied";
     }
 
     return new ListTile(
@@ -201,7 +204,7 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
             context,
             new MaterialPageRoute(
                 builder: (context) => ScheduleHomeVisits(
-                      document: document,
+                      document: document,midwifeId: _userM.uid,
                     )));
       },
     );

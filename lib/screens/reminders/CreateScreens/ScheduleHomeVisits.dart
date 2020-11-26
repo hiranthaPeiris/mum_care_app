@@ -2,14 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/services/HomeVisitService.dart';
 
 //import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class ScheduleHomeVisits extends StatefulWidget {
   //String
   final DocumentSnapshot document;
-
-  const ScheduleHomeVisits({Key key, this.document}) : super(key: key);
+  final String midwifeId;
+  const ScheduleHomeVisits({Key key, this.document, this.midwifeId})
+      : super(key: key);
   @override
   _ScheduleHomeVisitsState createState() => _ScheduleHomeVisitsState();
 }
@@ -54,29 +56,40 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
   bool pending = false;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final HomeVisitService _homeVisitService = HomeVisitService();
 
   String firestoreCollectionName = 'ShedulehomeVisit';
-  //HomeShedule currentShedule;
-  //String montherval = "Maala";
   String selectedType;
-
-  Future<void> addBook(String desc, String dateTime) async {
-    // HomeShedule she1 = HomeShedule(
-    //     description: description.text,
-    //     dateTime: _
-    //     mothername: montherval);
+/*
+  Future<void> addHomeVisit(String desc, String dateTime) async {
     try {
+  
       var homeVisit = _firestore
           .collection("Bookings")
-          .doc(widget.document.id)
+          .doc('IhiVRXSUfZPKoKpaNZgFtlPosj22')
           .collection('HomeVisits');
 
-      await homeVisit.add({'description': desc, 'dateTime': dateTime});
+      var midwifeVisit = _firestore
+          .collection('Bookings')
+          .doc(widget.midwifeId)
+          .collection('HomeVisits');
+      //data for user's home visit collection
+      await homeVisit.add({
+        'description': desc,
+        'dateTime': dateTime,
+        'status': "pending"
+      });
+      //data for midwife's home visit collection
+      await midwifeVisit.add({
+        'description': desc,
+        'dateTime': dateTime,
+        'status': "pending"
+      });
     } catch (e) {
       print(e.toString());
     }
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;
@@ -250,8 +263,11 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                             });
                             String dateSlug = getDateSlug();
                             //print(' Data : $des , $_date, $_time, $dateslug');
-                            dynamic result =
-                                addBook(description.text, dateSlug);
+                            dynamic result = _homeVisitService.addHomeVisit(
+                                description.text,
+                                dateSlug,
+                                widget.document.id,
+                                widget.midwifeId);
                             if (result == null) {
                               setState(() {
                                 pending = false;
@@ -266,7 +282,7 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                           } else {
                             print("validate failed");
                           }
-                          //addBook();
+                          //addHomeVisit();
                         },
                       ),
                     ),

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +8,6 @@ import 'package:mun_care_app/helpers/MessageStream.dart';
 import 'package:mun_care_app/models/Notification.model.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
-import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 import '../Locator.dart';
 

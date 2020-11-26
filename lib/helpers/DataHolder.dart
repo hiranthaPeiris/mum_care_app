@@ -14,8 +14,8 @@ class DataHolder{
     new NotificationM("Test header1", "test Content 1", new DateTime(2000))
   ];
 
-  void AddNotification(Map<String, dynamic> message) {
-    var notification = message['notification'];
+  void addNotification(Map<String, dynamic> message) {
+    //var notification = message['notification'];
     var data = message['data'];
     print(data);
     print("from data");
