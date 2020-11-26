@@ -126,6 +126,7 @@ class AuthService {
         .set({
           'name': name,
           'role': 'user',
+          'area01': 'notSelect',
           'competencyFam': false,
           'PregnanctFam': false,
           'midwifeID':'null',
