@@ -32,18 +32,9 @@ class _DairlyReportViewState extends State<DairlyReportView> {
     return user != null ? UserM.setUID(uid: user.uid) : null;
   }
 
-  var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
-  // new UserM.get().userCredential.user.uid;
-
-  TextEditingController name = TextEditingController();
-  TextEditingController department = TextEditingController();
-  TextEditingController newMothers = TextEditingController();
-  TextEditingController visiting = TextEditingController();
-  TextEditingController registerdMothers = TextEditingController();
-
-  String mohDropdownValue = 'Select Area';
-  String phmDropdownValue = 'Select Area';
-  String ageDropdownValue = '<16';
+  //var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
+  //
+  var useri = new UserM.get().userCredential.user.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -175,13 +166,11 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                     //.collection('HomeVisits')
                                     //.snapshots(),
                                     builder: (context, snapshot) {
-                                      print(widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString());
+                                      print(widget.getDate.year.toString() +
+                                          "/" +
+                                          widget.getDate.month.toString() +
+                                          "/" +
+                                          widget.getDate.day.toString());
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }

@@ -212,11 +212,12 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                   'Search'),
                                                               onPressed: () {
                                                                 Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(builder: (context) => DairlyReportView(getDate:_dayReport)),
-                                                                  );
-
-
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          DairlyReportView(
+                                                                              getDate: _dayReport)),
+                                                                );
                                                               },
                                                             ),
                                                           ),
@@ -354,14 +355,16 @@ class _ReportSearchState extends State<ReportSearch> {
                                                         Text(
                                                           _monthReport == null
                                                               ? "-------"
-                                                              : _monthReport.year
+                                                              : _monthReport
+                                                                      .year
                                                                       .toString() +
                                                                   "/" +
                                                                   _monthReport
                                                                       .month
                                                                       .toString() +
                                                                   "/" +
-                                                                  _monthReport.day
+                                                                  _monthReport
+                                                                      .day
                                                                       .toString(),
                                                           style: TextStyle(
                                                               fontSize: 20),
@@ -385,7 +388,8 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                   'Search'),
                                                               onPressed: () {
                                                                 Navigator.pushNamed(
-                                            context, '/geoLocate');
+                                                                    context,
+                                                                    '/geoLocate');
                                                               },
                                                             ),
                                                           ),

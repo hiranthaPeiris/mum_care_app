@@ -6,6 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mun_care_app/Wapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
+import 'package:mun_care_app/sister/DutyChecking.dart';
+import 'package:mun_care_app/sister/LeavingAccept.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/LeavingReport/LeavingReport.dart';
 import 'package:mun_care_app/screens/MedicationReport/MedicationReport.dart';
@@ -84,6 +86,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => GeoLocation());
       case '/leaveForm':
         return MaterialPageRoute(builder: (_) => LeaveForm());
+      case '/leavingAccept':
+        return MaterialPageRoute(builder: (_) => LeaveAccept());
+      case '/dutyChecking':
+        return MaterialPageRoute(builder: (_) => DutyCheck());
       case '/upcomingHomeVisit':
         return MaterialPageRoute(
             builder: (_) => UpcomingHomeVisitFirebaseDemo());
