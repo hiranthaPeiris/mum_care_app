@@ -239,6 +239,8 @@ class ComRegDB {
 }
 
 class PreRegDB {
+  String mohDropDownValue;
+  String phmDropDownValue;
   String gnDivision;
   String fcName;
   String hcName;
@@ -262,7 +264,10 @@ class PreRegDB {
   DocumentReference documentReference;
 
   PreRegDB(
-      {this.gnDivision,
+      {
+      this.mohDropDownValue,
+      this.phmDropDownValue,  
+      this.gnDivision,
       this.fcName,
       this.hcName,
       this.coName,
@@ -281,6 +286,8 @@ class PreRegDB {
       this.regDate});
 
   PreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    mohDropDownValue = map["_mohDropDownValue"];
+    phmDropDownValue = map["_phmDropDownValue"];
     gnDivision = map["_gnDivision"];
     fcName = map["_fcName"];
     hcName = map["_hcName"];
@@ -306,6 +313,8 @@ class PreRegDB {
 
   toJson() {
     return {
+      '_mohDropDownValue': mohDropDownValue,
+      '_phmDropDownValue': phmDropDownValue,
       '_gnDivision': gnDivision,
       '_fcName': fcName,
       '_hcName': hcName,
@@ -365,6 +374,7 @@ class WombPreRegDB {
       '_kgWeight': kgWeight,
       '_gWeight': gWeight,
       '_sex': sex,
+      
     };
   }
 }

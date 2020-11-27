@@ -384,8 +384,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                                               child: Text(
                                                                   'Search'),
                                                               onPressed: () {
-                                                                Navigator.pushNamed(
-                                            context, '/geoLocate');
+                                                                
                                                               },
                                                             ),
                                                           ),
