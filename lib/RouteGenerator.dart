@@ -1,6 +1,8 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:geolocation/geolocation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mun_care_app/Wapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
@@ -18,7 +20,7 @@ import 'package:mun_care_app/screens/leavingForm/leaveForm.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
-import 'package:mun_care_app/screens/Reports/dairlyRepo.dart';
+
 import 'package:mun_care_app/screens/Reports/diary.dart';
 import 'package:mun_care_app/screens/registration/MotherList.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
@@ -31,13 +33,14 @@ import 'package:mun_care_app/screens/viewHomeVisit/viewUpcomingHomeVisit.dart';
 import 'package:mun_care_app/screens/reports/dairlyDiry.dart';
 import 'package:mun_care_app/screens/reports/monthlyReport.dart';
 import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
+import 'package:mun_care_app/services/GeoLocation.dart';
 
 import 'screens/reports/ReportSearch.dart';
-
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
+    DateTime getDate;
 
     switch (settings.name) {
       case '/':
@@ -59,7 +62,8 @@ class RouteGenerator {
       case '/sechHomeVisits':
         return MaterialPageRoute(builder: (_) => SchHomeVisitSearch());
       case '/sechClinics':
-        return MaterialPageRoute(builder: (_) => ScheduleClinic(rescheduleFLAG: false));
+        return MaterialPageRoute(
+            builder: (_) => ScheduleClinic(rescheduleFLAG: false));
       case '/chat':
         return MaterialPageRoute(builder: (_) => HomeChat());
       case '/leavingReport':
@@ -69,16 +73,15 @@ class RouteGenerator {
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':
-        return MaterialPageRoute(
-            builder: (_) => ViewUpcomingHomevisit());
+        return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
-      case '/dairlyReportView':
-        return MaterialPageRoute(builder: (_) => DairlyReportView());
       case '/searchReport':
         return MaterialPageRoute(builder: (_) => ReportSearch());
+      case '/geoLocate':
+        return MaterialPageRoute(builder: (_) => GeoLocation());
       case '/leaveForm':
         return MaterialPageRoute(builder: (_) => LeaveForm());
       case '/upcomingHomeVisit':

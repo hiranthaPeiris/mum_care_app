@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class DairlyReportView extends StatefulWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final DateTime getDate;
+  DairlyReportView({Key key, this.getDate}) : super(key: key);
 
   @override
   _DairlyReportViewState createState() => new _DairlyReportViewState();
@@ -161,10 +163,25 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('ComDatabase')
+                                        .where("_regDate",
+                                            isEqualTo: widget.getDate.year
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.month
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.day.toString())
                                         .snapshots(),
                                     //.collection('HomeVisits')
                                     //.snapshots(),
                                     builder: (context, snapshot) {
+                                      print(widget.getDate.year
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.month
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.day.toString());
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }
@@ -309,6 +326,14 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('PreDatabase')
+                                        .where("_regDate",
+                                            isEqualTo: widget.getDate.year
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.month
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.day.toString())
                                         .snapshots(),
                                     //.collection('HomeVisits')
                                     //.snapshots(),

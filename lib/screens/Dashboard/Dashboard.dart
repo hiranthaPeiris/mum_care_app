@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/main.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
+import 'package:mun_care_app/services/GeoLocation.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
@@ -159,7 +161,7 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              (user.userCustomData['role'] != 'midwife')
+                              (user.userCustomData['role'] == 'midwife')
                                   ? SliverList(
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
@@ -274,6 +276,16 @@ class _DashboardState extends State<Dashboard> {
                                       press: () {
                                         Navigator.pushNamed(
                                             context, '/searchReport');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Map",
+                                      heading: "Geo Loacation",
+                                      svgSrc:
+                                          "assets/icons/home-visits-sch.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/geoLocate');
                                       },
                                     ),
                                   ]),

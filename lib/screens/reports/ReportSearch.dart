@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
 
 class ReportSearch extends StatefulWidget {
   @override
@@ -209,7 +210,14 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                 ElevatedButton(
                                                               child: Text(
                                                                   'Search'),
-                                                              onPressed: () {},
+                                                              onPressed: () {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(builder: (context) => DairlyReportView(getDate:_dayReport)),
+                                                                  );
+
+
+                                                              },
                                                             ),
                                                           ),
                                                         ),
@@ -375,7 +383,10 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                 ElevatedButton(
                                                               child: Text(
                                                                   'Search'),
-                                                              onPressed: () {},
+                                                              onPressed: () {
+                                                                Navigator.pushNamed(
+                                            context, '/geoLocate');
+                                                              },
                                                             ),
                                                           ),
                                                         ),

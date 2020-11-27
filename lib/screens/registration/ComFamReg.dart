@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
@@ -28,7 +29,7 @@ class _ComFamRegState extends State<ComFamReg> {
   int currentStep = 0;
   bool complete = false;
   bool isActive = false;
-  
+
   //StepState stepState=StepState.editing;
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
@@ -396,6 +397,11 @@ class _ComFamRegState extends State<ComFamReg> {
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
+      String dateConvert = date.year.toString() +
+          "/" +
+          date.month.toString() +
+          "/" +
+          date.day.toString();
       ComRegDB comRegDB = ComRegDB(
         husbandName: myController1.text,
         wifeName: myController2.text,
@@ -448,7 +454,7 @@ class _ComFamRegState extends State<ComFamReg> {
         menHeight: myController11.text,
         womenBloodDropDownValue: womenBloodDropdownValue,
         menBloodDropDownValue: menBloodDropdownValue,
-        regDate:date.toString(),
+        regDate: dateConvert,
       );
 
       try {

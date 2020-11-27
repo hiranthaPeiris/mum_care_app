@@ -115,6 +115,11 @@ class _PreFamRegState extends State<PreFamReg> {
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
+      String dateConvert = date.year.toString() +
+          "/" +
+          date.month.toString() +
+          "/" +
+          date.day.toString();
       PreRegDB preRegDB = PreRegDB(
           gnDivision: myController12.text,
           fcName: myController13.text,
@@ -126,7 +131,7 @@ class _PreFamRegState extends State<PreFamReg> {
           maleria: maleria_Yes,
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
-          regDate: date.toString());
+          regDate: dateConvert);
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
           await Firestore.instance
@@ -171,7 +176,7 @@ class _PreFamRegState extends State<PreFamReg> {
           .update({
             'PrenanctFam': true,
           })
-          .then((value) => print("Competency true"))
+          .then((value) => print("Pregnancy true"))
           .catchError((err) => print(err));
     }
 
