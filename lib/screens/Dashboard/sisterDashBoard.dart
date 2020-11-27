@@ -3,27 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
-import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
-import 'package:mun_care_app/models/UserReg.dart';
 
-class Dashboard extends StatefulWidget {
+class SisterDashboard extends StatefulWidget {
   @override
-  _DashboardState createState() => _DashboardState();
+  _SisterDashboardState createState() => _SisterDashboardState();
 }
 
 AuthService _authService = AuthService();
 
-class _DashboardState extends State<Dashboard> {
+class _SisterDashboardState extends State<SisterDashboard> {
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
-  var user = new UserM.get();
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -159,116 +157,38 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              (user.userCustomData['role'] == 'midwife')
-                                  ? SliverList(
-                                      delegate: SliverChildListDelegate([
-                                        Menu_liner_card(
-                                            heading: "Mother List",
-                                            content: "List of your mothers",
-                                            svgSrc:
-                                                "assets/icons/Hamburger.svg",
-                                            press: () {
-                                              Navigator.pushNamed(
-                                                  context, '/motherAssign');
-                                            }),
-                                        /*
+                              SliverList(
+                                delegate: SliverChildListDelegate([
+                                  Menu_liner_card(
+                                      heading: "Complete Registration",
+                                      content:
+                                          "Complete the competency family registration",
+                                      svgSrc: "assets/icons/Hamburger.svg",
+                                      press: () {
+                                        Navigator.pushNamed(context, '/comReg');
+                                      }),
                                   Menu_liner_card(
                                       heading: "Pregnancy Registration",
                                       content:
                                           "Complete the pregnancy registration",
                                       svgSrc: "assets/icons/Hamburger.svg",
-                                      press: () {
-                                        
-                                      }),
-                                      */
-                                      ]),
-                                    )
-                                  : SliverList(
-                                      delegate: SliverChildListDelegate([
-                                        Menu_liner_card(
-                                            heading: "Complete Registration",
-                                            content:
-                                                "Complete the competency family registration",
-                                            svgSrc:
-                                                "assets/icons/Hamburger.svg",
-                                            press: () {
-                                              Navigator.pushNamed(
-                                                  context, '/comReg');
-                                              DateTime now = DateTime.now();
-                                              print(now);
-                                            }),
-                                        Menu_liner_card(
-                                            heading: "Pregnancy Registration",
-                                            content:
-                                                "Complete the pregnancy registration",
-                                            svgSrc:
-                                                "assets/icons/Hamburger.svg",
-                                            press: () {
-                                              Navigator.pushNamed(
-                                                  context, '/preReg');
-                                            }),
-                                      ]),
-                                    ),
+                                      press: () {}),
+                                ]),
+                              ),
                               SliverGrid(
                                   delegate: SliverChildListDelegate([
                                     Menu_card(
-                                      title: "View Upcoming Clinics",
-                                      heading: "Clinics",
+                                      title: "Leaving Acceptance ",
+                                      heading: "Leaving Acceptance ",
                                       svgSrc: "assets/icons/clinics.svg",
                                       press: () {
                                         Navigator.pushNamed(
-                                            context, '/UpcomingClinics');
+                                            context, '/leaveForm');
                                       },
                                     ),
                                     Menu_card(
-                                      title: "View Upcoming Home Visits",
-                                      heading: "Home Visits",
-                                      svgSrc: "assets/icons/home-visits.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/upcomingHomeVisit');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Report private medications",
-                                      heading: "Report Medications",
-                                      svgSrc: "assets/icons/yoga.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/MedicalReport');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Report leaving residential area",
-                                      heading: "Report Leaving",
-                                      svgSrc: "assets/icons/yoga.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/leavingReport');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Home visits",
-                                      heading: "Schedule Home Visits",
-                                      svgSrc:
-                                          "assets/icons/home-visits-sch.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/sechHomeVisits');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Clinics",
-                                      heading: "Schedule Clinics",
-                                      svgSrc: "assets/icons/clinics-sch.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/sechClinics');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Reports",
-                                      heading: "Monthly and Daily Report",
+                                      title: "Duty Check",
+                                      heading: "Duty Check",
                                       svgSrc:
                                           "assets/icons/home-visits-sch.svg",
                                       press: () {

@@ -12,14 +12,15 @@ import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 
-class Dashboard extends StatefulWidget {
+class MidwifeDashboard extends StatefulWidget {
   @override
-  _DashboardState createState() => _DashboardState();
+  _MidwifeDashboardState createState() => _MidwifeDashboardState();
 }
 
 AuthService _authService = AuthService();
 
-class _DashboardState extends State<Dashboard> {
+class _MidwifeDashboardState extends State<MidwifeDashboard> {
+  bool isSwitched = false;
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
@@ -155,6 +156,23 @@ class _DashboardState extends State<Dashboard> {
                                   fontSize: 36,
                                   fontFamily: "Roboto",
                                   fontWeight: FontWeight.w800)),
+                          Row(
+                            children: <Widget>[
+                              Text("DUTY"),
+                              Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched = value;
+
+                                    print(isSwitched);
+                                  });
+                                },
+                                activeTrackColor: Colors.lightGreenAccent,
+                                activeColor: Colors.green,
+                              ),
+                            ],
+                          ),
                           Search_bar(),
                           Expanded(
                               child: CustomScrollView(
@@ -183,7 +201,8 @@ class _DashboardState extends State<Dashboard> {
                                       */
                                       ]),
                                     )
-                                  : SliverList(
+                                  :
+                                  /*SliverList(
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
                                             heading: "Complete Registration",
@@ -208,82 +227,66 @@ class _DashboardState extends State<Dashboard> {
                                                   context, '/preReg');
                                             }),
                                       ]),
-                                    ),
-                              SliverGrid(
-                                  delegate: SliverChildListDelegate([
-                                    Menu_card(
-                                      title: "View Upcoming Clinics",
-                                      heading: "Clinics",
-                                      svgSrc: "assets/icons/clinics.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/UpcomingClinics');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "View Upcoming Home Visits",
-                                      heading: "Home Visits",
-                                      svgSrc: "assets/icons/home-visits.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/upcomingHomeVisit');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Report private medications",
-                                      heading: "Report Medications",
-                                      svgSrc: "assets/icons/yoga.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/MedicalReport');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Report leaving residential area",
-                                      heading: "Report Leaving",
-                                      svgSrc: "assets/icons/yoga.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/leavingReport');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Home visits",
-                                      heading: "Schedule Home Visits",
-                                      svgSrc:
-                                          "assets/icons/home-visits-sch.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/sechHomeVisits');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Clinics",
-                                      heading: "Schedule Clinics",
-                                      svgSrc: "assets/icons/clinics-sch.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/sechClinics');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Reports",
-                                      heading: "Monthly and Daily Report",
-                                      svgSrc:
-                                          "assets/icons/home-visits-sch.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/searchReport');
-                                      },
-                                    ),
-                                  ]),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: .85,
-                                    crossAxisSpacing: 20,
-                                    mainAxisSpacing: 20,
-                                  ))
+                                    ),*/
+                                  SliverGrid(
+                                      delegate: SliverChildListDelegate([
+                                        /*Menu_card(
+                                          title: "View Upcoming Clinics",
+                                          heading: "Clinics",
+                                          svgSrc: "assets/icons/clinics.svg",
+                                          press: () {
+                                            Navigator.pushNamed(
+                                                context, '/UpcomingClinics');
+                                          },
+                                        ),
+                                        Menu_card(
+                                          title: "View Upcoming Home Visits",
+                                          heading: "Home Visits",
+                                          svgSrc:
+                                              "assets/icons/home-visits.svg",
+                                          press: () {
+                                            Navigator.pushNamed(
+                                                context, '/upcomingHomeVisit');
+                                          },
+                                        ),*/
+
+                                        Menu_card(
+                                          title: "Duty Inform",
+                                          heading: "Report Medications",
+                                          svgSrc: "assets/icons/yoga.svg",
+                                          press: () {
+                                            Navigator.pushNamed(
+                                                context, '/MedicalReport');
+                                          },
+                                        ),
+                                        Menu_card(
+                                          title: "Home visits",
+                                          heading: "Schedule Home Visits",
+                                          svgSrc:
+                                              "assets/icons/home-visits-sch.svg",
+                                          press: () {
+                                            Navigator.pushNamed(
+                                                context, '/sechHomeVisits');
+                                          },
+                                        ),
+                                        Menu_card(
+                                          title: "Clinics",
+                                          heading: "Schedule Clinics",
+                                          svgSrc:
+                                              "assets/icons/clinics-sch.svg",
+                                          press: () {
+                                            Navigator.pushNamed(
+                                                context, '/sechClinics');
+                                          },
+                                        ),
+                                      ]),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: .85,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 20,
+                                      ))
                             ],
                           ))
                         ],

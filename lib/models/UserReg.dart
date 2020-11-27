@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,6 +60,7 @@ class ComRegDB {
   String womenBloodDropDownValue;
   String menBloodDropDownValue;
   String regDate;
+  String duty;
 
   DocumentReference documentReference;
 
@@ -117,6 +117,7 @@ class ComRegDB {
     this.womenBloodDropDownValue,
     this.menBloodDropDownValue,
     this.regDate,
+    this.duty,
   });
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
@@ -176,6 +177,7 @@ class ComRegDB {
     womenBloodDropDownValue = map["_womenBloodDropDownValue"];
     menBloodDropDownValue = map["_menBloodDropDownValue"];
     regDate = map['_regDate'];
+    duty=map['_duty'];
   }
   ComRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -234,6 +236,7 @@ class ComRegDB {
       '_womenBloodDropDownValue': womenBloodDropDownValue,
       '_menBloodDropDownValue': menBloodDropDownValue,
       '_regDate': regDate,
+      '_duty':duty,
     };
   }
 }
@@ -322,7 +325,7 @@ class PreRegDB {
       '_maleria': maleria,
       '_heartDisorder': heartDisorder,
       '_kidneyDisorder': kidneyDisorder,
-      '_regDate':regDate,
+      '_regDate': regDate,
     };
   }
 }

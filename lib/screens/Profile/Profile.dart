@@ -108,7 +108,7 @@ class Profile extends StatelessWidget {
                       gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [kBackground, kBlueColor],
+                    // colors: [kBackground, kBlueColor],
                     //tileMode: TileMode.repeated,
                   )),
                   child: Container(
@@ -164,7 +164,8 @@ class Profile extends StatelessWidget {
                                           height: 5.0,
                                         ),
                                         Text(
-                                          "Competency Family",textAlign: TextAlign.center,
+                                          "Competency Family",
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 14.0,
                                             color: Colors.pinkAccent,
