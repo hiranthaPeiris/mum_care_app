@@ -33,7 +33,7 @@ class Bottom_nav extends StatelessWidget {
             svgScr: "assets/icons/menu-bottom.svg",
             isActive: true,
             press: () {
-              Navigator.pushNamed(context, '/dashboard');
+              Navigator.pushNamedAndRemoveUntil(context, '/dashboard',ModalRoute.withName('/'));
             },
           ),
           BottomNavItem(

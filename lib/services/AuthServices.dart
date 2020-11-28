@@ -11,10 +11,9 @@ class AuthService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   var userInstance = new UserM.get();
 
-
   UserM _userFromFirebase(User user) {
-    if(user != null){
-      return UserM.setUID(uid: user.uid,user: user);
+    if (user != null) {
+      return UserM.setUID(uid: user.uid, user: user);
     }
     return null;
     //return user != null ? UserM.setUID(uid: user.uid,user: user) : null;
@@ -73,8 +72,9 @@ class AuthService {
         // Get the token for this device
 
         String uid = user.uid;
-
-        new UserM.setUID(uid: user.uid,user: user);
+        Map<String, dynamic> customData = await getUserCustomData(uid);
+        
+        new UserM.setListner(uid: user.uid, user: user,customData: customData);
         //getting firebase message token
         String fcmToken = await _firebaseMessaging.getToken();
 
@@ -132,6 +132,7 @@ class AuthService {
         .set({
           'name': name,
           'role': 'user',
+          'area01': 'notSelect',
           'competencyFam': false,
           'PregnanctFam': false,
           'midwifeID': 'null',
@@ -159,10 +160,10 @@ class AuthService {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        print('Document data : ${documentSnapshot.data()}');
+        //print('Document data : ${documentSnapshot.data()}');
         return documentSnapshot.data();
       } else {
-        print("document not exists");
+        print("user custom document not exists");
         return null;
       }
     });

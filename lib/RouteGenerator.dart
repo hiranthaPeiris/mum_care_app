@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
+import 'package:mun_care_app/screens/Clinic/ClinicHomeWapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
@@ -23,11 +24,9 @@ import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
 
-
-
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
+    final Map<String, String> args = settings.arguments;
 
     switch (settings.name) {
       case '/':
@@ -49,7 +48,14 @@ class RouteGenerator {
       case '/sechHomeVisits':
         return MaterialPageRoute(builder: (_) => SchHomeVisitSearch());
       case '/sechClinics':
-        return MaterialPageRoute(builder: (_) => ScheduleClinic(rescheduleFLAG: false));
+        return MaterialPageRoute(
+            builder: (_) => ScheduleClinic(rescheduleFLAG: false));
+      case '/clinicHome':
+        return MaterialPageRoute(
+            builder: (_) => ClinicHomeWapper(
+                  key: Key('clinic'),
+                  viewSwitch: args['switchView'],
+                ));
       case '/chat':
         return MaterialPageRoute(builder: (_) => HomeChat());
       case '/leavingReport':
@@ -59,8 +65,7 @@ class RouteGenerator {
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':
-        return MaterialPageRoute(
-            builder: (_) => ViewUpcomingHomevisit());
+        return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/diary':

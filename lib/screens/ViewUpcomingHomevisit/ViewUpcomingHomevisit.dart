@@ -54,7 +54,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "UpComing Homevisits",
+                            "Upcoming Home Visits",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24.0,

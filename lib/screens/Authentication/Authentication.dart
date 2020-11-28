@@ -16,6 +16,7 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
+    print(showSignIn);
     if(showSignIn){
       return LoginComp(toggleView: toggleView);
     }else{

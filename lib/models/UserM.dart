@@ -12,12 +12,24 @@ class UserM {
   }
 
 //set constructor for uid
+  factory UserM.setListner({String uid,User user,Map<String,dynamic> customData}) {
+    _userM.uid = uid;
+    _userM.user = user;
+    _userM.userCustomData = customData;
+    return _userM;
+  }
+
+//set constructor for uid
   factory UserM.setUID({String uid,User user}) {
     _userM.uid = uid;
     _userM.user = user;
     return _userM;
   }
 
+  factory UserM.setCustomData({Map<String,dynamic> customData}) {
+    _userM.userCustomData = customData;
+    return _userM;
+  }
 //constructor for get userM
   factory UserM.get() {
     return _userM;

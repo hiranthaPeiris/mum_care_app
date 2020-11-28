@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-const kBackgroundColor = Color(0xFFF8F8F8);
+const kBackgroundColor = Color(0xFFE4E0E0);
 const kActiveIconColor = Color(0xFF19b6fd);
 const kTextColor = Color(0xFFFFFFFF);
 const kMenuTextColor = Colors.black54;

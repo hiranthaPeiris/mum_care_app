@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewClinic.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/services/ClinicService.dart';
@@ -21,6 +22,7 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
   var user = new UserM.get();
   final ClinicService _clinicService = ClinicService();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  
   Widget build(BuildContext context) {
     print(user.userCustomData);
     return Scaffold(
@@ -106,8 +108,15 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                                     //openBottomSheet(itemTitle);
                                     if (user.userCustomData['role'] ==
                                         "midwife") {
-                                      forMidwife(snapshot.data.docs[index],
-                                          _scaffoldKey);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ViewClinic(
+                                                  documentSnapshot: snapshot
+                                                      .data.docs[index])));
+
+                                      // forMidwife(snapshot.data.docs[index],
+                                      //     _scaffoldKey);
                                     } else if (user.userCustomData['role'] ==
                                         "user") {
                                       forUser(snapshot.data.docs[index],
