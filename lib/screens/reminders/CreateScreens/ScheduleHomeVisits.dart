@@ -10,7 +10,9 @@ class ScheduleHomeVisits extends StatefulWidget {
   //String
   final DocumentSnapshot document;
   final String midwifeId;
-  const ScheduleHomeVisits({Key key, this.document, this.midwifeId})
+  final String regDate;
+  const ScheduleHomeVisits(
+      {Key key, this.document, this.midwifeId, this.regDate})
       : super(key: key);
   @override
   _ScheduleHomeVisitsState createState() => _ScheduleHomeVisitsState();
@@ -267,7 +269,8 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                                 description.text,
                                 dateSlug,
                                 widget.document.id,
-                                widget.midwifeId);
+                                widget.midwifeId,
+                                widget.regDate);
                             if (result == null) {
                               setState(() {
                                 pending = false;

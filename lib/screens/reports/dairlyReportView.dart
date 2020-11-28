@@ -27,14 +27,15 @@ class _DairlyReportViewState extends State<DairlyReportView> {
         .map(_userFromFirebase);
   }
 
+  UserM getUser = new UserM.get();
   UserM _userFromFirebase(User user) {
     //String uid = user.uid;
     return user != null ? UserM.setUID(uid: user.uid) : null;
   }
 
-  //var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
+  var useri = '0RtK6v4kWkSx2JHZS6RYpFQY9Cr1';
   //
-  var useri = new UserM.get().userCredential.user.uid;
+  //var useri = new UserM.get().userCredential.user.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +155,9 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('ComDatabase')
+                                        .where('_phmDropDownValue',
+                                            isEqualTo: getUser
+                                                .userCustomData['area01'])
                                         .where("_regDate",
                                             isEqualTo: widget.getDate.year
                                                     .toString() +
@@ -163,14 +167,13 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                 "/" +
                                                 widget.getDate.day.toString())
                                         .snapshots(),
-                                    //.collection('HomeVisits')
-                                    //.snapshots(),
                                     builder: (context, snapshot) {
                                       print(widget.getDate.year.toString() +
                                           "/" +
                                           widget.getDate.month.toString() +
                                           "/" +
                                           widget.getDate.day.toString());
+                                      print(getUser.userCustomData['role']);
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }
@@ -315,6 +318,9 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('PreDatabase')
+                                        .where('_phmDropDownValue',
+                                            isEqualTo: getUser
+                                                .userCustomData['area01'])
                                         .where("_regDate",
                                             isEqualTo: widget.getDate.year
                                                     .toString() +
@@ -475,8 +481,17 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                         .collection('HomeVisits')
                                         .snapshots(),
 
-                                    //.collection('HomeVisits')
-                                    //.snapshots(),
+                                    /*stream: widget._firestore
+                                        .collection('HomeVisits')
+                                        .where("regDate",
+                                            isEqualTo: widget.getDate.year
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.month
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.day.toString())
+                                        .snapshots(),*/
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');

@@ -22,10 +22,11 @@ class Dashboard extends StatefulWidget {
 AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
+  bool isSwitched = false;
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
-  var user = new UserM.get();
+  UserM getRole = new UserM.get();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -158,10 +159,30 @@ class _DashboardState extends State<Dashboard> {
                                   fontFamily: "Roboto",
                                   fontWeight: FontWeight.w800)),
                           Search_bar(),
+                          Row(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.topRight,
+                              ),
+                              Text("DUTY"),
+                              Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched = value;
+
+                                    print(isSwitched);
+                                  });
+                                },
+                                activeTrackColor: Colors.lightGreenAccent,
+                                activeColor: Colors.green,
+                              ),
+                            ],
+                          ),
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              (user.userCustomData['role'] == 'midwife')
+                              getRole.userCustomData['role'] != 'midwife'
                                   ? SliverList(
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
@@ -170,19 +191,11 @@ class _DashboardState extends State<Dashboard> {
                                             svgSrc:
                                                 "assets/icons/Hamburger.svg",
                                             press: () {
+                                              print(getRole
+                                                  .userCustomData['role']);
                                               Navigator.pushNamed(
                                                   context, '/motherAssign');
                                             }),
-                                        /*
-                                  Menu_liner_card(
-                                      heading: "Pregnancy Registration",
-                                      content:
-                                          "Complete the pregnancy registration",
-                                      svgSrc: "assets/icons/Hamburger.svg",
-                                      press: () {
-                                        
-                                      }),
-                                      */
                                       ]),
                                     )
                                   : SliverList(
@@ -194,10 +207,10 @@ class _DashboardState extends State<Dashboard> {
                                             svgSrc:
                                                 "assets/icons/Hamburger.svg",
                                             press: () {
+                                              print(getRole
+                                                  .userCustomData['role']);
                                               Navigator.pushNamed(
                                                   context, '/comReg');
-                                              DateTime now = DateTime.now();
-                                              print(now);
                                             }),
                                         Menu_liner_card(
                                             heading: "Pregnancy Registration",

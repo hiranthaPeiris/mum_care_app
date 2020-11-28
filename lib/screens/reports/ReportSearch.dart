@@ -389,7 +389,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                                               onPressed: () {
                                                                 Navigator.pushNamed(
                                                                     context,
-                                                                    '/geoLocate');
+                                                                    '/dairlyReportView');
                                                               },
                                                             ),
                                                           ),

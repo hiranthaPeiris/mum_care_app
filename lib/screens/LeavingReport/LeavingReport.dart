@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:mun_care_app/models/MediModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -14,38 +18,159 @@ class LeavingReport extends StatefulWidget {
 }
 
 class _LeavingState extends State<LeavingReport> {
-  DateTime selected;
-  _showDateTimePicker() async {
-    selected = await showDatePicker(
-      context: context,
-      initialDate: new DateTime.now(),
-      firstDate: new DateTime(1960),
-      lastDate: new DateTime(2050),
-    );
-    setState(() {});
+  TextEditingController myController1 = new TextEditingController();
+  TextEditingController myController2 = new TextEditingController();
+  TextEditingController myController3 = new TextEditingController();
+  String mohDropdownValue = 'Select Area';
+  String phmDropdownValue = 'Select Area';
+  bool _validater = false;
+  void dispose() {
+    super.dispose();
+    myController1.dispose();
+    myController2.dispose();
+    myController3.dispose();
   }
+
+  DateTime _date;
 
   @override
   Widget build(BuildContext context) {
-    var dateFormat_1 = new Column(
-      children: <Widget>[
-        new SizedBox(
-          height: 30.0,
+    Widget showTextField(
+        String hintText, String inputName, TextEditingController controller) {
+      return TextFormField(
+        maxLines: 1,
+        controller: controller,
+        autofocus: true,
+        decoration: InputDecoration(
+          //hintText: hintText,
+          labelText: hintText,
+          errorText: _validater ? 'This can\'t be empty' : null,
         ),
-        selected != null
-            ? new Text(
-                new DateFormat('yyyy-MMMM-dd').format(selected),
-                style: new TextStyle(
-                  color: Colors.black,
-                  fontSize: 15.0,
-                ),
-              )
-            : new SizedBox(
-                width: 0.0,
-                height: 0.0,
+        // ignore: missing_return
+        validator: (controller) {
+          if (controller.isEmpty) {
+            setState(() {
+              _validater = true;
+            });
+          }
+        },
+
+        onSaved: (input) => inputName = input,
+      );
+    }
+
+    Widget mohDropDownMenu() {
+      return DropdownButton<String>(
+        value: mohDropdownValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 36,
+        isExpanded: true,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        items: <String>[
+          'Select Area',
+          'Ambalangoda',
+          'Hikkaduwa',
+          'Rathgama',
+          'Habaraduwa',
+          'Mirissa',
+          'Weligama',
+          'Dodanduwa',
+          'Balapitiya',
+          'Ahangama',
+          'Thalgaswala'
+        ].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
               ),
-      ],
-    );
+            ),
+          );
+        }).toList(),
+        onChanged: (String value) {
+          setState(() {
+            mohDropdownValue = value;
+          });
+        },
+      );
+    }
+
+    Widget phmDropDownMenu() {
+      return DropdownButton<String>(
+        value: phmDropdownValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 36,
+        isExpanded: true,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        items: <String>[
+          'Select Area',
+          '01',
+          '02',
+          '03',
+          '04',
+          '05',
+          '06',
+          '07',
+          '08',
+          '09',
+          '10'
+        ].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }).toList(),
+        onChanged: (String value) {
+          setState(() {
+            phmDropdownValue = value;
+          });
+        },
+      );
+    }
+
+    inserting() async {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      DateTime date = DateTime.now();
+      String dateConvert = date.year.toString() +
+          "/" +
+          date.month.toString() +
+          "/" +
+          date.day.toString();
+      LeaveData medi = LeaveData(
+        name: myController1.text,
+        nic: myController2.text,
+        eligibleFamNumber: myController3.text,
+        mohDropDownValue: mohDropdownValue,
+        phmDropDownValue: phmDropdownValue,
+        date: _date.toString(),
+        regDate: dateConvert,
+      );
+
+      try {
+        FirebaseFirestore.instance
+            .runTransaction((Transaction transaction) async {
+          await FirebaseFirestore.instance
+              .collection("FromMother")
+              .doc(_auth.currentUser.uid)
+              .collection("informLeaving")
+              .doc(_auth.currentUser.uid)
+              .set(medi.toJson());
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    }
 
     return new Scaffold(
         backgroundColor: Colors.lightBlue,
@@ -189,17 +314,8 @@ class _LeavingState extends State<LeavingReport> {
                                 MediaQuery.of(context).size.height * 0.005,
                                 MediaQuery.of(context).size.width * 0.05,
                                 MediaQuery.of(context).size.height * 0.005),
-                            child: showTextField("Name ", "_Name"),
-                          ),
-                        ),
-                        Container(
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.0005,
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.0005),
-                            child: showTextField("NIC Number", "_NICnumber"),
+                            child:
+                                showTextField("Name ", "_Name", myController1),
                           ),
                         ),
                         Container(
@@ -210,7 +326,18 @@ class _LeavingState extends State<LeavingReport> {
                                 MediaQuery.of(context).size.width * 0.05,
                                 MediaQuery.of(context).size.height * 0.0005),
                             child: showTextField(
-                                "Eligible Family Number", "_EFsnumber"),
+                                "NIC Number", "_NICnumber", myController2),
+                          ),
+                        ),
+                        Container(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.width * 0.05,
+                                MediaQuery.of(context).size.height * 0.0005,
+                                MediaQuery.of(context).size.width * 0.05,
+                                MediaQuery.of(context).size.height * 0.0005),
+                            child: showTextField("Eligible Family Number",
+                                "_EFsnumber", myController3),
                           ),
                         ),
                         Container(
@@ -239,7 +366,6 @@ class _LeavingState extends State<LeavingReport> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              dateFormat_1,
                                               new SizedBox(
                                                 height: 20.0,
                                               ),
@@ -248,15 +374,50 @@ class _LeavingState extends State<LeavingReport> {
                                         ),
                                       ),
                                       Container(
-                                        child: IconButton(
-                                          icon: new Icon(
-                                            Icons.date_range,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () =>
-                                              _showDateTimePicker(),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(_date == null
+                                                ? "Select Date"
+                                                : _date.year.toString() +
+                                                    "/" +
+                                                    _date.month.toString() +
+                                                    "/" +
+                                                    _date.day.toString()),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            SizedBox(
+                                              width: 60,
+                                              height: 30,
+                                              child: RaisedButton(
+                                                  child: Icon(
+                                                      Icons.calendar_today),
+                                                  /* shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(
+                                      color: Color.fromARGB(500, 21, 166, 211),
+                                    )),*/
+                                                  onPressed: () {
+                                                    showDatePicker(
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate:
+                                                                DateTime(1980),
+                                                            lastDate:
+                                                                DateTime(2021))
+                                                        .then((date) {
+                                                      setState(() {
+                                                        _date = date;
+                                                      });
+                                                    });
+                                                  }),
+                                            )
+                                          ],
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -290,8 +451,9 @@ class _LeavingState extends State<LeavingReport> {
                                   child: ElevatedButton(
                                     child: Text('Submit'),
                                     onPressed: () {
+                                      inserting();
                                       Navigator.pushNamed(
-                                          context, '/leavingAccept');
+                                          context, '/dashboard');
                                     },
                                   ),
                                 ),
@@ -310,79 +472,4 @@ class _LeavingState extends State<LeavingReport> {
   }
 }
 
-String mohDropdownValue = 'Select Area';
-String phmDropdownValue = 'Select Area';
-
-Widget mohDropDownMenu() {
-  return DropdownButton<String>(
-    value: mohDropdownValue,
-    icon: Icon(Icons.arrow_downward),
-    iconSize: 18,
-    elevation: 36,
-    isExpanded: true,
-    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-    items: <String>['Select Area', 'One', 'Two', 'five', 'Four']
-        .map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
-          child: Text(
-            value,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }).toList(),
-    onChanged: (String value) {
-      /*setState(() {
-          mohDropdownValue = value;
-        });*/
-    },
-  );
-}
-
-Widget phmDropDownMenu() {
-  return DropdownButton<String>(
-    value: phmDropdownValue,
-    icon: Icon(Icons.arrow_downward),
-    iconSize: 18,
-    elevation: 36,
-    isExpanded: true,
-    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-    items: <String>['Select Area', 'Five', 'Six', 'Seven', 'Eight']
-        .map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
-          child: Text(
-            value,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }).toList(),
-    onChanged: (String value) {
-      /* setState(() {
-          phmDropdownValue = value;
-        });*/
-    },
-  );
-}
-
-Widget showTextField(String hintText, String inputName) {
-  return TextFormField(
-    maxLines: 1,
-    decoration: InputDecoration(
-      hintText: hintText,
-    ),
-    // ignore: missing_return
-    validator: (input) {
-      if (input.isEmpty) {
-        return 'This can\'t be empty';
-      }
-    },
-    onSaved: (input) => inputName = input,
-  );
-}
+//void setState(Null Function() param0) {}
