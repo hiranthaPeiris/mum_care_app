@@ -211,13 +211,54 @@ class _ReportSearchState extends State<ReportSearch> {
                                                               child: Text(
                                                                   'Search'),
                                                               onPressed: () {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          DairlyReportView(
-                                                                              getDate: _dayReport)),
-                                                                );
+                                                                if (_dayReport !=
+                                                                    null) {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                DairlyReportView(getDate: _dayReport)),
+                                                                  );
+                                                                } else {
+                                                                  Widget
+                                                                      okButton =
+                                                                      FlatButton(
+                                                                    child: Text(
+                                                                        "OK"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  );
+
+                                                                  // set up the AlertDialog
+                                                                  AlertDialog
+                                                                      alert =
+                                                                      AlertDialog(
+                                                                    title: Text(
+                                                                        "Attention"),
+                                                                    content: Text(
+                                                                        "Please select a date to get daily reports"),
+                                                                    actions: [
+                                                                      okButton
+                                                                    ],
+                                                                  );
+
+                                                                  // show the dialog
+                                                                  showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return alert;
+                                                                    },
+                                                                  );
+                                                                }
                                                               },
                                                             ),
                                                           ),
@@ -387,11 +428,49 @@ class _ReportSearchState extends State<ReportSearch> {
                                                               child: Text(
                                                                   'Search'),
                                                               onPressed: () {
+                                                                if (_monthReport !=
+                                                                    null) {
+                                                                  Navigator.pushNamed(
+                                                                      context,
+                                                                      '/leaveForm');
+                                                                } else {
+                                                                  Widget
+                                                                      okButton =
+                                                                      FlatButton(
+                                                                    child: Text(
+                                                                        "OK"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  );
 
-                                                                
-                                                                Navigator.pushNamed(
-                                                  context, '/leaveForm');
+                                                                  // set up the AlertDialog
+                                                                  AlertDialog
+                                                                      alert =
+                                                                      AlertDialog(
+                                                                    title: Text(
+                                                                        "Attention"),
+                                                                    content: Text(
+                                                                        "Please select a date to get daily reports"),
+                                                                    actions: [
+                                                                      okButton
+                                                                    ],
+                                                                  );
 
+                                                                  // show the dialog
+                                                                  showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return alert;
+                                                                    },
+                                                                  );
+                                                                }
                                                               },
                                                             ),
                                                           ),
