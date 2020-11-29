@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/models/MidwifeLeave.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class LeaveForm extends StatefulWidget {
@@ -12,44 +15,52 @@ class _LeaveFormState extends State<LeaveForm> {
   DateTime _date1;
   DateTime _date2;
   DateTime _date3;
+  bool leaveAccpet=false;
+  bool leaveReject=false;
 
   TextEditingController name = TextEditingController();
   TextEditingController department = TextEditingController();
   TextEditingController numOfdays = TextEditingController();
   TextEditingController reasons = TextEditingController();
   TextEditingController address = TextEditingController();
-  _showDateTimePicker() async {
-    selected = await showDatePicker(
-      context: context,
-      initialDate: new DateTime.now(),
-      firstDate: new DateTime(1960),
-      lastDate: new DateTime(2050),
-    );
-    setState(() {});
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-    /*var dateFormat_1 = new Column(
-      children: <Widget>[
-        new SizedBox(
-          height: 20.0,
-        ),
-        selected != null
-            ? new Text(
-                new DateFormat('yyyy-MMMM-dd').format(selected),
-                style: new TextStyle(
-                  color: Colors.black,
-                  fontSize: 15.0,
-                ),
-              )
-            : new SizedBox(
-                width: 0.0,
-                height: 0.0,
-              ),
-      ],
-    );*/
+ 
+    leaveFormAdd() async{
+      FirebaseAuth _auth= FirebaseAuth.instance;
+      DateTime date = DateTime.now();
+      String dateConvert = date.year.toString() +
+          "/" +
+          date.month.toString() +
+          "/" +
+          date.day.toString();
+      LeaveFormDB leaveFormDB = LeaveFormDB(
+        applicantName : name.text,
+        applyDate : _date4,
+        department : department.text,
+        appoimentDate : _date1,
+        numOfDays : numOfdays.text,
+        leaveOnDate : _date2,
 
+        leaveOffDate : _date3,
+        reason : reasons.text,
+        applicantAddress : address.text,
+        accept:leaveAccpet,
+        reject:leaveReject,
+         );
+      try {
+        Firestore.instance.runTransaction((Transaction transaction) async {
+          await Firestore.instance
+              .collection("MidwifeLeaveforms")
+              .doc(_date4.toString())
+              .set(leaveFormDB.toJson());
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    }
     return new Scaffold(
         backgroundColor: Colors.lightBlue,
         body: Container(
@@ -140,7 +151,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                               context: context,
                                               initialDate: new DateTime.now(),
                                               firstDate: DateTime(1980),
-                                              lastDate: DateTime(2021))
+                                              lastDate: DateTime(2025))
                                           .then((date) {
                                         setState(() {
                                           _date4 = date;
@@ -215,7 +226,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                               context: context,
                                               initialDate: new DateTime.now(),
                                               firstDate: DateTime(1980),
-                                              lastDate: DateTime(2021))
+                                              lastDate: DateTime(2025))
                                           .then((date) {
                                         setState(() {
                                           _date1 = date;
@@ -437,7 +448,9 @@ class _LeaveFormState extends State<LeaveForm> {
                                   alignment: Alignment.bottomRight,
                                   child: ElevatedButton(
                                     child: Text('Submit'),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      leaveFormAdd();
+                                    },
                                   ),
                                 ),
                               ),

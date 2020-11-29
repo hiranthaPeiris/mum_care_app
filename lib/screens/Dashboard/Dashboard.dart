@@ -161,8 +161,9 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              getRole.userCustomData['role'] == 'midwife'
-                                  ? SliverList(
+                             // getRole.userCustomData['role'] == 'midwife'
+                               //   ?
+                                   SliverList(
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
                                             heading: "Mother List",
@@ -176,7 +177,7 @@ class _DashboardState extends State<Dashboard> {
                                             }),
                                       ]),
                                     )
-                                  : SliverList(
+                                /*  : SliverList(
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
                                             heading: "Complete Registration",
@@ -199,8 +200,10 @@ class _DashboardState extends State<Dashboard> {
                                               Navigator.pushNamed(
                                                   context, '/preReg');
                                             }),
+                                            
                                       ]),
-                                    ),
+                                    )*/,
+                                    
                               SliverGrid(
                                   delegate: SliverChildListDelegate([
                                     Menu_card(
@@ -276,6 +279,16 @@ class _DashboardState extends State<Dashboard> {
                                       press: () {
                                         Navigator.pushNamed(
                                             context, '/geoLocate');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Leave Form Adding",
+                                      heading: "Leave Form",
+                                      svgSrc:
+                                          "assets/icons/home-visits-sch.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/leaveFormsView');
                                       },
                                     ),
                                   ]),

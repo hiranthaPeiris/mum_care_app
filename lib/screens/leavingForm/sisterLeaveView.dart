@@ -1,30 +1,29 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mun_care_app/models/MidwifeLeave.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class DairlyReportView extends StatefulWidget {
+class LeaveReportView extends StatefulWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final DateTime getDate;
-  DairlyReportView({Key key, this.getDate}) : super(key: key);
+  //final DateTime getDate;
+  //DairlyReportView({Key key, this.getDate}) : super(key: key);
 
   @override
-  _DairlyReportViewState createState() => new _DairlyReportViewState();
+  _LeaveReportViewState createState() => new _LeaveReportViewState();
 }
 
-class _DairlyReportViewState extends State<DairlyReportView> {
+class _LeaveReportViewState extends State<LeaveReportView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String searchPara = "";
 
   DateTime selected;
-  String itemTitle = "Description";
-
-  var getUser=new UserM.get();
-
-  var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
-
+  //String itemTitle = "Description";
+  DocumentReference documentReference;
+  var getUser = new UserM.get();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         elevation: 5,
-        title: Text('Dairly Report View'),
+        title: Text('Midwife Leave Forms'),
         //bottom:
       ),
       body: Container(
@@ -113,19 +112,19 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                               Tab(
                                 child: Align(
                                   alignment: Alignment.center,
-                                  child: Text("Com Fam"),
+                                  child: Text("Pending Leave"),
                                 ),
                               ),
                               Tab(
                                 child: Align(
                                   alignment: Alignment.center,
-                                  child: Text("Pregnancy Fam"),
+                                  child: Text("Accept Leave"),
                                 ),
                               ),
                               Tab(
                                 child: Align(
                                   alignment: Alignment.center,
-                                  child: Text("Home Visits"),
+                                  child: Text("Reject Leave"),
                                 ),
                               ),
                             ],
@@ -143,25 +142,11 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   flex: 1,
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
-                                        .collection('ComDatabase')
-                                        .where('_phmDropDownValue', isEqualTo:getUser.userCustomData['area01'])
-                                        .where("_regDate",
-                                            isEqualTo: widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString())
+                                        .collection('MidwifeLeaveforms')
+                                        .where('_accept', isEqualTo: false)
+                                        .where('_reject', isEqualTo: false)
                                         .snapshots(),
                                     builder: (context, snapshot) {
-                                      print(widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString());
                                       print(getUser.userCustomData['role']);
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
@@ -171,8 +156,8 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                           shrinkWrap: true,
                                           itemCount: snapshot.data.docs.length,
                                           itemBuilder: (context, index) {
-                                            // String itemTitle = snapshot
-                                            //  .data.docs[index]["_address"];
+                                            String documentId =
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -181,7 +166,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                       InkWell(
                                                         onTap: () {
                                                           openBottomSheet(
-                                                              itemTitle);
+                                                              documentId);
                                                         },
                                                         child: Stack(
                                                           alignment:
@@ -263,7 +248,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                                                             Icons.message,
                                                                                             color: Colors.blue,
                                                                                           ),
-                                                                                          Text(snapshot.data.docs[index]['_wifeName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
+                                                                                          Text(snapshot.data.docs[index]['_applicantName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
                                                                                         ],
                                                                                       ),
                                                                                       Divider(),
@@ -274,7 +259,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                                                             color: Colors.purple,
                                                                                           ),*/
                                                                                           //Spacer(),
-                                                                                          Text(snapshot.data.docs[index]['_email'].toString(), textAlign: TextAlign.left),
+                                                                                          Text(snapshot.data.docs[index]['_department'].toString(), textAlign: TextAlign.left),
                                                                                         ],
                                                                                       ),
                                                                                     ],
@@ -306,16 +291,8 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   flex: 1,
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
-                                        .collection('PreDatabase')
-                                        .where('_phmDropDownValue', isEqualTo:getUser.userCustomData['area01'])
-                                        .where("_regDate",
-                                            isEqualTo: widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString())
+                                        .collection('MidwifeLeaveforms')
+                                        .where('_accept', isEqualTo: true)
                                         .snapshots(),
                                     //.collection('HomeVisits')
                                     //.snapshots(),
@@ -328,8 +305,8 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                           shrinkWrap: true,
                                           itemCount: snapshot.data.docs.length,
                                           itemBuilder: (context, index) {
-                                            // String itemTitle = snapshot
-                                            //  .data.docs[index]["_address"];
+                                            String itemId =
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -338,7 +315,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                       InkWell(
                                                         onTap: () {
                                                           openBottomSheet(
-                                                              itemTitle);
+                                                              itemId);
                                                         },
                                                         child: Stack(
                                                           alignment:
@@ -420,7 +397,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                                                             Icons.message,
                                                                                             color: Colors.blue,
                                                                                           ),
-                                                                                          Text(snapshot.data.docs[index]['_coName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
+                                                                                          Text(snapshot.data.docs[index]['_applicantName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
                                                                                         ],
                                                                                       ),
                                                                                       Divider(),
@@ -431,7 +408,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                                                             color: Colors.purple,
                                                                                           ),*/
                                                                                           //Spacer(),
-                                                                                          Text(snapshot.data.docs[index]['_hcName'].toString(), textAlign: TextAlign.left),
+                                                                                          Text(snapshot.data.docs[index]['_department'].toString(), textAlign: TextAlign.left),
                                                                                         ],
                                                                                       ),
                                                                                     ],
@@ -463,11 +440,9 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   flex: 1,
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
-                                        .collection('Bookings')
-                                        .doc(useri)
-                                        .collection('HomeVisits')
+                                        .collection('MidwifeLeaveforms')
+                                        .where('_reject', isEqualTo: true)
                                         .snapshots(),
-
                                     //.collection('HomeVisits')
                                     //.snapshots(),
                                     builder: (context, snapshot) {
@@ -479,8 +454,8 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                           shrinkWrap: true,
                                           itemCount: snapshot.data.docs.length,
                                           itemBuilder: (context, index) {
-                                            // String itemTitle = snapshot
-                                            //  .data.docs[index]["_address"];
+                                            String itemId =
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -489,7 +464,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                       InkWell(
                                                         onTap: () {
                                                           openBottomSheet(
-                                                              itemTitle);
+                                                              itemId);
                                                         },
                                                         child: Stack(
                                                           alignment:
@@ -571,7 +546,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                                                             Icons.message,
                                                                                             color: Colors.blue,
                                                                                           ),
-                                                                                          Text(snapshot.data.docs[index]['description'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
+                                                                                          Text(snapshot.data.docs[index]['_applicantName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
                                                                                         ],
                                                                                       ),
                                                                                       Divider(),
@@ -582,7 +557,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                                                             color: Colors.purple,
                                                                                           ),*/
                                                                                           //Spacer(),
-                                                                                          Text(snapshot.data.docs[index]['dateTime'].toString(), textAlign: TextAlign.left),
+                                                                                          Text(snapshot.data.docs[index]['_department'].toString(), textAlign: TextAlign.left),
                                                                                         ],
                                                                                       ),
                                                                                     ],
@@ -616,7 +591,29 @@ class _DairlyReportViewState extends State<DairlyReportView> {
     );
   }
 
-  void openBottomSheet(String itemTitle) {
+  Future<void> setAcceptTrue(String id) async {
+    await FirebaseFirestore.instance
+        .collection('MidwifeLeaveforms')
+        .doc(id)
+        .update({
+          '_accept': true,
+        })
+        .then((value) => print("Leave Accepted"))
+        .catchError((err) => print(err));
+  }
+
+  Future<void> setRejectTrue(String id) async {
+    await FirebaseFirestore.instance
+        .collection('MidwifeLeaveforms')
+        .doc(id)
+        .update({
+          '_reject': true,
+        })
+        .then((value) => print("Leave Rejected"))
+        .catchError((err) => print(err));
+  }
+
+  void openBottomSheet(String itemId) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -624,7 +621,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
-              height: 500.0,
+              height: 400.0,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(30.0),
@@ -647,7 +644,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                 Row(
                                   children: <Widget>[
                                     Text(
-                                      "Dear,",
+                                      "Leaving Form",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -664,38 +661,165 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                     ),
                                   ],
                                 ),
-                                Text(itemTitle),
                               ],
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Text(
-                      "Description of the  Mothers. ",
-                      style: TextStyle(color: Colors.black, fontSize: 18.0),
-                    ),
-                    SizedBox(
-                      height: 10.0,
+                    Container(
+                      child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("MidwifeLeaveforms")
+                              .doc(itemId)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text("Something went wrong");
+                            }
+                            if (!snapshot.hasData) {
+                              return Scaffold(
+                                body: Text("No data"),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              var value = snapshot.data;
+                              Timestamp time1 = value['_applyDate'];
+                              var applyDate =
+                                  DateTime.fromMicrosecondsSinceEpoch(time1.microsecondsSinceEpoch);
+                              String formattedapplyDate = DateFormat.yMMMd().format(applyDate);
+
+                              Timestamp time2 = value['_appoimentDate'];
+                              var appoimentDate =
+                                  DateTime.fromMicrosecondsSinceEpoch(time2.microsecondsSinceEpoch);
+                              String formattedappoimentDate = DateFormat.yMMMd().format(appoimentDate);
+
+                              Timestamp time3 = value['_leaveOnDate'];
+                              var leaveOnDate =
+                                  DateTime.fromMicrosecondsSinceEpoch(time3.microsecondsSinceEpoch);
+                              String formattedleaveOnDate = DateFormat.yMMMd().format(leaveOnDate);
+
+                              Timestamp time4 = value['_leaveOffDate'];
+                              var leaveOffDate =
+                                  DateTime.fromMicrosecondsSinceEpoch(time4.microsecondsSinceEpoch);
+                              String formattedleaveOffDate = DateFormat.yMMMd().format(leaveOffDate);
+                              return Column(children: [
+                                Row(
+                                  children: [
+                                    Text("Applicant Name:"),
+                                    Text(value['_applicantName']),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Apply Date:"),
+                                    value['_applyDate']==null?
+                                    Text("Not Selected")
+                                    :
+                                    Text(formattedapplyDate),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Department:"),
+                                    Text(value['_department']),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Date of the Appoiment:"),
+                                    value['_appoimentDate']==null?
+                                    Text("Not Selected")
+                                    :Text(formattedappoimentDate),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Number of Leave Days :"),
+                                    Text(value['_numOfDays']),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Leave to Commence on:"),
+                                    value['_leaveOnDate']==null?
+                                    Text("Not Selected")
+                                    :
+                                    Text(formattedleaveOnDate),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Leave to End on:"),
+                                    value['_leaveOffDate']==null?
+                                    Text("Not Selected")
+                                    :
+                                    Text(formattedleaveOffDate),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Reason for Application   :"),
+                                    Text(value['_reason']),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Address of Applicant  :"),
+                                    Text(value['_applicantAddress']),
+                                  ],
+                                ),
+                              ]);
+                            }
+                          }),
                     ),
                     Text(
                       "Thank you,",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18.0),
+                          fontSize: 12.0),
                     ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    SizedBox(
-                      height: 15.0,
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setRejectTrue(itemId);
+                                },
+                                child: Text('Reject'),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: ElevatedButton(
+                                child: Text('Accept'),
+                                onPressed: () {
+                                  setAcceptTrue(itemId);
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: ElevatedButton(
+                                child: Text('Accept'),
+                                onPressed: () {
+                                  setAcceptTrue(itemId);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

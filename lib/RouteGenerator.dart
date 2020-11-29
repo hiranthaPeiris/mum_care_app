@@ -16,6 +16,7 @@ import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart
 import 'package:mun_care_app/screens/chat/homechat.dart';
 
 import 'package:mun_care_app/screens/leavingForm/leaveForm.dart';
+import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
 
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 
@@ -84,6 +85,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => GeoLocation());
       case '/leaveForm':
         return MaterialPageRoute(builder: (_) => LeaveForm());
+      case '/leaveFormsView':
+        return MaterialPageRoute(builder: (_) => LeaveReportView());
       case '/upcomingHomeVisit':
         return MaterialPageRoute(
             builder: (_) => UpcomingHomeVisitFirebaseDemo());

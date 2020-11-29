@@ -76,7 +76,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                 ),
                                 ////////////////////////////////
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
                                       height: MediaQuery.of(context)
@@ -108,11 +108,11 @@ class _ReportSearchState extends State<ReportSearch> {
                                                   child: Text(
                                                     'Select Your Date',
                                                     style: TextStyle(
-                                                        fontSize: 22,
+                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Colors.white),
-                                                    textAlign: TextAlign.center,
+                                                    textAlign: TextAlign.left,
                                                   ),
                                                 ),
                                                 Container(
@@ -191,7 +191,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                   _dayReport.day
                                                                       .toString(),
                                                           style: TextStyle(
-                                                              fontSize: 20),
+                                                              fontSize: 15),
                                                         ),
                                                       ],
                                                     ),
@@ -249,7 +249,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                 ),
                                 ///////////////////////
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
                                       height: MediaQuery.of(context)
@@ -281,11 +281,11 @@ class _ReportSearchState extends State<ReportSearch> {
                                                   child: Text(
                                                     'Select Your Month',
                                                     style: TextStyle(
-                                                        fontSize: 22,
+                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Colors.white),
-                                                    textAlign: TextAlign.center,
+                                                    textAlign: TextAlign.left,
                                                   ),
                                                 ),
                                                 Container(
@@ -364,7 +364,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                   _monthReport.day
                                                                       .toString(),
                                                           style: TextStyle(
-                                                              fontSize: 20),
+                                                              fontSize: 15),
                                                         ),
                                                       ],
                                                     ),
@@ -378,13 +378,15 @@ class _ReportSearchState extends State<ReportSearch> {
                                                         Container(
                                                           child: Align(
                                                             alignment: Alignment
-                                                                .bottomRight,
+                                                                .center,
                                                             child:
                                                                 ElevatedButton(
                                                               child: Text(
                                                                   'Search'),
                                                               onPressed: () {
                                                                 
+                                                                Navigator.pushNamed(
+                                                  context, '/leaveForm');
                                                               },
                                                             ),
                                                           ),

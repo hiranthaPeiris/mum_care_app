@@ -255,7 +255,7 @@ class _PreFamRegState extends State<PreFamReg> {
           .collection('users')
           .doc(_auth.currentUser.uid)
           .update({
-            'PrenanctFam': true,
+            'PregnanctFam': true,
           })
           .then((value) => print("Pregnancy true"))
           .catchError((err) => print(err));
