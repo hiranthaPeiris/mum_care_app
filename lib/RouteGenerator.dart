@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mun_care_app/Wapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
+import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
 import 'package:mun_care_app/sister/DutyChecking.dart';
 import 'package:mun_care_app/sister/LeavingAccept.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
@@ -19,8 +20,6 @@ import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/leavingForm/leaveForm.dart';
 
 import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
-
-
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
@@ -72,14 +71,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => HomeChat());
       case '/leavingReport':
         return MaterialPageRoute(builder: (_) => LeavingReport());
-
       case '/MedicalReport':
         return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
-
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/searchReport':
@@ -93,9 +90,11 @@ class RouteGenerator {
 
       case '/leaveFormsView':
         return MaterialPageRoute(builder: (_) => LeaveReportView());
-
       case '/leavingAccept':
         return MaterialPageRoute(builder: (_) => LeaveAccept());
+      case '/dutyChecking':
+        return MaterialPageRoute(builder: (_) => DutyCheck());
+
       case '/upcomingHomeVisit':
         return MaterialPageRoute(
             builder: (_) => UpcomingHomeVisitFirebaseDemo());

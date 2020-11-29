@@ -182,8 +182,7 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-
-                             // getRole.userCustomData['role'] == 'midwife'
+   
                                //   ?
                                    SliverList(
 
