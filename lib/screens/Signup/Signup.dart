@@ -202,25 +202,7 @@ class _SignupState extends State<Signup> {
                       },
                       obscureText: true,
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: TextField(
-                      controller: myController2,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(16),
-                        border: OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(20.0)),
-                        labelText: 'Comfirm Password',
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _comfirmPassword = val;
-                        });
-                      },
-                    ),
-                  )
+                  ),       
                 ],
               ),
             ),

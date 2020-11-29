@@ -26,14 +26,16 @@ class _DashboardState extends State<Dashboard> {
   bool pending = true;
   UserM _user;
   String role = "";
-  String name = "";
+  String name = "null";
   bool compFam = false;
   bool pregMum = false;
   DateTime now;
+
   @override
   void initState() {
     super.initState();
     //_user = Provider.of<UserM>(context);
+    print(compFam);
   }
 
   @override
@@ -68,6 +70,13 @@ class _DashboardState extends State<Dashboard> {
         ? Loading()
         : Scaffold(
             key: _scaffoldKey,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+               Navigator.pushNamed(context, '/chat');
+              },
+              child: Icon(Icons.chat_rounded),
+              backgroundColor: kActiveIconColor,
+            ),
             endDrawer: Drawer(
               child: ListView(
                 children: [
@@ -203,79 +212,8 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              _buildSliverList(), _buildSliverGrid()
-
-                              // SliverGrid(
-                              //     delegate: SliverChildListDelegate([
-                              //       Menu_card(
-                              //         title: "View & Schedule Clinics",
-                              //         heading: "Clinic",
-                              //         svgSrc: "assets/icons/clinics.svg",
-                              //         press: () {
-                              //           Navigator.pushNamed(
-                              //               context, '/clinicHome',
-                              //               arguments: <String, String>{
-                              //                 'switchView': 'Clinic',
-                              //               });
-                              //         },
-                              //       ),
-                              //       Menu_card(
-                              //         title: "View & Schedule Home Visit",
-                              //         heading: "Home Visits",
-                              //         svgSrc: "assets/icons/home-visits.svg",
-                              //         press: () {
-                              //           Navigator.pushNamed(
-                              //               context, '/clinicHome',
-                              //               arguments: <String, String>{
-                              //                 'switchView': 'Home Visits',
-                              //               });
-                              //         },
-                              //       ),
-                              //       Menu_card(
-                              //         title: "Report private medications",
-                              //         heading: "Report Medications",
-                              //         svgSrc: "assets/icons/yoga.svg",
-                              //         press: () {
-                              //           Navigator.pushNamed(
-                              //               context, '/MedicalReport');
-                              //         },
-                              //       ),
-                              //       Menu_card(
-                              //         title: "Report leaving residential area",
-                              //         heading: "Report Leaving",
-                              //         svgSrc: "assets/icons/yoga.svg",
-                              //         press: () {
-                              //           Navigator.pushNamed(
-                              //               context, '/leavingReport');
-                              //         },
-                              //       ),
-                              //       // Menu_card(
-                              //       //   title: "Home visits",
-                              //       //   heading: "Schedule Home Visits",
-                              //       //   svgSrc:
-                              //       //       "assets/icons/home-visits-sch.svg",
-                              //       //   press: () {
-                              //       //     Navigator.pushNamed(
-                              //       //         context, '/sechHomeVisits');
-                              //       //   },
-                              //       // ),
-                              //       // Menu_card(
-                              //       //   title: "Clinics",
-                              //       //   heading: "Schedule Clinics",
-                              //       //   svgSrc: "assets/icons/clinics-sch.svg",
-                              //       //   press: () {
-                              //       //     Navigator.pushNamed(
-                              //       //         context, '/sechClinics');
-                              //       //   },
-                              //       // )
-                              //     ]),
-                              //     gridDelegate:
-                              //         SliverGridDelegateWithFixedCrossAxisCount(
-                              //       crossAxisCount: 2,
-                              //       childAspectRatio: .85,
-                              //       crossAxisSpacing: 20,
-                              //       mainAxisSpacing: 20,
-                              //     ))
+                              _buildSliverList(),
+                              _buildSliverGrid()
                             ],
                           ))
                         ],
@@ -296,7 +234,7 @@ class _DashboardState extends State<Dashboard> {
               content: "You have pending competency family data to review",
               svgSrc: "assets/icons/Hamburger.svg",
               press: () {
-                Navigator.pushNamed(context, '/');
+                Navigator.pushNamed(context, '/motherList');
               }),
           Menu_liner_card(
               heading: "Pregnancy Mothers",

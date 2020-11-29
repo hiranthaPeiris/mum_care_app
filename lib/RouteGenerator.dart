@@ -56,8 +56,11 @@ class RouteGenerator {
                   key: Key('clinic'),
                   viewSwitch: args['switchView'],
                 ));
+
       case '/chat':
         return MaterialPageRoute(builder: (_) => HomeChat());
+      case '/motherList':
+        return MaterialPageRoute(builder: (_) => MotherList());
       case '/leavingReport':
         return MaterialPageRoute(builder: (_) => LeavingReport());
       case '/MedicalReport':

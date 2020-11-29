@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/categoryslector.dart';
 import 'package:mun_care_app/widgets/recent_chats.dart';
 
@@ -12,6 +13,7 @@ class _HomeChatState extends State<HomeChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
+      bottomNavigationBar: Bottom_nav(),
       appBar: AppBar(
         /*leading: IconButton(
           icon: Icon(Icons.menu),
