@@ -7,7 +7,9 @@ import 'package:mun_care_app/screens/Clinic/ClinicHomeWapper.dart';
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/LeavingReport/LeavingReport.dart';
+import 'package:mun_care_app/screens/LeavingReport/ViewLeaving.dart';
 import 'package:mun_care_app/screens/MedicationReport/MedicationReport.dart';
+import 'package:mun_care_app/screens/MedicationReport/VewMedication.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
@@ -65,6 +67,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => LeavingReport());
       case '/MedicalReport':
         return MaterialPageRoute(builder: (_) => MedicationReport());
+      case '/ViewleavingReport':
+        return MaterialPageRoute(builder: (_) => ViewLeaving());
+      case '/ViewMedicalReport':
+        return MaterialPageRoute(builder: (_) => ViewMedication());
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':

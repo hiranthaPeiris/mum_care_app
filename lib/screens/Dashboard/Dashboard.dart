@@ -312,19 +312,19 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           Menu_card(
-            title: "Report private medications",
-            heading: "Report Medications",
+            title: "View reports on private medications",
+            heading: "View Mother Medications",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/MedicalReport');
+              Navigator.pushNamed(context, '/ViewleavingReport');
             },
           ),
           Menu_card(
-            title: "Report leaving residential area",
-            heading: "Report Leaving",
+            title: "View reports on leaving residential area",
+            heading: "View Leaving Report",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/leavingReport');
+              Navigator.pushNamed(context, '/ViewMedicalReport');
             },
           ),
         ]),
