@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -264,9 +263,8 @@ class PreRegDB {
   DocumentReference documentReference;
 
   PreRegDB(
-      {
-      this.mohDropDownValue,
-      this.phmDropDownValue,  
+      {this.mohDropDownValue,
+      this.phmDropDownValue,
       this.gnDivision,
       this.fcName,
       this.hcName,
@@ -331,7 +329,7 @@ class PreRegDB {
       '_maleria': maleria,
       '_heartDisorder': heartDisorder,
       '_kidneyDisorder': kidneyDisorder,
-      '_regDate':regDate,
+      '_regDate': regDate,
     };
   }
 }
@@ -374,7 +372,6 @@ class WombPreRegDB {
       '_kgWeight': kgWeight,
       '_gWeight': gWeight,
       '_sex': sex,
-      
     };
   }
 }

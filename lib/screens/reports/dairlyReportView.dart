@@ -21,6 +21,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
   DateTime selected;
   String itemTitle = "Description";
 
+
   var getUser=new UserM.get();
 
   var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
@@ -144,7 +145,9 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('ComDatabase')
-                                        .where('_phmDropDownValue', isEqualTo:getUser.userCustomData['area01'])
+                                        .where('_phmDropDownValue',
+                                            isEqualTo: getUser
+                                                .userCustomData['area01'])
                                         .where("_regDate",
                                             isEqualTo: widget.getDate.year
                                                     .toString() +
@@ -155,13 +158,11 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                 widget.getDate.day.toString())
                                         .snapshots(),
                                     builder: (context, snapshot) {
-                                      print(widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString());
+                                      print(widget.getDate.year.toString() +
+                                          "/" +
+                                          widget.getDate.month.toString() +
+                                          "/" +
+                                          widget.getDate.day.toString());
                                       print(getUser.userCustomData['role']);
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
@@ -307,7 +308,9 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('PreDatabase')
-                                        .where('_phmDropDownValue', isEqualTo:getUser.userCustomData['area01'])
+                                        .where('_phmDropDownValue',
+                                            isEqualTo: getUser
+                                                .userCustomData['area01'])
                                         .where("_regDate",
                                             isEqualTo: widget.getDate.year
                                                     .toString() +
@@ -468,8 +471,17 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                         .collection('HomeVisits')
                                         .snapshots(),
 
-                                    //.collection('HomeVisits')
-                                    //.snapshots(),
+                                    /*stream: widget._firestore
+                                        .collection('HomeVisits')
+                                        .where("regDate",
+                                            isEqualTo: widget.getDate.year
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.month
+                                                    .toString() +
+                                                "/" +
+                                                widget.getDate.day.toString())
+                                        .snapshots(),*/
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');

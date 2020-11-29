@@ -5,8 +5,8 @@ enum HOMEVISITCONFM { accept, deny }
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class HomeVisitService {
-  Future<void> addHomeVisit(
-      String desc, String dateTime, String uid, String midwifeID) async {
+  Future<void> addHomeVisit(String desc, String dateTime, String uid,
+      String midwifeID, String regDate) async {
     CollectionReference homeVisit = _firestore.collection('HomeVisits');
     DocumentReference userDocRef = _firestore.collection('users').doc(uid);
     // CollectionReference midwifeVisit = _firestore
@@ -33,8 +33,9 @@ class HomeVisitService {
           'status': "pending",
           'confirmation': 'pending',
           'midwifeID': midwifeID,
-          'userID':uid,
-          'userDocRef': userDocRef
+          'userID': uid,
+          'userDocRef': userDocRef,
+          'regDate': dateTime.toString()
         })
         .then((value) => print("home visit added $value"))
         .catchError((err) => print(err));
@@ -84,11 +85,10 @@ class HomeVisitService {
         .catchError((err) => print(err));
   }
 
-  Future<void> changeConfirmation(HOMEVISITCONFM confm, 
-      String docID, String midwifeID) async {
-    DocumentReference userDocRef = _firestore
-        .collection('HomeVisits')
-        .doc(docID);
+  Future<void> changeConfirmation(
+      HOMEVISITCONFM confm, String docID, String midwifeID) async {
+    DocumentReference userDocRef =
+        _firestore.collection('HomeVisits').doc(docID);
 
     //midwife doc
     // DocumentReference midwifeDocRef = _firestore

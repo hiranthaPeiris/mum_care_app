@@ -22,6 +22,7 @@ class Dashboard extends StatefulWidget {
 AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
+  bool isSwitched = false;
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
@@ -158,12 +159,37 @@ class _DashboardState extends State<Dashboard> {
                                   fontFamily: "Roboto",
                                   fontWeight: FontWeight.w800)),
                           Search_bar(),
+                          Row(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.topRight,
+                              ),
+                              Text("DUTY"),
+                              Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched = value;
+
+                                    print(isSwitched);
+                                  });
+                                },
+                                activeTrackColor: Colors.lightGreenAccent,
+                                activeColor: Colors.green,
+                              ),
+                            ],
+                          ),
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
+<<<<<<< HEAD
                              // getRole.userCustomData['role'] == 'midwife'
                                //   ?
                                    SliverList(
+=======
+                              getRole.userCustomData['role'] != 'midwife'
+                                  ? SliverList(
+>>>>>>> 8f0a86884a47a770a2b8fbd28ca4f1edd6ffe47d
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
                                             heading: "Mother List",
@@ -171,7 +197,8 @@ class _DashboardState extends State<Dashboard> {
                                             svgSrc:
                                                 "assets/icons/Hamburger.svg",
                                             press: () {
-                                              print(getRole.userCustomData['role']);
+                                              print(getRole
+                                                  .userCustomData['role']);
                                               Navigator.pushNamed(
                                                   context, '/motherAssign');
                                             }),
@@ -186,7 +213,8 @@ class _DashboardState extends State<Dashboard> {
                                             svgSrc:
                                                 "assets/icons/Hamburger.svg",
                                             press: () {
-                                              print(getRole.userCustomData['role']);
+                                              print(getRole
+                                                  .userCustomData['role']);
                                               Navigator.pushNamed(
                                                   context, '/comReg');
                                             }),
