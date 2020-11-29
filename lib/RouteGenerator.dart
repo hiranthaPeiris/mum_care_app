@@ -17,11 +17,10 @@ import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/leavingForm/leaveForm.dart';
-<<<<<<< HEAD
+
 import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
 
-=======
->>>>>>> 8f0a86884a47a770a2b8fbd28ca4f1edd6ffe47d
+
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
@@ -91,15 +90,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => GeoLocation());
       case '/leaveForm':
         return MaterialPageRoute(builder: (_) => LeaveForm());
-<<<<<<< HEAD
+
       case '/leaveFormsView':
         return MaterialPageRoute(builder: (_) => LeaveReportView());
-=======
+
       case '/leavingAccept':
         return MaterialPageRoute(builder: (_) => LeaveAccept());
-      case '/dutyChecking':
-        return MaterialPageRoute(builder: (_) => DutyCheck());
->>>>>>> 8f0a86884a47a770a2b8fbd28ca4f1edd6ffe47d
       case '/upcomingHomeVisit':
         return MaterialPageRoute(
             builder: (_) => UpcomingHomeVisitFirebaseDemo());
