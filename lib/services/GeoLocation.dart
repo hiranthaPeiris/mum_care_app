@@ -33,7 +33,7 @@ class _GeoLocationState extends State<GeoLocation> {
   static Future<void> openMap(double lat, double lon) async {
     String googleUrl = 'http://google.com/maps/search/?api=1&query=$lat,$lon';
     if (await canLaunch(googleUrl)) {
-      awch(googleUrl);
+      await launch(googleUrl);
     } else {
       throw 'Could not open the map';
     }
