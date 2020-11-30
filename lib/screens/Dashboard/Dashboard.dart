@@ -6,13 +6,15 @@ import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/main.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
-import 'package:mun_care_app/services/GeoLocation.dart';
+import 'package:mun_care_app/screens/login/Login_comp.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
 import 'package:mun_care_app/models/UserReg.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -22,11 +24,52 @@ class Dashboard extends StatefulWidget {
 AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
+  bool onDuty = false;
+  LoginComp v;
   bool isSwitched = false;
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
   UserM getRole = new UserM.get();
+
+  void toggleSwitch(bool value) {
+    if (onDuty == false) {
+      setState(() {
+        onDuty = true;
+        onDutyCheck();
+      });
+      print('Switch Button is ON');
+    }
+    if (onDuty == true) {
+      setState(() {
+        onDuty = false;
+        onDutyCheck();
+      });
+      print('Switch Button is OFF');
+    }
+  }
+
+  onDutyCheck() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    DateTime time = DateTime.now();
+    String dateConvert = time.hour.toString() + ":" + time.minute.toString();
+
+    /*OndutyState ondutyState = OndutyState(onDuty: onDuty, logTime: dateConvert);
+    try {
+      FirebaseFirestore.instance
+          .runTransaction((Transaction transaction) async {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(_auth.currentUser.uid)
+            .collection("onDuty")
+            .doc(_auth.currentUser.uid)
+            .set(ondutyState.toJson());
+      });
+    } catch (e) {
+      print(e.toString());
+    }*/
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -44,6 +87,7 @@ class _DashboardState extends State<Dashboard> {
                     onTap: () async {
                       setState(() {
                         pending = true;
+                        onDuty = false;
                       });
                       dynamic result = await _authService.SignOut();
                       setState(() {
@@ -167,12 +211,30 @@ class _DashboardState extends State<Dashboard> {
                               Text("DUTY"),
                               Switch(
                                 value: isSwitched,
+                                // onChanged: toggleSwitch,
+
                                 onChanged: (value) {
-                                  setState(() {
+                                  if (onDuty == false) {
+                                    setState(() {
+                                      onDuty = true;
+                                      onDutyCheck();
+                                    });
+                                    print('Switch Button is ON');
+                                  } else {
+                                    setState(() {
+                                      onDuty = false;
+                                      onDutyCheck();
+                                    });
+                                    print('Switch Button is OFF');
+                                  }
+                                  /*setState(() {
                                     isSwitched = value;
 
+                                    onDuty = true;
+
                                     print(isSwitched);
-                                  });
+                                    onDutyCheck();
+                                  });*/
                                 },
                                 activeTrackColor: Colors.lightGreenAccent,
                                 activeColor: Colors.green,
@@ -262,7 +324,7 @@ class _DashboardState extends State<Dashboard> {
                                             context, '/leavingReport');
                                       },
                                     ),
-                                    Menu_card(
+                                    /*Menu_card(
                                       title: "Home visits",
                                       heading: "Schedule Home Visits",
                                       svgSrc:
@@ -271,7 +333,7 @@ class _DashboardState extends State<Dashboard> {
                                         Navigator.pushNamed(
                                             context, '/sechHomeVisits');
                                       },
-                                    ),
+                                    ),*/
                                     Menu_card(
                                       title: "Clinics",
                                       heading: "Schedule Clinics",
@@ -299,6 +361,17 @@ class _DashboardState extends State<Dashboard> {
                                       press: () {
                                         Navigator.pushNamed(
                                             context, '/geoLocate');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Duty",
+                                      heading: "On Duty Midwives",
+                                      // heading: "Geo Loacation",
+                                      svgSrc: "assets/icons/Hamburger.svg",
+                                      press: () {
+                                        // print(getRole.userCustomData['role']);
+                                        Navigator.pushNamed(
+                                            context, '/dutyChecking');
                                       },
                                     ),
                                   ]),

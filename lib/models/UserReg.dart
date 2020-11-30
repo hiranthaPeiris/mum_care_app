@@ -397,3 +397,23 @@ class ComSetState {
     };
   }
 }
+
+/*class OndutyState {
+  bool onDuty;
+  String logTime;
+
+  DocumentReference documentReference;
+
+  OndutyState({this.onDuty, this.logTime});
+
+  OndutyState.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    onDuty = map["_onDuty"];
+    logTime = map["_logTime"];
+  }
+  OndutyState.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
+
+  toJson() {
+    return {'_onDuty': onDuty, '_logTime': logTime};
+  }
+}*/

@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
           textTheme:
               Theme.of(context).textTheme.apply(displayColor: kTextColor),
         ),
-        initialRoute: '/leavingReport',
+        initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );
