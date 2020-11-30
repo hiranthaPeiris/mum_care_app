@@ -1,7 +1,7 @@
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 
 class ComRegDB {
   String mohDropDownValue;
@@ -59,6 +59,7 @@ class ComRegDB {
   String menHeight;
   String womenBloodDropDownValue;
   String menBloodDropDownValue;
+  String regDate;
 
   DocumentReference documentReference;
 
@@ -114,6 +115,7 @@ class ComRegDB {
     this.menHeight,
     this.womenBloodDropDownValue,
     this.menBloodDropDownValue,
+    this.regDate,
   });
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
@@ -172,6 +174,7 @@ class ComRegDB {
     menHeight = map["_menHeight"];
     womenBloodDropDownValue = map["_womenBloodDropDownValue"];
     menBloodDropDownValue = map["_menBloodDropDownValue"];
+    regDate = map['_regDate'];
   }
   ComRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -229,11 +232,14 @@ class ComRegDB {
       '_menHeight': menHeight,
       '_womenBloodDropDownValue': womenBloodDropDownValue,
       '_menBloodDropDownValue': menBloodDropDownValue,
+      '_regDate': regDate,
     };
   }
 }
 
 class PreRegDB {
+  String mohDropDownValue;
+  String phmDropDownValue;
   String gnDivision;
   String fcName;
   String hcName;
@@ -252,11 +258,14 @@ class PreRegDB {
   bool maleria;
   bool heartDisorder;
   bool kidneyDisorder;
+  String regDate;
 
   DocumentReference documentReference;
 
   PreRegDB(
-      {this.gnDivision,
+      {this.mohDropDownValue,
+      this.phmDropDownValue,
+      this.gnDivision,
       this.fcName,
       this.hcName,
       this.coName,
@@ -271,9 +280,12 @@ class PreRegDB {
       this.diabetic,
       this.maleria,
       this.heartDisorder,
-      this.kidneyDisorder});
+      this.kidneyDisorder,
+      this.regDate});
 
   PreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    mohDropDownValue = map["_mohDropDownValue"];
+    phmDropDownValue = map["_phmDropDownValue"];
     gnDivision = map["_gnDivision"];
     fcName = map["_fcName"];
     hcName = map["_hcName"];
@@ -292,12 +304,15 @@ class PreRegDB {
     maleria = map["_maleria"];
     heartDisorder = map["_heartDisorder"];
     maleria = map["_maleria"];
+    regDate = map["_regDate"];
   }
   PreRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
 
   toJson() {
     return {
+      '_mohDropDownValue': mohDropDownValue,
+      '_phmDropDownValue': phmDropDownValue,
       '_gnDivision': gnDivision,
       '_fcName': fcName,
       '_hcName': hcName,
@@ -314,6 +329,7 @@ class PreRegDB {
       '_maleria': maleria,
       '_heartDisorder': heartDisorder,
       '_kidneyDisorder': kidneyDisorder,
+      '_regDate': regDate,
     };
   }
 }
@@ -381,59 +397,3 @@ class ComSetState {
     };
   }
 }
-
-Widget getG1(BuildContext context) {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection("PreDatabase")
-        .doc(_auth.currentUser.uid)
-        .collection("G1")
-        .doc("G1")
-        .snapshots(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        var value = snapshot.data;
-        return ListView(
-          children: [
-            Text(value["_womb"].toString()),
-            Text(value["_details"].toString()),
-            Text(value["_kgWeight"].toString()),
-            Text(value["_gWeight"].toString()),
-            Text(value["_result"].toString()),
-            Text(value["_sex"].toString()),
-          ],
-        );
-      }
-    },
-  );
-}
-
-Widget getG2(BuildContext context) {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection("PreDatabase")
-        .doc(_auth.currentUser.uid)
-        .collection("G2")
-        .doc("G2")
-        .snapshots(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        var value = snapshot.data;
-        return ListView(
-          children: [
-            Text(value["_womb"].toString()),
-            Text(value["_details"].toString()),
-            Text(value["_kgWeight"].toString()),
-            Text(value["_gWeight"].toString()),
-            Text(value["_result"].toString()),
-            Text(value["_sex"].toString()),
-          ],
-        );
-      }
-    },
-  );
-}
-
-
