@@ -36,6 +36,19 @@ class _PreFamRegState extends State<PreFamReg> {
 
   DateTime _dateDOB;
   DateTime _dateMarrage;
+  List<String> arr=[
+          'Select Area',
+          'Ambalangoda',
+          'Hikkaduwa',
+          'Rathgama',
+          'Habaraduwa',
+          'Mirissa',
+          'Weligama',
+          'Dodanduwa',
+          'Balapitiya',
+          'Ahangama',
+          'Thalgaswala'
+        ];
 
   TextEditingController myController12 = new TextEditingController();
   TextEditingController myController13 = new TextEditingController();
@@ -91,19 +104,7 @@ class _PreFamRegState extends State<PreFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>[
-          'Select Area',
-          'Ambalangoda',
-          'Hikkaduwa',
-          'Rathgama',
-          'Habaraduwa',
-          'Mirissa',
-          'Weligama',
-          'Dodanduwa',
-          'Balapitiya',
-          'Ahangama',
-          'Thalgaswala'
-        ].map<DropdownMenuItem<String>>((String value) {
+        items:arr.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(

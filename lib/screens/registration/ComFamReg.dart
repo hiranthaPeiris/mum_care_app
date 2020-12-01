@@ -100,7 +100,19 @@ class _ComFamRegState extends State<ComFamReg> {
   DateTime _dateMarrage;
   bool _set = false;
   bool allreadyComReg;
-
+  List<String> arr=[
+          'Select Area',
+          'Ambalangoda',
+          'Hikkaduwa',
+          'Rathgama',
+          'Habaraduwa',
+          'Mirissa',
+          'Weligama',
+          'Dodanduwa',
+          'Balapitiya',
+          'Ahangama',
+          'Thalgaswala'
+        ];
   @override
   Widget build(BuildContext context) {
     Widget showTextField(
@@ -135,19 +147,7 @@ class _ComFamRegState extends State<ComFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>[
-          'Select Area',
-          'Ambalangoda',
-          'Hikkaduwa',
-          'Rathgama',
-          'Habaraduwa',
-          'Mirissa',
-          'Weligama',
-          'Dodanduwa',
-          'Balapitiya',
-          'Ahangama',
-          'Thalgaswala'
-        ].map<DropdownMenuItem<String>>((String value) {
+        items:arr.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
