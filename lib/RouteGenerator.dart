@@ -7,6 +7,7 @@ import 'package:mun_care_app/Wapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
+import 'package:mun_care_app/screens/reports/monthlyReportView.dart';
 import 'package:mun_care_app/sister/DutyChecking.dart';
 import 'package:mun_care_app/sister/LeavingAccept.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
@@ -83,6 +84,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ReportSearch());
       case '/dairlyReportView':
         return MaterialPageRoute(builder: (_) => DairlyReportView());
+      case '/monthlyReportView':
+        return MaterialPageRoute(builder: (_) => MonthlyReportView());
       case '/geoLocate':
         return MaterialPageRoute(builder: (_) => GeoLocation());
       case '/leaveForm':

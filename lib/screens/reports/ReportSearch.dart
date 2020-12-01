@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
+
+import 'monthlyReportView.dart';
 
 class ReportSearch extends StatefulWidget {
   @override
@@ -240,7 +243,11 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                       alert =
                                                                       AlertDialog(
                                                                     title: Text(
-                                                                        "Attention"),
+                                                                      "Attention",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.red),
+                                                                    ),
                                                                     content: Text(
                                                                         "Please select a date to get daily reports"),
                                                                     actions: [
@@ -359,7 +366,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                         211),
                                                               )),
                                                       onPressed: () {
-                                                        showDatePicker(
+                                                        showMonthPicker(
                                                                 context:
                                                                     context,
                                                                 initialDate:
@@ -402,10 +409,6 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                   "/" +
                                                                   _monthReport
                                                                       .month
-                                                                      .toString() +
-                                                                  "/" +
-                                                                  _monthReport
-                                                                      .day
                                                                       .toString(),
                                                           style: TextStyle(
                                                               fontSize: 15),
@@ -430,9 +433,14 @@ class _ReportSearchState extends State<ReportSearch> {
                                                               onPressed: () {
                                                                 if (_monthReport !=
                                                                     null) {
-                                                                  Navigator.pushNamed(
-                                                                      context,
-                                                                      '/leaveForm');
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                MonthlyReportView(getMonth: _monthReport)),
+                                                                  );
                                                                 } else {
                                                                   Widget
                                                                       okButton =
@@ -452,7 +460,11 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                       alert =
                                                                       AlertDialog(
                                                                     title: Text(
-                                                                        "Attention"),
+                                                                      "Attention",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.red),
+                                                                    ),
                                                                     content: Text(
                                                                         "Please select a date to get daily reports"),
                                                                     actions: [

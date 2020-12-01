@@ -25,9 +25,6 @@ class Dashboard extends StatefulWidget {
 AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  //bool onDuty = false;
   AuthService v;
   bool isSwitched = false;
   int notificationCount = 2;
@@ -35,24 +32,17 @@ class _DashboardState extends State<Dashboard> {
   bool pending = false;
   UserM getRole = new UserM.get();
   UserM n;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    
 
-  void toggleSwitch(bool value) {
-    /*if (onDuty == false) {
-      setState(() {
-        onDuty = true;
-        // onDutyCheck();
-      });
-      print('Switch Button is ON');
-    }*/
-    /*if (onDuty == true) {
-      setState(() {
-        onDuty = false;
-        onDutyCheck();
-      });
-      print('Switch Button is OFF');
-    }*/
-  }
-  Future<void> dutyChecking() async {
+
+
+
+Future<void> dutyChecking() async {
     await _firestore
         .collection('users')
         .doc(_auth.currentUser.uid)
@@ -69,32 +59,6 @@ class _DashboardState extends State<Dashboard> {
         .then((value) => print('duty is not available'))
         .catchError((err) => print(err));
   }
-
-  /*onDutyCheck() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    // DateTime time = DateTime.now();
-    //  String dateConvert = time.hour.toString() + ":" + time.minute.toString();
-
-    //ComRegDB ondutyState = ComRegDB(onDuty: onDuty);
-    try {
-      FirebaseFirestore.instance
-          .runTransaction((Transaction transaction) async {
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(_auth.currentUser.uid)
-            .set({'onDuty': true})
-            .then((value) => print('duty is set'))
-            .catchError((err) => print(err));
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }*/
-
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return pending
         ? Loading()
         : Scaffold(
@@ -108,7 +72,6 @@ class _DashboardState extends State<Dashboard> {
                     onTap: () async {
                       setState(() {
                         pending = true;
-                        // onDuty = false;
                       });
                       dynamic result = await _authService.SignOut();
                       setState(() {
@@ -235,71 +198,23 @@ class _DashboardState extends State<Dashboard> {
                                 onChanged: (value) {
                                   setState(() {
                                     if (isSwitched = value) {
-                                      //onDutyCheck();
                                       dutyChecking();
-
-                                      //  v.onDuty = false;
                                       print(isSwitched);
                                     } else {
                                       noDutyChecking();
                                       print(isSwitched);
                                     }
                                   });
-                                  //print("false");
-
-                                  // v.dutyChecking();
-                                  //v.onDuty = true;
-                                  // onDutyCheck();
                                 },
                                 activeTrackColor: Colors.lightGreenAccent,
                                 activeColor: Colors.green,
                               ),
-
-                              /*onChanged: (value) {
-                                  if (onDuty == false) {
-                                    setState(() {
-                                      onDuty = true;
-                                      //onDutyCheck();
-                                    });
-                                    print('Switch Button is ON');
-                                  }*/
-                              /*else {
-                                    setState(() {
-                                      onDuty = false;
-                                      onDutyCheck();
-                                    });
-                                    print('Switch Button is OFF');
-                                  }*/
-                              /*setState(() {
-                                    isSwitched = value;
-
-                                    onDuty = true;
-
-                                    print(isSwitched);
-                                    onDutyCheck();
-                                  });*/
                             ],
                           ),
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              getRole.userCustomData['role'] != 'midwife'
-                                  ? SliverList(
-                                      delegate: SliverChildListDelegate([
-                                        Menu_liner_card(
-                                            heading: "Mother List",
-                                            content: "List of your mothers",
-                                            svgSrc:
-                                                "assets/icons/Hamburger.svg",
-                                            press: () {
-                                              print(getRole
-                                                  .userCustomData['role']);
-                                              Navigator.pushNamed(
-                                                  context, '/motherAssign');
-                                            }),
-                                      ]),
-                                    )
-                                  : SliverList(
+                               SliverList(
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
                                             heading: "Complete Registration",

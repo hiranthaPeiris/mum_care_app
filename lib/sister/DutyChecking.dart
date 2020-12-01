@@ -35,6 +35,9 @@ class _DutyCheckState extends State<DutyCheck> {
     return StreamBuilder(
         stream: getData01(),
         builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child: Text("No data here"));
+          }
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
           }
@@ -64,10 +67,12 @@ class _DutyCheckState extends State<DutyCheck> {
             child: Column(
           children: <Widget>[
             Card(
+              color: Colors.blueAccent,
               clipBehavior: Clip.antiAlias,
               child: Column(
                 children: [
                   ListTile(
+                    //isThreeLine: true,
                     leading: Icon(Icons.arrow_drop_down_circle),
                     title: data['name'] != ""
                         ? Text("${data['name']} ")
@@ -78,14 +83,19 @@ class _DutyCheckState extends State<DutyCheck> {
                     ),
                   ),
                   ButtonBar(
-                    alignment: MainAxisAlignment.start,
+                    alignment: MainAxisAlignment.end,
                     children: [
                       FlatButton(
                         textColor: const Color(0xFF6200EE),
                         onPressed: () {
                           Navigator.pushNamed(context, '/geoLocate');
                         },
-                        child: const Text('Location'),
+                        child: Row(
+                          children: [
+                            Icon(Icons.location_pin,size: 20.0,),
+                            const Text('Location'),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -121,6 +131,7 @@ class _DutyCheckState extends State<DutyCheck> {
     }
 
     return Scaffold(
+      //backgroundColor: Colors.pinkAccent,
       body: getState(context),
     );
   }

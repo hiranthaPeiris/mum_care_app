@@ -199,6 +199,9 @@ class _PreFamRegState extends State<PreFamReg> {
           date.month.toString() +
           "/" +
           date.day.toString();
+      String monthConvert = date.year.toString() +
+          "/" +
+          date.month.toString();
       PreRegDB preRegDB = PreRegDB(
           mohDropDownValue: mohDropdownValue,
           phmDropDownValue: phmDropdownValue,
@@ -212,7 +215,8 @@ class _PreFamRegState extends State<PreFamReg> {
           maleria: maleria_Yes,
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
-          regDate: dateConvert);
+          regDate: dateConvert,
+          regMonth: monthConvert,);
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
           await Firestore.instance

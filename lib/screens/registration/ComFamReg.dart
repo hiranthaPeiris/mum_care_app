@@ -402,6 +402,9 @@ class _ComFamRegState extends State<ComFamReg> {
           date.month.toString() +
           "/" +
           date.day.toString();
+      String monthConvert = date.year.toString() +
+          "/" +
+          date.month.toString();
       ComRegDB comRegDB = ComRegDB(
         husbandName: myController1.text,
         wifeName: myController2.text,
@@ -455,6 +458,7 @@ class _ComFamRegState extends State<ComFamReg> {
         womenBloodDropDownValue: womenBloodDropdownValue,
         menBloodDropDownValue: menBloodDropdownValue,
         regDate: dateConvert,
+        regMonth: monthConvert,
       );
 
       try {
