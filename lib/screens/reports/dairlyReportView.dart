@@ -20,22 +20,12 @@ class _DairlyReportViewState extends State<DairlyReportView> {
 
   DateTime selected;
   String itemTitle = "Description";
-  Stream<UserM> get user {
-    return _auth
-        .authStateChanges()
-        //.map((FirebaseUser user) => _userFromFirebaseUser(user));
-        .map(_userFromFirebase);
-  }
 
-  UserM getUser = new UserM.get();
-  UserM _userFromFirebase(User user) {
-    //String uid = user.uid;
-    return user != null ? UserM.setUID(uid: user.uid) : null;
-  }
 
-  var useri = '0RtK6v4kWkSx2JHZS6RYpFQY9Cr1';
-  //
-  //var useri = new UserM.get().userCredential.user.uid;
+  var getUser=new UserM.get();
+
+  var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
+
 
   @override
   Widget build(BuildContext context) {

@@ -12,6 +12,7 @@ import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,51 +25,71 @@ class Dashboard extends StatefulWidget {
 AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
-  bool onDuty = false;
-  LoginComp v;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //bool onDuty = false;
+  AuthService v;
   bool isSwitched = false;
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
   UserM getRole = new UserM.get();
+  UserM n;
 
   void toggleSwitch(bool value) {
-    if (onDuty == false) {
+    /*if (onDuty == false) {
       setState(() {
         onDuty = true;
-        onDutyCheck();
+        // onDutyCheck();
       });
       print('Switch Button is ON');
-    }
-    if (onDuty == true) {
+    }*/
+    /*if (onDuty == true) {
       setState(() {
         onDuty = false;
         onDutyCheck();
       });
       print('Switch Button is OFF');
-    }
+    }*/
+  }
+  Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': true})
+        .then((value) => print('duty is available'))
+        .catchError((err) => print(err));
   }
 
-  onDutyCheck() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    DateTime time = DateTime.now();
-    String dateConvert = time.hour.toString() + ":" + time.minute.toString();
+  Future<void> noDutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': false})
+        .then((value) => print('duty is not available'))
+        .catchError((err) => print(err));
+  }
 
-    /*OndutyState ondutyState = OndutyState(onDuty: onDuty, logTime: dateConvert);
+  /*onDutyCheck() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    // DateTime time = DateTime.now();
+    //  String dateConvert = time.hour.toString() + ":" + time.minute.toString();
+
+    //ComRegDB ondutyState = ComRegDB(onDuty: onDuty);
     try {
       FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
         await FirebaseFirestore.instance
             .collection("users")
             .doc(_auth.currentUser.uid)
-            .collection("onDuty")
-            .doc(_auth.currentUser.uid)
-            .set(ondutyState.toJson());
+            .set({'onDuty': true})
+            .then((value) => print('duty is set'))
+            .catchError((err) => print(err));
       });
     } catch (e) {
       print(e.toString());
-    }*/
-  }
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +108,7 @@ class _DashboardState extends State<Dashboard> {
                     onTap: () async {
                       setState(() {
                         pending = true;
-                        onDuty = false;
+                        // onDuty = false;
                       });
                       dynamic result = await _authService.SignOut();
                       setState(() {
@@ -205,29 +226,51 @@ class _DashboardState extends State<Dashboard> {
                           Search_bar(),
                           Row(
                             children: <Widget>[
-                              Align(
-                                alignment: Alignment.topRight,
-                              ),
+                              //  Align(
+                              // alignment: Alignment.topRight,
+                              // ),
                               Text("DUTY"),
                               Switch(
                                 value: isSwitched,
-                                // onChanged: toggleSwitch,
-
                                 onChanged: (value) {
+                                  setState(() {
+                                    if (isSwitched = value) {
+                                      //onDutyCheck();
+                                      dutyChecking();
+
+                                      //  v.onDuty = false;
+                                      print(isSwitched);
+                                    } else {
+                                      noDutyChecking();
+                                      print(isSwitched);
+                                    }
+                                  });
+                                  //print("false");
+
+                                  // v.dutyChecking();
+                                  //v.onDuty = true;
+                                  // onDutyCheck();
+                                },
+                                activeTrackColor: Colors.lightGreenAccent,
+                                activeColor: Colors.green,
+                              ),
+
+                              /*onChanged: (value) {
                                   if (onDuty == false) {
                                     setState(() {
                                       onDuty = true;
-                                      onDutyCheck();
+                                      //onDutyCheck();
                                     });
                                     print('Switch Button is ON');
-                                  } else {
+                                  }*/
+                              /*else {
                                     setState(() {
                                       onDuty = false;
                                       onDutyCheck();
                                     });
                                     print('Switch Button is OFF');
-                                  }
-                                  /*setState(() {
+                                  }*/
+                              /*setState(() {
                                     isSwitched = value;
 
                                     onDuty = true;
@@ -235,10 +278,6 @@ class _DashboardState extends State<Dashboard> {
                                     print(isSwitched);
                                     onDutyCheck();
                                   });*/
-                                },
-                                activeTrackColor: Colors.lightGreenAccent,
-                                activeColor: Colors.green,
-                              ),
                             ],
                           ),
                           Expanded(

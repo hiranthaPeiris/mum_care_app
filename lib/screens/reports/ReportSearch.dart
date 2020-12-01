@@ -76,7 +76,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                 ),
                                 ////////////////////////////////
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
                                       height: MediaQuery.of(context)
@@ -108,11 +108,11 @@ class _ReportSearchState extends State<ReportSearch> {
                                                   child: Text(
                                                     'Select Your Date',
                                                     style: TextStyle(
-                                                        fontSize: 22,
+                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Colors.white),
-                                                    textAlign: TextAlign.center,
+                                                    textAlign: TextAlign.left,
                                                   ),
                                                 ),
                                                 Container(
@@ -191,7 +191,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                   _dayReport.day
                                                                       .toString(),
                                                           style: TextStyle(
-                                                              fontSize: 20),
+                                                              fontSize: 15),
                                                         ),
                                                       ],
                                                     ),
@@ -211,13 +211,54 @@ class _ReportSearchState extends State<ReportSearch> {
                                                               child: Text(
                                                                   'Search'),
                                                               onPressed: () {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          DairlyReportView(
-                                                                              getDate: _dayReport)),
-                                                                );
+                                                                if (_dayReport !=
+                                                                    null) {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                DairlyReportView(getDate: _dayReport)),
+                                                                  );
+                                                                } else {
+                                                                  Widget
+                                                                      okButton =
+                                                                      FlatButton(
+                                                                    child: Text(
+                                                                        "OK"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  );
+
+                                                                  // set up the AlertDialog
+                                                                  AlertDialog
+                                                                      alert =
+                                                                      AlertDialog(
+                                                                    title: Text(
+                                                                        "Attention"),
+                                                                    content: Text(
+                                                                        "Please select a date to get daily reports"),
+                                                                    actions: [
+                                                                      okButton
+                                                                    ],
+                                                                  );
+
+                                                                  // show the dialog
+                                                                  showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return alert;
+                                                                    },
+                                                                  );
+                                                                }
                                                               },
                                                             ),
                                                           ),
@@ -250,7 +291,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                 ),
                                 ///////////////////////
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
                                       height: MediaQuery.of(context)
@@ -282,11 +323,11 @@ class _ReportSearchState extends State<ReportSearch> {
                                                   child: Text(
                                                     'Select Your Month',
                                                     style: TextStyle(
-                                                        fontSize: 22,
+                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Colors.white),
-                                                    textAlign: TextAlign.center,
+                                                    textAlign: TextAlign.left,
                                                   ),
                                                 ),
                                                 Container(
@@ -367,7 +408,7 @@ class _ReportSearchState extends State<ReportSearch> {
                                                                       .day
                                                                       .toString(),
                                                           style: TextStyle(
-                                                              fontSize: 20),
+                                                              fontSize: 15),
                                                         ),
                                                       ],
                                                     ),
@@ -381,15 +422,55 @@ class _ReportSearchState extends State<ReportSearch> {
                                                         Container(
                                                           child: Align(
                                                             alignment: Alignment
-                                                                .bottomRight,
+                                                                .center,
                                                             child:
                                                                 ElevatedButton(
                                                               child: Text(
                                                                   'Search'),
                                                               onPressed: () {
-                                                                Navigator.pushNamed(
-                                                                    context,
-                                                                    '/dairlyReportView');
+                                                                if (_monthReport !=
+                                                                    null) {
+                                                                  Navigator.pushNamed(
+                                                                      context,
+                                                                      '/leaveForm');
+                                                                } else {
+                                                                  Widget
+                                                                      okButton =
+                                                                      FlatButton(
+                                                                    child: Text(
+                                                                        "OK"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  );
+
+                                                                  // set up the AlertDialog
+                                                                  AlertDialog
+                                                                      alert =
+                                                                      AlertDialog(
+                                                                    title: Text(
+                                                                        "Attention"),
+                                                                    content: Text(
+                                                                        "Please select a date to get daily reports"),
+                                                                    actions: [
+                                                                      okButton
+                                                                    ],
+                                                                  );
+
+                                                                  // show the dialog
+                                                                  showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return alert;
+                                                                    },
+                                                                  );
+                                                                }
                                                               },
                                                             ),
                                                           ),

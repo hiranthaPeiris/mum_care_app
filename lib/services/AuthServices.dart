@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
-
+import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 
 class AuthService {
+  bool onDuty = false;
+  Dashboard n;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -46,7 +48,6 @@ class AuthService {
       new UserM(user: userCredential, data: customData);
 
       return _userFromFirebase(userCredential.user);
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -93,6 +94,7 @@ class AuthService {
       }
     });
   }
+
   //sign out
   Future SignOut() async {
     try {
@@ -103,7 +105,7 @@ class AuthService {
     }
   }
 
- //register
+  //register
   Future Register(String email, String password, String name) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -118,6 +120,7 @@ class AuthService {
       return null;
     }
   }
+
 //set user role
   Future<void> setUserRole(String uid, String name) async {
     await _firestore
@@ -129,10 +132,29 @@ class AuthService {
           'area01': 'notSelect',
           'competencyFam': false,
           'PregnanctFam': false,
-          'midwifeID':'null',
-          'nameSearch':getSearchParam(name)
+          'midwifeID': 'null',
+          'nameSearch': getSearchParam(name),
+          'onDuty': true,
         })
         .then((value) => print("user role added"))
+        .catchError((err) => print(err));
+  }
+
+  /* Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .set({'onDuty': true})
+        .then((value) => print('duty is set'))
+        .catchError((err) => print(err));
+  }*/
+
+  Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .set({'onDuty': false})
+        .then((value) => print('duty is set'))
         .catchError((err) => print(err));
   }
 
@@ -186,7 +208,6 @@ class AuthService {
         mumIds.add(element.id);
       });
     }).catchError((onError) => print(onError));
-   return mumIds;
+    return mumIds;
   }
-
 }

@@ -3,12 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:flutter/material.dart';
 import 'package:mun_care_app/models/UserReg.dart';
-import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
+import 'package:mun_care_app/services/AuthServices.dart';
 //import 'dart:html';
 
 //import 'ComDisplayData.dart';
 
 class DutyCheck extends StatefulWidget {
+  AuthService n;
   @override
   _DutyCheckState createState() => _DutyCheckState();
 }
@@ -20,7 +21,7 @@ class _DutyCheckState extends State<DutyCheck> {
   getData01() {
     return FirebaseFirestore.instance
         .collection("users")
-        .where('_onDuty', isEqualTo: true)
+        .where('onDuty', isEqualTo: true)
         .snapshots();
 
     //.doc(_auth.currentUser.uid)
@@ -76,31 +77,18 @@ class _DutyCheckState extends State<DutyCheck> {
                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
                     ),
                   ),
-                  /*ButtonBar(
+                  ButtonBar(
                     alignment: MainAxisAlignment.start,
                     children: [
                       FlatButton(
                         textColor: const Color(0xFF6200EE),
                         onPressed: () {
-                          Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => ComGetIdDetails(comRegBD.documentReference.id)),
-                                      );
+                          Navigator.pushNamed(context, '/geoLocate');
                         },
-                        child: const Text('Competency'),
-                      ),
-                      FlatButton(
-                        textColor: const Color(0xFF6200EE),
-                        onPressed: () {
-                          Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => PreGetIdDetails(comRegBD.documentReference.id)),
-                                      );
-                        },
-                        child: const Text('Pregnancy'),
+                        child: const Text('Location'),
                       ),
                     ],
-                  ),*/
+                  ),
                 ],
               ),
             ),
@@ -122,6 +110,9 @@ class _DutyCheckState extends State<DutyCheck> {
           var value = snapshot.data;
           String role = value['role'].toString();
           print(role);
+          if (snapshot.hasError) {
+            return Text("Error ${snapshot.error}");
+          }
           if (snapshot.hasData) {
             return buildBody01(context);
           }
