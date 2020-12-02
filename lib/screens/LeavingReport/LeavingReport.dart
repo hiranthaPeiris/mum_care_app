@@ -5,12 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mun_care_app/models/MediModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
-  runApp(new MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: new LeavingReport(),
-  ));
-}
+///MUM Leaving area report
 
 class LeavingReport extends StatefulWidget {
   @override
