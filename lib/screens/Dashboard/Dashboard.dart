@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/main.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
+import 'package:mun_care_app/screens/login/Login_comp.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mun_care_app/models/UserReg.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -21,6 +26,11 @@ class Dashboard extends StatefulWidget {
 AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //bool onDuty = false;
+  AuthService v;
+  bool isSwitched = false;
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = true;
@@ -61,6 +71,44 @@ class _DashboardState extends State<Dashboard> {
     // }
   }
 
+  // bool pending = false;
+  UserM getRole = new UserM.get();
+  UserM n;
+
+  void toggleSwitch(bool value) {
+    /*if (onDuty == false) {
+      setState(() {
+        onDuty = true;
+        // onDutyCheck();
+      });
+      print('Switch Button is ON');
+    }*/
+    /*if (onDuty == true) {
+      setState(() {
+        onDuty = false;
+        onDutyCheck();
+      });
+      print('Switch Button is OFF');
+    }*/
+  }
+  Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': true})
+        .then((value) => print('duty is available'))
+        .catchError((err) => print(err));
+  }
+
+  Future<void> noDutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': false})
+        .then((value) => print('duty is not available'))
+        .catchError((err) => print(err));
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -85,6 +133,7 @@ class _DashboardState extends State<Dashboard> {
                     onTap: () async {
                       setState(() {
                         pending = true;
+                        // onDuty = false;
                       });
                       dynamic result = await _authService.SignOut();
                       setState(() {
@@ -200,10 +249,67 @@ class _DashboardState extends State<Dashboard> {
                                   fontFamily: "Roboto",
                                   fontWeight: FontWeight.w800)),
                           Search_bar(),
+                          Row(
+                            children: <Widget>[
+                              //  Align(
+                              // alignment: Alignment.topRight,
+                              // ),
+                              Text("DUTY"),
+                              Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (isSwitched = value) {
+                                      //onDutyCheck();
+                                      dutyChecking();
+
+                                      //  v.onDuty = false;
+                                      print(isSwitched);
+                                    } else {
+                                      noDutyChecking();
+                                      print(isSwitched);
+                                    }
+                                  });
+                                  //print("false");
+
+                                  // v.dutyChecking();
+                                  //v.onDuty = true;
+                                  // onDutyCheck();
+                                },
+                                activeTrackColor: Colors.lightGreenAccent,
+                                activeColor: Colors.green,
+                              ),
+
+                              /*onChanged: (value) {
+                                  if (onDuty == false) {
+                                    setState(() {
+                                      onDuty = true;
+                                      //onDutyCheck();
+                                    });
+                                    print('Switch Button is ON');
+                                  }*/
+                              /*else {
+                                    setState(() {
+                                      onDuty = false;
+                                      onDutyCheck();
+                                    });
+                                    print('Switch Button is OFF');
+                                  }*/
+                              /*setState(() {
+                                    isSwitched = value;
+
+                                    onDuty = true;
+
+                                    print(isSwitched);
+                                    onDutyCheck();
+                                  });*/
+                            ],
+                          ),
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              _buildSliverList(), _buildSliverGrid()
+                              _buildSliverList(),
+                              _buildSliverGrid()
 
                               // SliverGrid(
                               //     delegate: SliverChildListDelegate([
@@ -276,6 +382,145 @@ class _DashboardState extends State<Dashboard> {
                               //       crossAxisSpacing: 20,
                               //       mainAxisSpacing: 20,
                               //     ))
+                              ,
+                              getRole.userCustomData['role'] != 'midwife'
+                                  ? SliverList(
+                                      delegate: SliverChildListDelegate([
+                                        Menu_liner_card(
+                                            heading: "Mother List",
+                                            content: "List of your mothers",
+                                            svgSrc:
+                                                "assets/icons/Hamburger.svg",
+                                            press: () {
+                                              print(getRole
+                                                  .userCustomData['role']);
+                                              Navigator.pushNamed(
+                                                  context, '/motherAssign');
+                                            }),
+                                      ]),
+                                    )
+                                  : SliverList(
+                                      delegate: SliverChildListDelegate([
+                                        Menu_liner_card(
+                                            heading: "Complete Registration",
+                                            content:
+                                                "Complete the competency family registration",
+                                            svgSrc:
+                                                "assets/icons/Hamburger.svg",
+                                            press: () {
+                                              print(getRole
+                                                  .userCustomData['role']);
+                                              Navigator.pushNamed(
+                                                  context, '/comReg');
+                                            }),
+                                        Menu_liner_card(
+                                            heading: "Pregnancy Registration",
+                                            content:
+                                                "Complete the pregnancy registration",
+                                            svgSrc:
+                                                "assets/icons/Hamburger.svg",
+                                            press: () {
+                                              Navigator.pushNamed(
+                                                  context, '/preReg');
+                                            }),
+                                      ]),
+                                    ),
+                              SliverGrid(
+                                  delegate: SliverChildListDelegate([
+                                    Menu_card(
+                                      title: "View Upcoming Clinics",
+                                      heading: "Clinics",
+                                      svgSrc: "assets/icons/clinics.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/UpcomingClinics');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "View Upcoming Home Visits",
+                                      heading: "Home Visits",
+                                      svgSrc: "assets/icons/home-visits.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/upcomingHomeVisit');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Report private medications",
+                                      heading: "Report Medications",
+                                      svgSrc: "assets/icons/yoga.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/MedicalReport');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Report leaving residential area",
+                                      heading: "Report Leaving",
+                                      svgSrc: "assets/icons/yoga.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/leavingReport');
+                                      },
+                                    ),
+                                    /*Menu_card(
+                                      title: "Home visits",
+                                      heading: "Schedule Home Visits",
+                                      svgSrc:
+                                          "assets/icons/home-visits-sch.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/sechHomeVisits');
+                                      },
+                                    ),*/
+                                    Menu_card(
+                                      title: "Clinics",
+                                      heading: "Schedule Clinics",
+                                      svgSrc: "assets/icons/clinics-sch.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/sechClinics');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Reports",
+                                      heading: "Monthly and Daily Report",
+                                      svgSrc:
+                                          "assets/icons/home-visits-sch.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/searchReport');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Map",
+                                      heading: "Geo Loacation",
+                                      svgSrc:
+                                          "assets/icons/home-visits-sch.svg",
+                                      press: () {
+                                        Navigator.pushNamed(
+                                            context, '/geoLocate');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Duty",
+                                      heading: "On Duty Midwives",
+                                      // heading: "Geo Loacation",
+                                      svgSrc: "assets/icons/Hamburger.svg",
+                                      press: () {
+                                        // print(getRole.userCustomData['role']);
+                                        Navigator.pushNamed(
+                                            context, '/dutyChecking');
+                                      },
+                                    ),
+                                  ]),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: .85,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 20,
+                                  ))
                             ],
                           ))
                         ],

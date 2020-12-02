@@ -35,7 +35,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final UserDataSevice _userDataSevice = UserDataSevice();
-  
+
   UserM _user = new UserM.get();
   bool pending = true;
   DocumentSnapshot compFamData;
@@ -183,7 +183,7 @@ class _ProfileState extends State<Profile> {
                               gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            colors: [kBackground, kBlueColor],
+                            //  colors: [kBackground, kBlueColor],
                             //tileMode: TileMode.repeated,
                           )),
                           child: Container(

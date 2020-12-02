@@ -68,7 +68,6 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
           .collection("Bookings")
           .doc('IhiVRXSUfZPKoKpaNZgFtlPosj22')
           .collection('HomeVisits');
-
       var midwifeVisit = _firestore
           .collection('Bookings')
           .doc(widget.midwifeId)

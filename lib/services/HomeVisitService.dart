@@ -33,8 +33,8 @@ class HomeVisitService {
           'status': "pending",
           'confirmation': 'pending',
           'midwifeID': midwifeID,
-          'userID':uid,
-          'userDocRef': userDocRef
+          'userID': uid,
+          'userDocRef': userDocRef,
         })
         .then((value) => print("home visit added $value"))
         .catchError((err) => print(err));
@@ -84,11 +84,10 @@ class HomeVisitService {
         .catchError((err) => print(err));
   }
 
-  Future<void> changeConfirmation(HOMEVISITCONFM confm, 
-      String docID, String midwifeID) async {
-    DocumentReference userDocRef = _firestore
-        .collection('HomeVisits')
-        .doc(docID);
+  Future<void> changeConfirmation(
+      HOMEVISITCONFM confm, String docID, String midwifeID) async {
+    DocumentReference userDocRef =
+        _firestore.collection('HomeVisits').doc(docID);
 
     //midwife doc
     // DocumentReference midwifeDocRef = _firestore

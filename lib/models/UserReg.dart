@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -239,6 +238,8 @@ class ComRegDB {
 }
 
 class PreRegDB {
+  String mohDropDownValue;
+  String phmDropDownValue;
   String gnDivision;
   String fcName;
   String hcName;
@@ -262,7 +263,9 @@ class PreRegDB {
   DocumentReference documentReference;
 
   PreRegDB(
-      {this.gnDivision,
+      {this.mohDropDownValue,
+      this.phmDropDownValue,
+      this.gnDivision,
       this.fcName,
       this.hcName,
       this.coName,
@@ -281,6 +284,8 @@ class PreRegDB {
       this.regDate});
 
   PreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    mohDropDownValue = map["_mohDropDownValue"];
+    phmDropDownValue = map["_phmDropDownValue"];
     gnDivision = map["_gnDivision"];
     fcName = map["_fcName"];
     hcName = map["_hcName"];
@@ -306,6 +311,8 @@ class PreRegDB {
 
   toJson() {
     return {
+      '_mohDropDownValue': mohDropDownValue,
+      '_phmDropDownValue': phmDropDownValue,
       '_gnDivision': gnDivision,
       '_fcName': fcName,
       '_hcName': hcName,
@@ -322,7 +329,7 @@ class PreRegDB {
       '_maleria': maleria,
       '_heartDisorder': heartDisorder,
       '_kidneyDisorder': kidneyDisorder,
-      '_regDate':regDate,
+      '_regDate': regDate,
     };
   }
 }
@@ -390,3 +397,23 @@ class ComSetState {
     };
   }
 }
+
+/*class OndutyState {
+  bool onDuty;
+  String logTime;
+
+  DocumentReference documentReference;
+
+  OndutyState({this.onDuty, this.logTime});
+
+  OndutyState.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    onDuty = map["_onDuty"];
+    logTime = map["_logTime"];
+  }
+  OndutyState.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
+
+  toJson() {
+    return {'_onDuty': onDuty, '_logTime': logTime};
+  }
+}*/

@@ -25,7 +25,8 @@ class ShapePainter extends CustomPainter {
 class _PreFamRegState extends State<PreFamReg> {
   int currentStep = 0;
   bool complete = false;
-
+  String mohDropdownValue = 'Select Area';
+  String phmDropdownValue = 'Select Area';
   String wombDropdownValue = "G1";
 
   bool diabetic_Yes = false;
@@ -82,7 +83,85 @@ class _PreFamRegState extends State<PreFamReg> {
         onSaved: (input) => inputName = input,
       );
     }
+    Widget mohDropDownMenu() {
+      return DropdownButton<String>(
+        value: mohDropdownValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 36,
+        isExpanded: true,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        items: <String>[
+          'Select Area',
+          'Ambalangoda',
+          'Hikkaduwa',
+          'Rathgama',
+          'Habaraduwa',
+          'Mirissa',
+          'Weligama',
+          'Dodanduwa',
+          'Balapitiya',
+          'Ahangama',
+          'Thalgaswala'
+        ].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }).toList(),
+        onChanged: (String value) {
+          setState(() {
+            mohDropdownValue = value;
+          });
+        },
+      );
+    }
 
+    Widget phmDropDownMenu() {
+      return DropdownButton<String>(
+        value: phmDropdownValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 36,
+        isExpanded: true,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        items: <String>[
+          'Select Area',
+          '01',
+          '02',
+          '03',
+          '04',
+          '05',
+          '06',
+          '07',
+          '08',
+          '09',
+          '10'
+        ].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }).toList(),
+        onChanged: (String value) {
+          setState(() {
+            phmDropdownValue = value;
+          });
+        },
+      );
+    }
     Widget wombDropDownMenu() {
       return DropdownButton<String>(
         value: wombDropdownValue,
@@ -115,7 +194,14 @@ class _PreFamRegState extends State<PreFamReg> {
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
+      String dateConvert = date.year.toString() +
+          "/" +
+          date.month.toString() +
+          "/" +
+          date.day.toString();
       PreRegDB preRegDB = PreRegDB(
+          mohDropDownValue: mohDropdownValue,
+          phmDropDownValue: phmDropdownValue,
           gnDivision: myController12.text,
           fcName: myController13.text,
           hcName: myController14.text,
@@ -126,7 +212,7 @@ class _PreFamRegState extends State<PreFamReg> {
           maleria: maleria_Yes,
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
-          regDate: date.toString());
+          regDate: dateConvert);
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
           await Firestore.instance
@@ -169,9 +255,9 @@ class _PreFamRegState extends State<PreFamReg> {
           .collection('users')
           .doc(_auth.currentUser.uid)
           .update({
-            'PrenanctFam': true,
+            'PregnanctFam': true,
           })
-          .then((value) => print("Competency true"))
+          .then((value) => print("Pregnancy true"))
           .catchError((err) => print(err));
     }
 
@@ -224,6 +310,96 @@ class _PreFamRegState extends State<PreFamReg> {
                       ),
                     ),
                   ),
+                ),
+              ),
+               Container(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 10, child: Container()),
+                        Expanded(
+                            flex: 40,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 25,
+                                child: Text(
+                                  "MOH Area  -",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          flex: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: 25,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                    boxShadow: [
+                                      new BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 10.0),
+                                    ],
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                                child: mohDropDownMenu()),
+                          ),
+                        ),
+                        Expanded(flex: 5, child: Container()),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 10, child: Container()),
+                        Expanded(
+                            flex: 40,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 25,
+                                child: Text(
+                                  "PHM Area  -",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          flex: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: 25,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                    boxShadow: [
+                                      new BoxShadow(
+                                          color: Colors.black,
+                                          blurRadius: 10.0),
+                                    ],
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                                child: phmDropDownMenu()),
+                          ),
+                        ),
+                        Expanded(flex: 5, child: Container()),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               Container(

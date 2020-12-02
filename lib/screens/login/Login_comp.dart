@@ -8,7 +8,7 @@ import 'package:sign_button/sign_button.dart';
 
 class LoginComp extends StatefulWidget {
   final Function toggleView;
-
+  //bool onDuty = false;
   LoginComp({this.toggleView});
 
   @override
@@ -17,12 +17,16 @@ class LoginComp extends StatefulWidget {
 
 class _LoginCompState extends State<LoginComp> {
   final AuthService _auth = AuthService();
-
+  LoginComp v;
   String email = '';
   String password = '';
   String error = '';
 
   bool pending = false;
+
+  // set onDuty(bool onDuty) {
+  // onDuty = true;
+  //}
 
   bool validate() {
     if (email.isEmpty && password.isEmpty) {
@@ -166,6 +170,7 @@ class _LoginCompState extends State<LoginComp> {
                           } else {
                             print(new UserM.get().userCredential.user.uid);
                             _auth.setUserMessageToken();
+                            //onDuty = true;
                           }
                         } else {
                           setState(() {
