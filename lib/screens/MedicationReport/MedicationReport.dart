@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mun_care_app/models/MediModel.dart';
+import 'package:mun_care_app/models/Medi&LeaveModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MedicationReport extends StatefulWidget {

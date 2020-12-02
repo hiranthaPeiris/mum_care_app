@@ -113,6 +113,12 @@ class _MotherListState extends State<MotherList> {
           var value = snapshot.data;
           String area = value['area01'].toString();
           print(area);
+          if(!snapshot.hasData){
+            return Center(child: Text("No data here"));
+          }
+          if (snapshot.hasError) {
+            return Text("Error ${snapshot.error}");
+          }
           if (snapshot.hasData) {
             return buildBody01(context, area);
           }

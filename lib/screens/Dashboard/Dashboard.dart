@@ -6,13 +6,16 @@ import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/main.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
-import 'package:mun_care_app/services/GeoLocation.dart';
+import 'package:mun_care_app/screens/login/Login_comp.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mun_care_app/models/UserReg.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -22,15 +25,40 @@ class Dashboard extends StatefulWidget {
 AuthService _authService = AuthService();
 
 class _DashboardState extends State<Dashboard> {
+  AuthService v;
   bool isSwitched = false;
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
   UserM getRole = new UserM.get();
+  UserM n;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    
 
+
+
+
+Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': true})
+        .then((value) => print('duty is available'))
+        .catchError((err) => print(err));
+  }
+
+  Future<void> noDutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': false})
+        .then((value) => print('duty is not available'))
+        .catchError((err) => print(err));
+  }
     return pending
         ? Loading()
         : Scaffold(
@@ -161,17 +189,21 @@ class _DashboardState extends State<Dashboard> {
                           Search_bar(),
                           Row(
                             children: <Widget>[
-                              Align(
-                                alignment: Alignment.topRight,
-                              ),
+                              //  Align(
+                              // alignment: Alignment.topRight,
+                              // ),
                               Text("DUTY"),
                               Switch(
                                 value: isSwitched,
                                 onChanged: (value) {
                                   setState(() {
-                                    isSwitched = value;
-
-                                    print(isSwitched);
+                                    if (isSwitched = value) {
+                                      dutyChecking();
+                                      print(isSwitched);
+                                    } else {
+                                      noDutyChecking();
+                                      print(isSwitched);
+                                    }
                                   });
                                 },
                                 activeTrackColor: Colors.lightGreenAccent,
@@ -182,24 +214,7 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                             // getRole.userCustomData['role'] == 'midwife'
-                               //   ?
-                                   SliverList(
-                                      delegate: SliverChildListDelegate([
-                                        Menu_liner_card(
-                                            heading: "Mother List",
-                                            content: "List of your mothers",
-                                            svgSrc:
-                                                "assets/icons/Hamburger.svg",
-                                            press: () {
-                                              print(getRole
-                                                  .userCustomData['role']);
-                                              Navigator.pushNamed(
-                                                  context, '/motherAssign');
-                                            }),
-                                      ]),
-                                    )
-                                /*  : SliverList(
+                               SliverList(
                                       delegate: SliverChildListDelegate([
                                         Menu_liner_card(
                                             heading: "Complete Registration",
@@ -223,10 +238,8 @@ class _DashboardState extends State<Dashboard> {
                                               Navigator.pushNamed(
                                                   context, '/preReg');
                                             }),
-                                            
                                       ]),
-                                    )*/,
-                                    
+                                    ),
                               SliverGrid(
                                   delegate: SliverChildListDelegate([
                                     Menu_card(
@@ -265,7 +278,7 @@ class _DashboardState extends State<Dashboard> {
                                             context, '/leavingReport');
                                       },
                                     ),
-                                    Menu_card(
+                                    /*Menu_card(
                                       title: "Home visits",
                                       heading: "Schedule Home Visits",
                                       svgSrc:
@@ -274,7 +287,7 @@ class _DashboardState extends State<Dashboard> {
                                         Navigator.pushNamed(
                                             context, '/sechHomeVisits');
                                       },
-                                    ),
+                                    ),*/
                                     Menu_card(
                                       title: "Clinics",
                                       heading: "Schedule Clinics",
@@ -295,23 +308,24 @@ class _DashboardState extends State<Dashboard> {
                                       },
                                     ),
                                     Menu_card(
-                                      title: "Map",
-                                      heading: "Geo Loacation",
-                                      svgSrc:
-                                          "assets/icons/home-visits-sch.svg",
-                                      press: () {
-                                        Navigator.pushNamed(
-                                            context, '/geoLocate');
-                                      },
-                                    ),
-                                    Menu_card(
-                                      title: "Leave Form Adding",
-                                      heading: "Leave Form",
+                                      title: "Leave Form",
+                                      heading: "Leave Forms View",
                                       svgSrc:
                                           "assets/icons/home-visits-sch.svg",
                                       press: () {
                                         Navigator.pushNamed(
                                             context, '/leaveFormsView');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Duty",
+                                      heading: "On Duty Midwives",
+                                      // heading: "Geo Loacation",
+                                      svgSrc: "assets/icons/Hamburger.svg",
+                                      press: () {
+                                        // print(getRole.userCustomData['role']);
+                                        Navigator.pushNamed(
+                                            context, '/dutyChecking');
                                       },
                                     ),
                                   ]),
