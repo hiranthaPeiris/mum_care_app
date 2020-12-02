@@ -327,6 +327,14 @@ class _DashboardState extends State<Dashboard> {
               Navigator.pushNamed(context, '/ViewMedicalReport');
             },
           ),
+           Menu_card(
+            title: "View reports on leaving residential area",
+            heading: "Geo Location",
+            svgSrc: "assets/icons/yoga.svg",
+            press: () {
+              Navigator.pushNamed(context, '/geoLocate');
+            },
+          ),
         ]),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

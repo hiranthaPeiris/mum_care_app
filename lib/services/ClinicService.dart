@@ -75,7 +75,7 @@ class ClinicService {
 
 //Clinic status update by midwife
   Future<void> updateStatus(String midUID, String docID, CLINICSTATE status,
-      List<DocumentReference> userClinicRefList) async {
+      List<DocumentReference> userClinicRefList,String remarks) async {
     //docID - midwife's clinic record id
 
     WriteBatch batch = _firestore.batch();
@@ -126,7 +126,7 @@ class ClinicService {
   }
 
   //clinic reshcedule
-  Future<void> clinicReschedule(String midUID, String docID, String desc,
+  Future<dynamic> clinicReschedule(String midUID, String docID, String desc,
       String dateTime, List<DocumentReference> userClinicRefList) async {
     //docID - midwife's clinic record id
 
@@ -153,7 +153,7 @@ class ClinicService {
       });
     });
 
-    await batch.commit().then((value) => print("Reschedule Done"));
+    return await batch.commit().then((value) => print("Reschedule Done"));
   }
 
   //increase or decreace clinic count - trigger by user(mother)

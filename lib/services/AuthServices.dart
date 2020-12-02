@@ -73,8 +73,8 @@ class AuthService {
 
         String uid = user.uid;
         Map<String, dynamic> customData = await getUserCustomData(uid);
-        
-        new UserM.setListner(uid: user.uid, user: user,customData: customData);
+
+        new UserM.setListner(uid: user.uid, user: user, customData: customData);
         //getting firebase message token
         String fcmToken = await _firebaseMessaging.getToken();
 
@@ -136,6 +136,7 @@ class AuthService {
           'competencyFam': false,
           'PregnanctFam': false,
           'midwifeID': 'null',
+          'onDuty': false,
           'nameSearch': getSearchParam(name)
         })
         .then((value) => print("user role added"))

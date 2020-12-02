@@ -627,11 +627,11 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                                       ),
                                       onPressed: () {
                                         //Put your code here which you want to execute on Yes button click.
-                                        _clinicService.updateStatus(
-                                            midID,
-                                            midWifeClinicID,
-                                            CLINICSTATE.done,
-                                            usersClinicRefList);
+                                        // _clinicService.updateStatus(
+                                        //     midID,
+                                        //     midWifeClinicID,
+                                        //     CLINICSTATE.done,
+                                        //     usersClinicRefList,re);
                                       },
                                     ),
                                   ],

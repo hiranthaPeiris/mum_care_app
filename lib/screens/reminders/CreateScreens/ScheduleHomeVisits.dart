@@ -261,11 +261,12 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                             setState(() {
                               pending = true;
                             });
-                            String dateSlug = getDateSlug();
+                            //String dateSlug = getDateSlug();
                             //print(' Data : $des , $_date, $_time, $dateslug');
                             dynamic result = _homeVisitService.addHomeVisit(
                                 description.text,
-                                dateSlug,
+                                _date,
+                                _time,
                                 widget.document.id,
                                 widget.midwifeId);
                             if (result == null) {

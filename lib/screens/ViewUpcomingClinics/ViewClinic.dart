@@ -21,7 +21,8 @@ class _ViewClinicState extends State<ViewClinic> {
   var user = new UserM.get();
   Map<String, String> data;
   bool pending = true;
-
+  String remarks = "";
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -53,6 +54,8 @@ class _ViewClinicState extends State<ViewClinic> {
     return pending
         ? Loading()
         : Scaffold(
+            key: _scaffoldKey,
+            resizeToAvoidBottomInset: false,
             body: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
@@ -61,9 +64,6 @@ class _ViewClinicState extends State<ViewClinic> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 50.0,
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
@@ -144,9 +144,9 @@ class _ViewClinicState extends State<ViewClinic> {
                                 child: Text(
                                   "$itemCount",
                                   style: TextStyle(
-                                      color: kTextColor,
-                                      fontSize: 18.0,
-                                      ),
+                                    color: kTextColor,
+                                    fontSize: 18.0,
+                                  ),
                                 ),
                               ),
                             ],
@@ -154,6 +154,17 @@ class _ViewClinicState extends State<ViewClinic> {
                         ),
                         SizedBox(
                           height: 10.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                remarks = value;
+                              });
+                            },
+                            decoration: InputDecoration(labelText: 'Remarks'),
+                          ),
                         ),
                         Padding(
                           padding:
@@ -186,14 +197,6 @@ class _ViewClinicState extends State<ViewClinic> {
                                         .map((DocumentSnapshot document) {
                                       return _buildListTile(
                                           document, usersClinicRefList);
-                                      //new ListTile(
-                                      //   title: new Text(document['name']),
-                                      //   trailing: Icon(
-                                      //     Icons.check_circle,
-                                      //     color: Colors.green,
-                                      //   ),
-                                      //   leading: Icon(Icons.person_rounded),
-                                      // );
                                     }).toList(),
                                   );
                                 })),
@@ -256,11 +259,56 @@ class _ViewClinicState extends State<ViewClinic> {
                                 ),
                                 onPressed: () {
                                   //Put your code here which you want to execute on Yes button click.
-                                  _clinicService.updateStatus(
-                                      midID,
-                                      midWifeClinicID,
-                                      CLINICSTATE.done,
-                                      usersClinicRefList);
+                                  if (remarks.isNotEmpty) {
+                                    dynamic rst = _clinicService.updateStatus(
+                                        midID,
+                                        midWifeClinicID,
+                                        CLINICSTATE.done,
+                                        usersClinicRefList,
+                                        remarks);
+                                    if (rst != null) {
+                                      final snackBar = SnackBar(
+                                        content: Text('Successfully Updated'),
+                                        action: SnackBarAction(
+                                          label: 'Go Back',
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        duration: Duration(seconds: 3),
+                                      );
+
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(snackBar);
+                                      //
+                                    }
+                                  } else {
+                                    AlertDialog alert = AlertDialog(
+                                      title: Text('Enter Remarks'),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text(
+                                                'Please give an remark for the clinic'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('Ok'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return alert;
+                                      },
+                                    );
+                                  }
                                 },
                               ),
                             ],

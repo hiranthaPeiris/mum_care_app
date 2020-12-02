@@ -25,6 +25,7 @@ import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
+import 'package:mun_care_app/services/GeoLocation.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -58,7 +59,9 @@ class RouteGenerator {
                   key: Key('clinic'),
                   viewSwitch: args['switchView'],
                 ));
-
+      case '/geoLocate':
+        return MaterialPageRoute(builder: (_) => GeoLocation());
+        
       case '/chat':
         return MaterialPageRoute(builder: (_) => HomeChat());
       case '/motherList':

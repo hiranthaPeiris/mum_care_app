@@ -49,7 +49,7 @@ class Menu_liner_card extends StatelessWidget {
                   SvgPicture.asset(
                     "assets/icons/arrow.svg",
                     height: 20,
-                    width: 40,
+                    width: 35,
                     color: Colors.black26,
                   ),
                 ],

@@ -1,14 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_time_format/date_time_format.dart';
+import 'package:flutter/material.dart';
 
 enum HOMEVISITSTATE { active, done, cancle, rescheduled }
 enum HOMEVISITCONFM { accept, deny }
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+final dateTimeNow = DateTime.now();
 class HomeVisitService {
   Future<void> addHomeVisit(
-      String desc, String dateTime, String uid, String midwifeID) async {
+      String desc, DateTime dateTime, TimeOfDay time, String uid, String midwifeID) async {
     CollectionReference homeVisit = _firestore.collection('HomeVisits');
     DocumentReference userDocRef = _firestore.collection('users').doc(uid);
+
+    String dateTimeSlug = getDateSlug(dateTime,time);
     // CollectionReference midwifeVisit = _firestore
     //     .collection('Bookings')
     //     .doc(midwifeID)
@@ -29,7 +33,12 @@ class HomeVisitService {
     await homeVisit
         .add({
           'description': desc,
-          'dateTime': dateTime,
+          'remarks':"",
+          'dateTime': dateTimeSlug,
+          'scheduleData':dateTimeNow.format(DateTimeFormats.american).toString(),
+          'day':dateTime.day,
+          'month':dateTime.month,
+          'year':dateTime.year,
           'status': "pending",
           'confirmation': 'pending',
           'midwifeID': midwifeID,
@@ -116,5 +125,12 @@ class HomeVisitService {
         .commit()
         .then((value) => print("updated home visit confm"))
         .catchError((err) => print(err));
+  }
+
+  String getDateSlug(DateTime _date, TimeOfDay _time) {
+    return DateTimeFormat.format(
+        new DateTime(
+            _date.year, _date.month, _date.day, _time.hour, _time.minute),
+        format: DateTimeFormats.american);
   }
 }

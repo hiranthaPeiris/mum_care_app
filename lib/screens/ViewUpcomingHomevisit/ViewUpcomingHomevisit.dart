@@ -90,179 +90,243 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                       .where('midwifeID', isEqualTo: _user.uid)
                       .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Text('Loding...');
-                }
-                return ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: <Widget>[
-                          SingleChildScrollView(
-                            child: Column(
+                if (snapshot.hasError) {
+                  return Text('Snapshot Error');
+                } else {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return Container(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.info,
+                              color: Colors.blue,
+                              size: 60,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Text('Select a lot'),
+                            )
+                          ],
+                        ),
+                      );
+                      break;
+                    case ConnectionState.waiting:
+                      return Container(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              child: const CircularProgressIndicator(),
+                              width: 50,
+                              height: 50,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Text('Awaiting Data...'),
+                            )
+                          ],
+                        ),
+                      );
+                    case ConnectionState.active:
+                      return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.docs.length,
+                          itemBuilder: (context, index) {
+                            return Column(
                               children: <Widget>[
-                                InkWell(
-                                  onTap: () {
-                                    print(_user.userCustomData['role']);
-                                    if (_user.userCustomData['role'] ==
-                                        "midwife") {
-                                      //forUser(itemTitle,itemStatus,itemDate);
-                                      forMidwife(snapshot.data.docs[index]);
-                                      print("midwife");
-                                    } else if (_user.userCustomData['role'] ==
-                                        "user") {
-                                      print("user");
-                                      forUser(snapshot.data.docs[index],
-                                          _scaffoldKey);
-                                    }
-                                  },
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    overflow: Overflow.visible,
+                                SingleChildScrollView(
+                                  child: Column(
                                     children: <Widget>[
-                                      Container(
-                                        margin: EdgeInsets.all(14.0),
-                                        height: 70.0,
-                                        width: 300.0,
-                                        decoration: BoxDecoration(
-                                            color: Colors.blue[100],
-                                            borderRadius:
-                                                BorderRadius.circular(15.0)),
-                                      ),
-                                      Positioned(
-                                        bottom: 20.0,
-                                        child: Container(
-                                          height: 50.0,
-                                          width: 330.0,
-                                          decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0)),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 25.0,
-                                        child: Container(
-                                          // height: 80.0,
-                                          width: 350.0,
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue[50],
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Container(
-                                                  height: 60,
-                                                  width: 70,
-                                                  margin:
+                                      InkWell(
+                                        onTap: () {
+                                          print(_user.userCustomData['role']);
+                                          if (_user.userCustomData['role'] ==
+                                              "midwife") {
+                                            //forUser(itemTitle,itemStatus,itemDate);
+                                            forMidwife(
+                                                snapshot.data.docs[index]);
+                                            print("midwife");
+                                          } else if (_user
+                                                  .userCustomData['role'] ==
+                                              "user") {
+                                            print("user");
+                                            forUser(snapshot.data.docs[index],
+                                                _scaffoldKey);
+                                          }
+                                        },
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          overflow: Overflow.visible,
+                                          children: <Widget>[
+                                            Container(
+                                              margin: EdgeInsets.all(14.0),
+                                              height: 70.0,
+                                              width: 300.0,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.blue[100],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0)),
+                                            ),
+                                            Positioned(
+                                              bottom: 20.0,
+                                              child: Container(
+                                                height: 50.0,
+                                                width: 330.0,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15.0)),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 25.0,
+                                              child: Container(
+                                                // height: 80.0,
+                                                width: 350.0,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue[50],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
+                                                ),
+                                                child: Padding(
+                                                  padding:
                                                       const EdgeInsets.all(2.0),
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.blue,
-                                                      border: Border.all(
-                                                        color: Colors.blueGrey,
-                                                        width: 2,
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Container(
+                                                        height: 60,
+                                                        width: 70,
+                                                        margin: const EdgeInsets
+                                                            .all(2.0),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color:
+                                                                    Colors.blue,
+                                                                border:
+                                                                    Border.all(
+                                                                  color: Colors
+                                                                      .blueGrey,
+                                                                  width: 2,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0)),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(5.0),
+                                                          child: Text(
+                                                              snapshot
+                                                                  .data
+                                                                  .docs[index][
+                                                                      'dateTime']
+                                                                  .toString(),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center),
+                                                        ),
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0)),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Text(
-                                                        snapshot
-                                                            .data
-                                                            .docs[index]
-                                                                ['dateTime']
-                                                            .toString(),
-                                                        textAlign:
-                                                            TextAlign.center),
+                                                      Expanded(
+                                                        flex: 2,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(2.0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: <Widget>[
+                                                              Row(
+                                                                children: <
+                                                                    Widget>[
+                                                                  Spacer(),
+                                                                  Text(
+                                                                    "8:16 AM",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontSize:
+                                                                            12.0),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Text(
+                                                                  snapshot.data
+                                                                              .docs[
+                                                                          index]
+                                                                      [
+                                                                      'description'],
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left),
+                                                              Text(
+                                                                  snapshot.data
+                                                                              .docs[
+                                                                          index]
+                                                                      [
+                                                                      'status'],
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left),
+                                                              Row(
+                                                                children: <
+                                                                    Widget>[
+                                                                  Text(
+                                                                      snapshot
+                                                                          .data
+                                                                          .docs[
+                                                                              index]
+                                                                              [
+                                                                              'dateTime']
+                                                                          .toString(),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left),
+                                                                  Spacer(),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .star_border,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                    size: 20.0,
+                                                                  )
+                                                                ],
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            2.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Spacer(),
-                                                            Text(
-                                                              "8:16 AM",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize:
-                                                                      12.0),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Text(
-                                                            snapshot.data
-                                                                    .docs[index]
-                                                                ['description'],
-                                                            style: TextStyle(
-                                                                fontSize: 15),
-                                                            textAlign:
-                                                                TextAlign.left),
-                                                        Text(
-                                                            snapshot.data
-                                                                    .docs[index]
-                                                                ['status'],
-                                                            style: TextStyle(
-                                                                fontSize: 15),
-                                                            textAlign:
-                                                                TextAlign.left),
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Text(
-                                                                snapshot
-                                                                    .data
-                                                                    .docs[index]
-                                                                        [
-                                                                        'dateTime']
-                                                                    .toString(),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .left),
-                                                            Spacer(),
-                                                            Icon(
-                                                              Icons.star_border,
-                                                              color:
-                                                                  Colors.orange,
-                                                              size: 20.0,
-                                                            )
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
-                                ),
+                                )
                               ],
-                            ),
-                          )
-                        ],
-                      );
-                    });
+                            );
+                          });
+                    default:
+                    print(snapshot.connectionState.toString());
+                      return Text("No data");
+                  }
+                }
               },
             ),
           ),
