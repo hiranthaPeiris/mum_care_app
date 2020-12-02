@@ -505,26 +505,6 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                         .where('day',
                                             isEqualTo: widget.getDate.day)
                                         .snapshots(),
-                                    /*
-                                        .where('month',
-                                            isEqualTo:
-                                                widget.getDate.month.toString())
-                                        .where('day',
-                                            isEqualTo:
-                                                widget.getDate.day.toString())
-                                        .snapshots(),*/
-
-                                    /*stream: widget._firestore
-                                        .collection('HomeVisits')
-                                        .where("regDate",
-                                            isEqualTo: widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString())
-                                        .snapshots(),*/
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
