@@ -9,6 +9,7 @@ import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
+import 'package:mun_care_app/models/UserM.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _DashboardState extends State<Dashboard> {
   int notificationCount = 2;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool pending = false;
+  final UserM user = new UserM.get();
 
   @override
   Widget build(BuildContext context) {
@@ -248,6 +250,15 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-            )));
+            ),),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+           onPressed: () {
+
+               Navigator.pushNamed(
+                   context, '/chat1');
+          },
+          ),
+    );
   }
 }

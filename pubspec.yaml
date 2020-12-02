@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   sign_button: ^1.0.0
-  firebase_core: "^0.5.0+1"
+  firebase_core: ^0.5.0+1
   firebase_auth: "^0.18.1+2"
   provider: ^4.3.2+2
 

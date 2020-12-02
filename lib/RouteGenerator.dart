@@ -11,7 +11,8 @@ import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
-import 'package:mun_care_app/screens/chat/homechat.dart';
+import 'package:mun_care_app/screens/chat/page/chats_page.dart';
+//import 'package:mun_care_app/screens/chat/chatscreen.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/Reports/dairlyRepo.dart';
@@ -50,8 +51,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SchHomeVisitSearch());
       case '/sechClinics':
         return MaterialPageRoute(builder: (_) => ScheduleClinic(rescheduleFLAG: false));
-      case '/chat':
-        return MaterialPageRoute(builder: (_) => HomeChat());
+      case '/chat1':
+        return MaterialPageRoute(builder: (_) => ChatsPage());
+      //case '/chat2':
+       // return MaterialPageRoute(builder: (_) => ChatScreen());
       case '/leavingReport':
         return MaterialPageRoute(builder: (_) => LeavingReport());
       case '/MedicalReport':
