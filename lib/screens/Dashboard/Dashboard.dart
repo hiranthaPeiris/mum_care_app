@@ -308,13 +308,13 @@ Future<void> dutyChecking() async {
                                       },
                                     ),
                                     Menu_card(
-                                      title: "Map",
-                                      heading: "Geo Loacation",
+                                      title: "Leave Form",
+                                      heading: "Leave Forms View",
                                       svgSrc:
                                           "assets/icons/home-visits-sch.svg",
                                       press: () {
                                         Navigator.pushNamed(
-                                            context, '/geoLocate');
+                                            context, '/leaveFormsView');
                                       },
                                     ),
                                     Menu_card(

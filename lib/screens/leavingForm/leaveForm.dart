@@ -17,6 +17,7 @@ class _LeaveFormState extends State<LeaveForm> {
   DateTime _date3;
   bool leaveAccpet=false;
   bool leaveReject=false;
+  String mohDropdownValue = 'Select Area';
 
   TextEditingController name = TextEditingController();
   TextEditingController department = TextEditingController();
@@ -27,7 +28,47 @@ class _LeaveFormState extends State<LeaveForm> {
 
   @override
   Widget build(BuildContext context) {
- 
+    
+    Widget mohDropDownMenu() {
+      return DropdownButton<String>(
+        value: mohDropdownValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 36,
+        isExpanded: true,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        items: <String>[
+          'Select Area',
+          'Ambalangoda',
+          'Hikkaduwa',
+          'Rathgama',
+          'Habaraduwa',
+          'Mirissa',
+          'Weligama',
+          'Dodanduwa',
+          'Balapitiya',
+          'Ahangama',
+          'Thalgaswala'
+        ].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 4),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }).toList(),
+        onChanged: (String value) {
+          setState(() {
+            mohDropdownValue = value;
+          });
+        },
+      );
+    }
+
     leaveFormAdd() async{
       FirebaseAuth _auth= FirebaseAuth.instance;
       DateTime date = DateTime.now();
@@ -38,6 +79,7 @@ class _LeaveFormState extends State<LeaveForm> {
           date.day.toString();
       LeaveFormDB leaveFormDB = LeaveFormDB(
         applicantName : name.text,
+        mohDropDownValue: mohDropdownValue,
         applyDate : _date4,
         department : department.text,
         appoimentDate : _date1,
@@ -124,6 +166,42 @@ class _LeaveFormState extends State<LeaveForm> {
                                     ),
                                   ),
                                   Expanded(flex: 10, child: Container()),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(flex: 10, child: Container()),
+                                  Expanded(
+                                      flex: 40,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 25,
+                                          child: Text(
+                                            "MOH Area  -",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                                  Expanded(
+                                    flex: 40,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                          height: 25,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              border: Border.all(
+                                                  color: Colors.black,
+                                                  style: BorderStyle.solid,
+                                                  width: 0.5)),
+                                          child: mohDropDownMenu()),
+                                    ),
+                                  ),
+                                  Expanded(flex: 5, child: Container()),
                                 ],
                               ),
                               Row(

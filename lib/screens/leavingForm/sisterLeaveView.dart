@@ -19,6 +19,7 @@ class LeaveReportView extends StatefulWidget {
 class _LeaveReportViewState extends State<LeaveReportView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String searchPara = "";
+  UserM user=new UserM.get();
 
   DateTime selected;
   //String itemTitle = "Description";
@@ -145,6 +146,7 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                     child: StreamBuilder<QuerySnapshot>(
                                       stream: widget._firestore
                                           .collection('MidwifeLeaveforms')
+                                          .where('_mohDropDownValue',isEqualTo: user.userCustomData['mohArea'])
                                           .where('_accept', isEqualTo: false)
                                           .where('_reject', isEqualTo: false)
                                           .snapshots(),
@@ -297,6 +299,7 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                     child: StreamBuilder<QuerySnapshot>(
                                       stream: widget._firestore
                                           .collection('MidwifeLeaveforms')
+                                          .where('_mohDropDownValue',isEqualTo: user.userCustomData['mohArea'])
                                           .where('_accept', isEqualTo: true)
                                           .snapshots(),
                                       //.collection('HomeVisits')
@@ -449,6 +452,7 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                     child: StreamBuilder<QuerySnapshot>(
                                       stream: widget._firestore
                                           .collection('MidwifeLeaveforms')
+                                          .where('_mohDropDownValue',isEqualTo: user.userCustomData['mohArea'])
                                           .where('_reject', isEqualTo: true)
                                           .snapshots(),
                                       //.collection('HomeVisits')

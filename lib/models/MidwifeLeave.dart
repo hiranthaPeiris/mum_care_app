@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 class LeaveFormDB{
   String applicantName;
+  String mohDropDownValue;
   DateTime applyDate;
   String department;
   DateTime appoimentDate;
@@ -17,6 +18,7 @@ class LeaveFormDB{
   LeaveFormDB(
     {
       this.applicantName,
+      this.mohDropDownValue,
       this.applyDate,
       this.department,
       this.appoimentDate,
@@ -31,6 +33,7 @@ class LeaveFormDB{
   );
   LeaveFormDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
     applicantName = map["_applicantName"];
+    mohDropDownValue = map["_mohDropDownValue"];
     applyDate = map["_applyDate"];
     department = map["_department"];
     appoimentDate = map["_appoimentDate"];
@@ -49,6 +52,7 @@ class LeaveFormDB{
   toJson() {
     return {
       '_applicantName': applicantName,
+      '_mohDropDownValue': mohDropDownValue,
       '_applyDate': applyDate,
       '_department': department,
       '_appoimentDate': appoimentDate,
