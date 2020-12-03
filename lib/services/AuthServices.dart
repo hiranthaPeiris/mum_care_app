@@ -4,8 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 
 class AuthService {
+  bool onDuty = false;
+  Dashboard n;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -73,8 +76,8 @@ class AuthService {
 
         String uid = user.uid;
         Map<String, dynamic> customData = await getUserCustomData(uid);
-        
-        new UserM.setListner(uid: user.uid, user: user,customData: customData);
+
+        new UserM.setListner(uid: user.uid, user: user, customData: customData);
         //getting firebase message token
         String fcmToken = await _firebaseMessaging.getToken();
 
@@ -139,6 +142,24 @@ class AuthService {
           'nameSearch': getSearchParam(name)
         })
         .then((value) => print("user role added"))
+        .catchError((err) => print(err));
+  }
+
+  /* Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .set({'onDuty': true})
+        .then((value) => print('duty is set'))
+        .catchError((err) => print(err));
+  }*/
+
+  Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .set({'onDuty': false})
+        .then((value) => print('duty is set'))
         .catchError((err) => print(err));
   }
 

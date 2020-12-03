@@ -104,7 +104,6 @@ class _MonthlyReportState extends State<MonthlyReport> {
                         height: 40.0,
                         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         color: Colors.lightBlue,
-
                         child: Text("Monthly Report",
                             style:
                                 TextStyle(color: Colors.black87, fontSize: 20)),

@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,6 +60,7 @@ class ComRegDB {
   String womenBloodDropDownValue;
   String menBloodDropDownValue;
   String regDate;
+  String regMonth;
 
   DocumentReference documentReference;
 
@@ -117,6 +117,7 @@ class ComRegDB {
     this.womenBloodDropDownValue,
     this.menBloodDropDownValue,
     this.regDate,
+    this.regMonth,
   });
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
@@ -176,6 +177,7 @@ class ComRegDB {
     womenBloodDropDownValue = map["_womenBloodDropDownValue"];
     menBloodDropDownValue = map["_menBloodDropDownValue"];
     regDate = map['_regDate'];
+    regMonth = map['_regMonth'];
   }
   ComRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -234,11 +236,14 @@ class ComRegDB {
       '_womenBloodDropDownValue': womenBloodDropDownValue,
       '_menBloodDropDownValue': menBloodDropDownValue,
       '_regDate': regDate,
+      '_regMonth': regMonth,
     };
   }
 }
 
 class PreRegDB {
+  String mohDropDownValue;
+  String phmDropDownValue;
   String gnDivision;
   String fcName;
   String hcName;
@@ -258,11 +263,14 @@ class PreRegDB {
   bool heartDisorder;
   bool kidneyDisorder;
   String regDate;
+  String regMonth;
 
   DocumentReference documentReference;
 
   PreRegDB(
-      {this.gnDivision,
+      {this.mohDropDownValue,
+      this.phmDropDownValue,
+      this.gnDivision,
       this.fcName,
       this.hcName,
       this.coName,
@@ -278,9 +286,12 @@ class PreRegDB {
       this.maleria,
       this.heartDisorder,
       this.kidneyDisorder,
-      this.regDate});
+      this.regDate,
+      this.regMonth,});
 
   PreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    mohDropDownValue = map["_mohDropDownValue"];
+    phmDropDownValue = map["_phmDropDownValue"];
     gnDivision = map["_gnDivision"];
     fcName = map["_fcName"];
     hcName = map["_hcName"];
@@ -300,12 +311,15 @@ class PreRegDB {
     heartDisorder = map["_heartDisorder"];
     maleria = map["_maleria"];
     regDate = map["_regDate"];
+    regMonth = map['_regMonth'];
   }
   PreRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
 
   toJson() {
     return {
+      '_mohDropDownValue': mohDropDownValue,
+      '_phmDropDownValue': phmDropDownValue,
       '_gnDivision': gnDivision,
       '_fcName': fcName,
       '_hcName': hcName,
@@ -322,7 +336,8 @@ class PreRegDB {
       '_maleria': maleria,
       '_heartDisorder': heartDisorder,
       '_kidneyDisorder': kidneyDisorder,
-      '_regDate':regDate,
+      '_regDate': regDate,
+      '_regMonth': regMonth,
     };
   }
 }
@@ -390,3 +405,23 @@ class ComSetState {
     };
   }
 }
+
+/*class OndutyState {
+  bool onDuty;
+  String logTime;
+
+  DocumentReference documentReference;
+
+  OndutyState({this.onDuty, this.logTime});
+
+  OndutyState.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    onDuty = map["_onDuty"];
+    logTime = map["_logTime"];
+  }
+  OndutyState.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
+
+  toJson() {
+    return {'_onDuty': onDuty, '_logTime': logTime};
+  }
+}*/

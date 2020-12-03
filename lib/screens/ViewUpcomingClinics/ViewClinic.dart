@@ -144,9 +144,9 @@ class _ViewClinicState extends State<ViewClinic> {
                                 child: Text(
                                   "$itemCount",
                                   style: TextStyle(
-                                      color: kTextColor,
-                                      fontSize: 18.0,
-                                      ),
+                                    color: kTextColor,
+                                    fontSize: 18.0,
+                                  ),
                                 ),
                               ),
                             ],
@@ -310,7 +310,7 @@ class _ViewClinicState extends State<ViewClinic> {
             context,
             MaterialPageRoute(
                 builder: (context) => Profile(
-                      documentSnapshot: documentSnapshot,
+                    // documentSnapshot: documentSnapshot,
                     )));
       },
     );
