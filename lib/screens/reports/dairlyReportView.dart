@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
+import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
 import 'package:mun_care_app/screens/registration/ComDisplayData.dart';
 import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
 
@@ -22,15 +25,42 @@ class _DairlyReportViewState extends State<DairlyReportView> {
 
   DateTime selected;
   String itemTitle = "Description";
+  UserM _user;
+  var getUser = new UserM.get();
 
+  // var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
+  Stream<UserM> get user {
+    return _auth
+        .authStateChanges()
+        //.map((FirebaseUser user) => _userFromFirebaseUser(user));
+        .map(_userFromFirebase);
+  }
 
-  var getUser=new UserM.get();
+  UserM _userFromFirebase(User user) {
+    //String uid = user.uid;
+    return user != null ? UserM.setUID(uid: user.uid) : null;
+  }
 
-  var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
+  var useri = new UserM.get().userCredential.user.uid;
 
+  /* Future<List<String>> getMyAssigns(String u) async {
+    List<String> mumIds = List();
+    await widget._firestore
+        .collection('HomeVisits')
+        .where('midwifeID', isEqualTo: u)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        print(element.id);
+        mumIds.add(element.id);
+      });
+    }).catchError((onError) => print(onError));
+    return mumIds;
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<UserM>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -175,7 +205,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                           itemCount: snapshot.data.docs.length,
                                           itemBuilder: (context, index) {
                                             String documentId =
-                                                  snapshot.data.docs[index].id;
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -185,7 +215,10 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                         onTap: () {
                                                           Navigator.push(
                                                             context,
-                                                            MaterialPageRoute(builder: (context) => ComGetIdDetails(documentId)),
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    ComGetIdDetails(
+                                                                        documentId)),
                                                           );
                                                         },
                                                         child: Stack(
@@ -325,7 +358,6 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                     //.collection('HomeVisits')
                                     //.snapshots(),
                                     builder: (context, snapshot) {
-                                      
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }
@@ -337,7 +369,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
                                             String documentId =
-                                                  snapshot.data.docs[index].id;
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -347,7 +379,10 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                         onTap: () {
                                                           Navigator.push(
                                                             context,
-                                                            MaterialPageRoute(builder: (context) => PreGetIdDetails(documentId)),
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    PreGetIdDetails(
+                                                                        documentId)),
                                                           );
                                                         },
                                                         child: Stack(
@@ -473,22 +508,15 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   flex: 1,
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
-                                        .collection('Bookings')
-                                        .doc(useri)
                                         .collection('HomeVisits')
+                                        .where('midwifeID', isEqualTo: useri)
+                                        .where('year',
+                                            isEqualTo: widget.getDate.year)
+                                        .where('month',
+                                            isEqualTo: widget.getDate.month)
+                                        .where('day',
+                                            isEqualTo: widget.getDate.day)
                                         .snapshots(),
-
-                                    /*stream: widget._firestore
-                                        .collection('HomeVisits')
-                                        .where("regDate",
-                                            isEqualTo: widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString())
-                                        .snapshots(),*/
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');

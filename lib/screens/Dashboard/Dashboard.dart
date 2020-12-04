@@ -11,6 +11,7 @@ import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
+import 'package:mun_care_app/sister/DutyChecking.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
 
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class Dashboard extends StatefulWidget {
 }
 
 AuthService _authService = AuthService();
+DutyCheck d = DutyCheck();
 
 class _DashboardState extends State<Dashboard> {
   AuthService v;
@@ -73,7 +75,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
-
   UserM getRole = new UserM.get();
   UserM n;
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -81,28 +82,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    
-
-
-
-
-Future<void> dutyChecking() async {
-    await _firestore
-        .collection('users')
-        .doc(_auth.currentUser.uid)
-        .update({'onDuty': true})
-        .then((value) => print('duty is available'))
-        .catchError((err) => print(err));
-  }
-
-  Future<void> noDutyChecking() async {
-    await _firestore
-        .collection('users')
-        .doc(_auth.currentUser.uid)
-        .update({'onDuty': false})
-        .then((value) => print('duty is not available'))
-        .catchError((err) => print(err));
-  }
 
     return pending
         ? Loading()
@@ -251,10 +230,10 @@ Future<void> dutyChecking() async {
                                 onChanged: (value) {
                                   setState(() {
                                     if (isSwitched = value) {
-                                      dutyChecking();
+                                      d.dutyChecking();
                                       print(isSwitched);
                                     } else {
-                                      noDutyChecking();
+                                      d.noDutyChecking();
                                       print(isSwitched);
                                     }
                                   });
@@ -267,8 +246,6 @@ Future<void> dutyChecking() async {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-
-
                               SliverList(
                                 delegate: SliverChildListDelegate([
                                   Menu_liner_card(
@@ -398,8 +375,6 @@ Future<void> dutyChecking() async {
                                     mainAxisSpacing: 20,
                                   ))
 
-                              
-
                               // SliverGrid(
                               //     delegate: SliverChildListDelegate([
                               //       Menu_card(
@@ -471,7 +446,6 @@ Future<void> dutyChecking() async {
                               //       crossAxisSpacing: 20,
                               //       mainAxisSpacing: 20,
                               //     ))
-
                             ],
                           ))
                         ],

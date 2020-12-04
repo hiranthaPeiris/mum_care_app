@@ -23,11 +23,10 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
   DateTime selected;
   String itemTitle = "Description";
 
+  var getUser = new UserM.get();
+  var useri = new UserM.get().userCredential.user.uid;
 
-  var getUser=new UserM.get();
-
-  var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
-
+  // var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         elevation: 5,
-        title: Text('Dairly Report View'),
+        title: Text('Monthly Report View'),
         //bottom:
       ),
       body: Container(
@@ -160,7 +159,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                     builder: (context, snapshot) {
                                       print(widget.getMonth.year.toString() +
                                           "/" +
-                                          widget.getMonth.month.toString() );
+                                          widget.getMonth.month.toString());
                                       print(getUser.userCustomData['role']);
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
@@ -173,7 +172,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
                                             String documentId =
-                                                  snapshot.data.docs[index].id;
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -183,7 +182,10 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                                         onTap: () {
                                                           Navigator.push(
                                                             context,
-                                                            MaterialPageRoute(builder: (context) => ComGetIdDetails(documentId)),
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    ComGetIdDetails(
+                                                                        documentId)),
                                                           );
                                                         },
                                                         child: Stack(
@@ -322,9 +324,8 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                         .snapshots(),
                                     //.collection('HomeVisits')
                                     //.snapshots(),
-                                    
+
                                     builder: (context, snapshot) {
-                                      
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }
@@ -336,7 +337,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
                                             String documentId =
-                                                  snapshot.data.docs[index].id;
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -346,7 +347,10 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                                         onTap: () {
                                                           Navigator.push(
                                                             context,
-                                                            MaterialPageRoute(builder: (context) => PreGetIdDetails(documentId)),
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    PreGetIdDetails(
+                                                                        documentId)),
                                                           );
                                                         },
                                                         child: Stack(
@@ -472,22 +476,13 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                   flex: 1,
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
-                                        .collection('Bookings')
-                                        .doc(useri)
                                         .collection('HomeVisits')
+                                        .where('midwifeID', isEqualTo: useri)
+                                        .where('year',
+                                            isEqualTo: widget.getMonth.year)
+                                        .where('month',
+                                            isEqualTo: widget.getMonth.month)
                                         .snapshots(),
-
-                                    /*stream: widget._firestore
-                                        .collection('HomeVisits')
-                                        .where("regDate",
-                                            isEqualTo: widget.getDate.year
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.month
-                                                    .toString() +
-                                                "/" +
-                                                widget.getDate.day.toString())
-                                        .snapshots(),*/
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
@@ -500,7 +495,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
                                             String documentId =
-                                                  snapshot.data.docs[index].id;
+                                                snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
