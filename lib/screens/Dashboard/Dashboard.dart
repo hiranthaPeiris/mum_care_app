@@ -6,14 +6,14 @@ import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/main.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
-import 'package:mun_care_app/screens/login/Login_comp.dart';
+import 'package:mun_care_app/sister/DutyChecking.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:mun_care_app/widgets/FirebaseMessageWapper.dart';
 import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mun_care_app/models/UserReg.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -23,6 +23,7 @@ class Dashboard extends StatefulWidget {
 }
 
 AuthService _authService = AuthService();
+DutyCheck d = DutyCheck();
 
 class _DashboardState extends State<Dashboard> {
   AuthService v;
@@ -37,24 +38,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
-    Future<void> dutyChecking() async {
-      await _firestore
-          .collection('users')
-          .doc(_auth.currentUser.uid)
-          .update({'onDuty': true})
-          .then((value) => print('duty is available'))
-          .catchError((err) => print(err));
-    }
-
-    Future<void> noDutyChecking() async {
-      await _firestore
-          .collection('users')
-          .doc(_auth.currentUser.uid)
-          .update({'onDuty': false})
-          .then((value) => print('duty is not available'))
-          .catchError((err) => print(err));
-    }
 
     return pending
         ? Loading()
@@ -195,10 +178,10 @@ class _DashboardState extends State<Dashboard> {
                                 onChanged: (value) {
                                   setState(() {
                                     if (isSwitched = value) {
-                                      dutyChecking();
+                                      d.dutyChecking();
                                       print(isSwitched);
                                     } else {
-                                      noDutyChecking();
+                                      d.noDutyChecking();
                                       print(isSwitched);
                                     }
                                   });

@@ -9,33 +9,47 @@ import 'package:mun_care_app/services/AuthServices.dart';
 //import 'ComDisplayData.dart';
 
 class DutyCheck extends StatefulWidget {
-  AuthService n;
+  //AuthService n;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': true})
+        .then((value) => print('duty is available'))
+        .catchError((err) => print(err));
+  }
+
+  Future<void> noDutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .update({'onDuty': false})
+        .then((value) => print('duty is not available'))
+        .catchError((err) => print(err));
+  }
+
   @override
   _DutyCheckState createState() => _DutyCheckState();
 }
 
 class _DutyCheckState extends State<DutyCheck> {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  //new UserM.get().userCredential.user.uid;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   getData01() {
     return FirebaseFirestore.instance
         .collection("users")
         .where('onDuty', isEqualTo: true)
         .snapshots();
-
-    //.doc(_auth.currentUser.uid)
-    // .collection("onDuty")
-    //.doc(_auth.currentUser.uid)
-    //.where('_onDuty', isEqualTo: true)
-    //.snapshots();
   }
 
   Widget buildBody01(BuildContext context) {
     return StreamBuilder(
         stream: getData01(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData){
+          if (!snapshot.hasData) {
             return Center(child: Text("No data here"));
           }
           if (snapshot.hasError) {
@@ -92,7 +106,10 @@ class _DutyCheckState extends State<DutyCheck> {
                         },
                         child: Row(
                           children: [
-                            Icon(Icons.location_pin,size: 20.0,),
+                            Icon(
+                              Icons.location_pin,
+                              size: 20.0,
+                            ),
                             const Text('Location'),
                           ],
                         ),
