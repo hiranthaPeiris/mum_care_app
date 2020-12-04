@@ -8,8 +8,9 @@ import 'package:mun_care_app/screens/Clinic/ClinicHomeWapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
-import 'package:mun_care_app/screens/reports/ReportSearch.dart';
-import 'package:mun_care_app/screens/reports/monthlyReportView.dart';
+import 'package:mun_care_app/screens/ReportsAll/ReportSearch.dart';
+import 'package:mun_care_app/screens/ReportsAll/MonthlyReportView.dart';
+import 'package:mun_care_app/screens/ReportsAll/DairlyReportView.dart';
 import 'package:mun_care_app/sister/DutyChecking.dart';
 import 'package:mun_care_app/sister/LeavingAccept.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
@@ -31,7 +32,7 @@ import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
 import 'package:mun_care_app/screens/viewHomeVisit/viewUpcomingHomeVisit.dart';
-import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
+
 import 'package:mun_care_app/services/GeoLocation.dart';
 
 
