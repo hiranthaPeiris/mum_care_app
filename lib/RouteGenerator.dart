@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
-import 'package:mun_care_app/screens/Clinic/ClinicForm.dart';
-
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
 import 'package:mun_care_app/screens/reports/monthlyReportView.dart';
@@ -82,8 +80,6 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => GeoLocation());
       case '/leaveForm':
         return MaterialPageRoute(builder: (_) => LeaveForm());
-      case '/clinicViews':
-        return MaterialPageRoute(builder: (_) => ClinicForm());
       case '/leaveFormsView':
         return MaterialPageRoute(builder: (_) => LeaveReportView());
       case '/leavingAccept':
