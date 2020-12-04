@@ -100,6 +100,7 @@ class _PreFamRegState extends State<PreFamReg> {
         onSaved: (input) => inputName = input,
       );
     }
+   
 
     Widget mohDropDownMenu() {
       return DropdownButton<String>(
@@ -128,6 +129,7 @@ class _PreFamRegState extends State<PreFamReg> {
         },
       );
     }
+
     Widget phmDropDownMenu() {
       return DropdownButton<String>(
         value: phmDropdownValue,
@@ -167,7 +169,6 @@ class _PreFamRegState extends State<PreFamReg> {
         },
       );
     }
-   
     Widget wombDropDownMenu() {
       return DropdownButton<String>(
         value: wombDropdownValue,
@@ -206,6 +207,11 @@ class _PreFamRegState extends State<PreFamReg> {
           date.month.toString() +
           "/" +
           date.day.toString();
+
+      String monthConvert = date.year.toString() +
+          "/" +
+          date.month.toString();
+
       PreRegDB preRegDB = PreRegDB(
           mohDropDownValue: mohDropdownValue,
           phmDropDownValue: phmDropdownValue,
@@ -219,8 +225,8 @@ class _PreFamRegState extends State<PreFamReg> {
           maleria: maleria_Yes,
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
-
-          regDate: dateConvert);
+          regDate: dateConvert,
+          regMonth: monthConvert,);
 
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
@@ -267,7 +273,6 @@ class _PreFamRegState extends State<PreFamReg> {
             'PregnanctFam': true,
           })
           .then((value) => print("Pregnancy true"))
-
           .catchError((err) => print(err));
     }
 

@@ -5,7 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
 
+import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
+
+
 class AuthService {
+  bool onDuty = false;
+  Dashboard n;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -136,9 +141,30 @@ class AuthService {
           'competencyFam': false,
           'PregnanctFam': false,
           'midwifeID': 'null',
-          'nameSearch': getSearchParam(name)
+
+          'nameSearch': getSearchParam(name),
+          'onDuty': true,
+
         })
         .then((value) => print("user role added"))
+        .catchError((err) => print(err));
+  }
+
+  /* Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .set({'onDuty': true})
+        .then((value) => print('duty is set'))
+        .catchError((err) => print(err));
+  }*/
+
+  Future<void> dutyChecking() async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser.uid)
+        .set({'onDuty': false})
+        .then((value) => print('duty is set'))
         .catchError((err) => print(err));
   }
 

@@ -128,51 +128,49 @@ class _ProfileState extends State<Profile> {
                     color: Colors.blue,
                   ),
                 ),*/
-                      UserAccountsDrawerHeader(
-                        accountEmail: Text("Alice@gmail.com"),
-                        accountName: Text(
-                          "Alice James",
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        currentAccountPicture: ClipRRect(
-                          borderRadius: BorderRadius.circular(80),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
-                            ),
-                          ),
-                          //child: ,
-                        ),
+
+                UserAccountsDrawerHeader(
+                  accountEmail: Text("Alice@gmail.com"),
+                  accountName: Text(
+                    "Alice James",
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  currentAccountPicture: ClipRRect(
+                    borderRadius: BorderRadius.circular(110),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
                       ),
-                      ListTile(
-                        title: Text(
-                          'Edit Competency Fam Data',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ComFamReg()));
-                        },
-                      ),
-                      ListTile(
-                        title: Text(
-                          'Edit Pregncy  Data',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PreFamReg()));
-                        },
-                      ),
-                    ],
+                    ),
+                    //child: ,
                   ),
                 ),
+                ListTile(
+                  title: Text(
+                    'Edit Competency Fam Data',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ComFamReg()));
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    'Edit Pregncy  Data',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => PreFamReg()));
+                  },
+                ),
+              ],
+            ),
+          ),
+         
                 body: Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
@@ -197,6 +195,7 @@ class _ProfileState extends State<Profile> {
                                   CircleAvatar(
                                     backgroundImage: NetworkImage(
                                       "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+
                                     ),
                                     radius: 50.0,
                                   ),

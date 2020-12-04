@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +30,7 @@ class _ComFamRegState extends State<ComFamReg> {
   int currentStep = 0;
   bool complete = false;
   bool isActive = false;
-  
+
   //StepState stepState=StepState.editing;
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
@@ -102,19 +104,22 @@ class _ComFamRegState extends State<ComFamReg> {
   DateTime _dateMarrage;
   bool _set = false;
   bool allreadyComReg;
-  List<String> arr=[
-          'Select Area',
-          'Ambalangoda',
-          'Hikkaduwa',
-          'Rathgama',
-          'Habaraduwa',
-          'Mirissa',
-          'Weligama',
-          'Dodanduwa',
-          'Balapitiya',
-          'Ahangama',
-          'Thalgaswala'
-        ];
+  List<String> arr = [
+    'Select Area',
+    'Ambalangoda',
+    'Hikkaduwa',
+    'Rathgama',
+    'Habaraduwa',
+    'Mirissa',
+    'Weligama',
+    'Dodanduwa',
+    'Balapitiya',
+    'Ahangama',
+    'Thalgaswala'
+  ];
+  double latitudeData;
+  double longitiduData;
+
   @override
   Widget build(BuildContext context) {
     Widget showTextField(
@@ -149,7 +154,7 @@ class _ComFamRegState extends State<ComFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items:arr.map<DropdownMenuItem<String>>((String value) {
+        items: arr.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -393,9 +398,17 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
+    
+
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
+      String dateConvert = date.year.toString() +
+          "/" +
+          date.month.toString() +
+          "/" +
+          date.day.toString();
+      String monthConvert = date.year.toString() + "/" + date.month.toString();
       ComRegDB comRegDB = ComRegDB(
         husbandName: myController1.text,
         wifeName: myController2.text,
@@ -448,7 +461,8 @@ class _ComFamRegState extends State<ComFamReg> {
         menHeight: myController11.text,
         womenBloodDropDownValue: womenBloodDropdownValue,
         menBloodDropDownValue: menBloodDropdownValue,
-        regDate:date.toString(),
+        regDate: dateConvert,
+        regMonth: monthConvert,
       );
 
       try {
@@ -561,8 +575,7 @@ class _ComFamRegState extends State<ComFamReg> {
                                   "MOH Area  -",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 20,
-                                  ),
+                                      fontSize: 20, color: Colors.red),
                                 ),
                               ),
                             )),
@@ -598,8 +611,7 @@ class _ComFamRegState extends State<ComFamReg> {
                                   "PHM Area  -",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 20,
-                                  ),
+                                      fontSize: 20, color: Colors.red),
                                 ),
                               ),
                             )),
@@ -623,6 +635,83 @@ class _ComFamRegState extends State<ComFamReg> {
                       ],
                     ),
                   ],
+                ),
+              ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * 0.05,
+                      MediaQuery.of(context).size.height * 0.05,
+                      MediaQuery.of(context).size.width * 0.025,
+                      MediaQuery.of(context).size.height * 0.005),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 45,
+                        child: Row(
+                          children: [
+                            Icon(
+                                Icons.location_pin,
+                                color: Colors.red,
+                              ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Share your Location",
+                              style: TextStyle(fontSize: 16, color: Colors.brown),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            /*Text(_dateMarrage == null
+                              ? "Select Marriage Date"
+                              : _dateMarrage.year.toString() +
+                                  "/" +
+                                  _dateMarrage.month.toString() +
+                                  "/" +
+                                  _dateMarrage.day.toString()),
+                          */
+                          
+                            SizedBox(
+                              width: 60,
+                              height: 30,
+                              child: RaisedButton(
+                                  color: Color.fromARGB(500, 21, 166, 211),
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: BorderSide(color: Colors.white)),
+                                  /*:Icon(
+                                Icons.switch_right,
+                                color: Colors.green,
+                              ),*/
+                                  onPressed: () async{
+                                    
+                                        final geoposition = await Geolocator.getCurrentPosition(
+                                            desiredAccuracy: LocationAccuracy.high);
+                                        setState(() {
+                                          latitudeData = geoposition.latitude;
+                                          longitiduData = geoposition.longitude;
+                                        });
+                                      
+                                  },
+                                  child: 
+                                    Icon((latitudeData==null) ?
+                                Icons.refresh_rounded:
+                                Icons.switch_right,
+                              ),
+                                  ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -1782,44 +1871,63 @@ class _ComFamRegState extends State<ComFamReg> {
         goto(currentStep - 1);
       }
     }
-  Widget alertBox(){
-    return Expanded(
-                child: Center(
-                child: AlertDialog(
-                  title: Row(
-                    children: [
-                      Icon(Icons.warning,color: Colors.red,),
-                      Text("  Warning",style: TextStyle(color: Colors.red),),
-                    ],
-                  ),
-                  content: Text("You have to fill every details",style: TextStyle(color: Colors.blueAccent),),
-                  actions: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        
-                        FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                              });
-                            }),
-                      ],
-                    ),
-                  ],
-                ),
-              ));
-  }
 
-  bool validate() {
-    if (myController1.text.isEmpty && myController2.text.isEmpty && myController3.text.isEmpty && myController4.text.isEmpty && myController5.text.isEmpty&& myController6.text.isEmpty && myController7.text.isEmpty && myController8.text.isEmpty && myController9.text.isEmpty && myController10.text.isEmpty && myController11.text.isEmpty) {
-      print("This cant't be empty");
-      return false;
-      
+    Widget alertBox() {
+      return Expanded(
+          child: Center(
+        child: AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning,
+                color: Colors.red,
+              ),
+              Text(
+                "  Warning",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          content: Text(
+            "You have to fill every details",
+            style: TextStyle(color: Colors.blueAccent),
+          ),
+          actions: <Widget>[
+            Row(
+              children: <Widget>[
+                FlatButton(
+                    child: Text("OK"),
+                    onPressed: () {
+                      setState(() {
+                        complete = false;
+                      });
+                    }),
+              ],
+            ),
+          ],
+        ),
+      ));
     }
-    print("not empty");
-    return true;
-  }
+
+    bool validate() {
+      if (myController1.text.isEmpty &&
+          myController2.text.isEmpty &&
+          myController3.text.isEmpty &&
+          myController4.text.isEmpty &&
+          myController5.text.isEmpty &&
+          myController6.text.isEmpty &&
+          myController7.text.isEmpty &&
+          myController8.text.isEmpty &&
+          myController9.text.isEmpty &&
+          myController10.text.isEmpty &&
+          myController11.text.isEmpty) {
+        print("This cant't be empty");
+        return false;
+      }
+      print("not empty");
+      return true;
+    }
+
     return new Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -1828,53 +1936,51 @@ class _ComFamRegState extends State<ComFamReg> {
           height: 20,
         ),
         complete
-            ? 
-            validate() ?
-            Expanded(
-                child: Center(
-                child: AlertDialog(
-                  title: Text("Competency Registration Succesfully"),
-                  content: Text("Congratulation"),
-                  actions: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-
-                              setState(() {
-                                complete = false;
-                                allreadyComReg = true;
-                              });
-                              stepOneReg();
-                              comRegComfirm();
-                              setCompetencyTrue();
-                              Navigator.pushNamed(context, '/dashboard');
-                              myController1.clear();
-                              myController2.clear();
-                              myController3.clear();
-                              myController4.clear();
-                              myController5.clear();
-                              myController6.clear();
-                              myController7.clear();
-                              myController8.clear();
-                              myController9.clear();
-                              myController10.clear();
-                              myController11.clear();
-                            }),
-                        FlatButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                              });
-                            }),
+            ? validate()
+                ? Expanded(
+                    child: Center(
+                    child: AlertDialog(
+                      title: Text("Competency Registration Succesfully"),
+                      content: Text("Congratulation"),
+                      actions: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            FlatButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  setState(() {
+                                    complete = false;
+                                    allreadyComReg = true;
+                                  });
+                                  stepOneReg();
+                                  comRegComfirm();
+                                  setCompetencyTrue();
+                                  Navigator.pushNamed(context, '/dashboard');
+                                  myController1.clear();
+                                  myController2.clear();
+                                  myController3.clear();
+                                  myController4.clear();
+                                  myController5.clear();
+                                  myController6.clear();
+                                  myController7.clear();
+                                  myController8.clear();
+                                  myController9.clear();
+                                  myController10.clear();
+                                  myController11.clear();
+                                }),
+                            FlatButton(
+                                child: Text("Cancel"),
+                                onPressed: () {
+                                  setState(() {
+                                    complete = false;
+                                  });
+                                }),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              ))
-              :alertBox()
+                  ))
+                : alertBox()
             : Expanded(
                 flex: 80,
                 child: Stepper(
@@ -1913,12 +2019,12 @@ class _ComFamRegState extends State<ComFamReg> {
                                         )),
                                     child: Container(
                                         child: Text(
-                                          "Prev",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )),
+                                      "Prev",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )),
                                     onPressed: onStepCancel,
                                   ),
                                 )),

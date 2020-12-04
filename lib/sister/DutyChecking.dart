@@ -1,30 +1,43 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 import 'package:mun_care_app/models/UserReg.dart';
-import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
+import 'package:mun_care_app/services/AuthServices.dart';
+//import 'dart:html';
 
-import 'ComDisplayData.dart';
+//import 'ComDisplayData.dart';
 
-class MotherList extends StatefulWidget {
+class DutyCheck extends StatefulWidget {
+  AuthService n;
   @override
-  _MotherListState createState() => _MotherListState();
+  _DutyCheckState createState() => _DutyCheckState();
 }
 
-class _MotherListState extends State<MotherList> {
+class _DutyCheckState extends State<DutyCheck> {
   FirebaseAuth _auth = FirebaseAuth.instance;
+  //new UserM.get().userCredential.user.uid;
 
-  getData01(String area) {
+  getData01() {
     return FirebaseFirestore.instance
-        .collection("ComDatabase")
-        .where('_phmDropDownValue', isEqualTo: area)
+        .collection("users")
+        .where('onDuty', isEqualTo: true)
         .snapshots();
+
+    //.doc(_auth.currentUser.uid)
+    // .collection("onDuty")
+    //.doc(_auth.currentUser.uid)
+    //.where('_onDuty', isEqualTo: true)
+    //.snapshots();
   }
 
-  Widget buildBody01(BuildContext context, String abc) {
+  Widget buildBody01(BuildContext context) {
     return StreamBuilder(
-        stream: getData01(abc),
+        stream: getData01(),
         builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child: Text("No data here"));
+          }
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
           }
@@ -42,7 +55,7 @@ class _MotherListState extends State<MotherList> {
   }
 
   Widget listItemBuild01(BuildContext context, DocumentSnapshot data) {
-    final comRegBD = ComRegDB.fromSnapshot(data);
+    // final ondutyState = OndutyState.fromSnapshot(data);
     return Padding(
       //key: ValueKey(comStep1.husbandName),
       padding: EdgeInsets.symmetric(vertical: 19, horizontal: 19),
@@ -54,41 +67,35 @@ class _MotherListState extends State<MotherList> {
             child: Column(
           children: <Widget>[
             Card(
+              color: Colors.blueAccent,
               clipBehavior: Clip.antiAlias,
               child: Column(
                 children: [
                   ListTile(
+                    //isThreeLine: true,
                     leading: Icon(Icons.arrow_drop_down_circle),
-                    title: data['_wifeName'] != ""
-                        ? Text("${data['_wifeName']} Details")
+                    title: data['name'] != ""
+                        ? Text("${data['name']} ")
                         : Text('No Details'),
                     subtitle: Text(
-                      "${data['_nic']}",
+                      "OnDuty",
                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
                     ),
                   ),
                   ButtonBar(
-                    alignment: MainAxisAlignment.start,
+                    alignment: MainAxisAlignment.end,
                     children: [
                       FlatButton(
                         textColor: const Color(0xFF6200EE),
                         onPressed: () {
-                          Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => ComGetIdDetails(comRegBD.documentReference.id)),
-                                      );
+                          Navigator.pushNamed(context, '/geoLocate');
                         },
-                        child: const Text('Competency'),
-                      ),
-                      FlatButton(
-                        textColor: const Color(0xFF6200EE),
-                        onPressed: () {
-                          Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => PreGetIdDetails(comRegBD.documentReference.id)),
-                                      );
-                        },
-                        child: const Text('Pregnancy'),
+                        child: Row(
+                          children: [
+                            Icon(Icons.location_pin,size: 20.0,),
+                            const Text('Location'),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -111,22 +118,20 @@ class _MotherListState extends State<MotherList> {
             .snapshots(),
         builder: (context, snapshot) {
           var value = snapshot.data;
-          String area = value['area01'].toString();
-          print(area);
-          if(!snapshot.hasData){
-            return Center(child: Text("No data here"));
-          }
+          String role = value['role'].toString();
+          print(role);
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
           }
           if (snapshot.hasData) {
-            return buildBody01(context, area);
+            return buildBody01(context);
           }
         },
       );
     }
 
     return Scaffold(
+      //backgroundColor: Colors.pinkAccent,
       body: getState(context),
     );
   }
