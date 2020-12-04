@@ -463,6 +463,8 @@ class _ComFamRegState extends State<ComFamReg> {
         menBloodDropDownValue: menBloodDropdownValue,
         regDate: dateConvert,
         regMonth: monthConvert,
+        latitudeData: latitudeData,
+        longitiduData: longitiduData
       );
 
       try {
@@ -1929,6 +1931,7 @@ class _ComFamRegState extends State<ComFamReg> {
     }
 
     return new Scaffold(
+      //backgroundColor: Colors.green,
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
