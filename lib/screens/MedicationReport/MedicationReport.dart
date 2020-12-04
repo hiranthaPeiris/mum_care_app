@@ -17,7 +17,8 @@ class _MedicationReportState extends State<MedicationReport> {
   TextEditingController myController5 = new TextEditingController();
   bool _validater = false;
   UserM _user;
-  
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   void dispose() {
     super.dispose();
     myController1.dispose();
@@ -32,60 +33,6 @@ class _MedicationReportState extends State<MedicationReport> {
   @override
   Widget build(BuildContext context) {
     _user = Provider.of<UserM>(context);
-    Widget showTextField(
-        String hintText, String inputName, TextEditingController controller) {
-      return TextFormField(
-        maxLines: 1,
-        controller: controller,
-        autofocus: true,
-        decoration: InputDecoration(
-          //hintText: hintText,
-          labelText: hintText,
-          errorText: _validater ? 'This can\'t be empty' : null,
-        ),
-        // ignore: missing_return
-        validator: (controller) {
-          if (controller.isEmpty) {
-            setState(() {
-              _validater = true;
-            });
-          }
-        },
-
-        onSaved: (input) => inputName = input,
-      );
-    }
-
-    inserting() async {
-      DateTime date = DateTime.now();
-      String dateConvert = date.year.toString() +
-          "/" +
-          date.month.toString() +
-          "/" +
-          date.day.toString();
-      MediData medi = MediData(
-        name: myController1.text,
-        nic: myController2.text,
-        eligibleFamNumber: myController3.text,
-        doctorName: myController4.text,
-        date: _date.toString(),
-        regDate: dateConvert,
-      );
-
-      try {
-        FirebaseFirestore.instance
-            .runTransaction((Transaction transaction) async {
-          await FirebaseFirestore.instance
-              .collection("FromMother")
-              .doc(_user.uid)
-              .collection("informMedical")
-              .doc(_user.uid)
-              .set(medi.toJson());
-        });
-      } catch (e) {
-        print(e.toString());
-      }
-    }
 
     /*var dateFormat_1 = new Column(
       children: <Widget>[
@@ -108,240 +55,344 @@ class _MedicationReportState extends State<MedicationReport> {
     );*/
 
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            Column(
+        backgroundColor: Colors.lightBlue,
+        body: Builder(
+          builder: (context) => Container(
+            child: ListView(
               children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).copyWith().size.height / 6,
-                  width: MediaQuery.of(context).copyWith().size.width,
-                  color: Colors.lightBlue,
-                  child: Container(
-                    child: Text(
-                      'Private Medication Report',
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                      textAlign: TextAlign.center,
+                Column(
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).copyWith().size.height / 6,
+                      width: MediaQuery.of(context).copyWith().size.width,
+                      color: Colors.lightBlue,
+                      child: Container(
+                        child: Text(
+                          'Private Medication Report',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        padding: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width * 0.2,
+                            MediaQuery.of(context).size.height * 0.06,
+                            MediaQuery.of(context).size.width * 0.2,
+                            MediaQuery.of(context).size.height * 0.02),
+                      ),
                     ),
-                    padding: EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width * 0.2,
-                        MediaQuery.of(context).size.height * 0.06,
-                        MediaQuery.of(context).size.width * 0.2,
-                        MediaQuery.of(context).size.height * 0.02),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  height:
-                      MediaQuery.of(context).copyWith().size.height * (5 / 6),
-                  width: MediaQuery.of(context).copyWith().size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0),
-                    ),
-                  ),
-                  child: ListView(
-                    children: <Widget>[
-                      Column(
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      height: MediaQuery.of(context).copyWith().size.height *
+                          (5 / 6),
+                      width: MediaQuery.of(context).copyWith().size.width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0),
+                        ),
+                      ),
+                      child: ListView(
                         children: <Widget>[
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005,
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005),
-                              child:
-                                  showTextField("Name", "_Name", myController1),
-                            ),
-                          ),
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005,
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005),
-                              child: showTextField(
-                                  "NIC Number", "_NICnumber", myController2),
-                            ),
-                          ),
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005,
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005),
-                              child: showTextField("Eligible Family Number",
-                                  "_EFsnumber", myController3),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * 0.1,
-                                MediaQuery.of(context).size.height * 0.05,
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.05),
-                            child: Text(
-                              'About Medication',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005,
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005),
+                                  child: showTextField("Description",
+                                      "_Description", myController1),
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.005,
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.005),
-                            child: showTextField("Doctor's Name",
-                                "_Doctor's_name", myController4),
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.005,
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.005),
-                            child: showTextField("Vaccines Name",
-                                "_Vacciness_name", myController5),
-                          ),
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005,
-                                  MediaQuery.of(context).size.width * 0.05,
-                                  MediaQuery.of(context).size.height * 0.005),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 20,
-                                    child: Text(
-                                      "Date",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
+                              Container(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005,
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005),
+                                  child: showTextField("NIC Number",
+                                      "_NICnumber", myController2),
+                                ),
+                              ),
+                              
+                              Container(
+                                padding: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.1,
+                                    MediaQuery.of(context).size.height * 0.05,
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.05),
+                                child: Text(
+                                  'About Medication',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(_date == null
-                                            ? "Select Date"
-                                            : _date.year.toString() +
-                                                "/" +
-                                                _date.month.toString() +
-                                                "/" +
-                                                _date.day.toString()),
-                                        SizedBox(
-                                          width: 20,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.005,
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.005),
+                                child: showTextField("Doctor's Name",
+                                    "_Doctor's_name", myController4),
+                              ),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.005,
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.005),
+                                child: showTextField("Vaccines Name",
+                                    "_Vacciness_name", myController5),
+                              ),Container(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005,
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005),
+                                  child: showTextField("Remarks",
+                                      "_Remarks", myController3),
+                                ),
+                              ),
+                              Container(
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005,
+                                      MediaQuery.of(context).size.width * 0.05,
+                                      MediaQuery.of(context).size.height *
+                                          0.005),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 20,
+                                        child: Text(
+                                          "Date",
+                                          style: TextStyle(fontSize: 16),
                                         ),
-                                        SizedBox(
-                                          width: 60,
-                                          height: 30,
-                                          child: RaisedButton(
-                                              child: Icon(Icons.calendar_today),
-                                              /* shape: RoundedRectangleBorder(
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(_date == null
+                                                ? "Select Date"
+                                                : _date.year.toString() +
+                                                    "/" +
+                                                    _date.month.toString() +
+                                                    "/" +
+                                                    _date.day.toString()),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            SizedBox(
+                                              width: 60,
+                                              height: 30,
+                                              child: RaisedButton(
+                                                  child: Icon(
+                                                      Icons.calendar_today),
+                                                  /* shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                     side: BorderSide(
                                       color: Color.fromARGB(500, 21, 166, 211),
                                     )),*/
-                                              onPressed: () {
-                                                showDatePicker(
-                                                        context: context,
-                                                        initialDate:
-                                                            DateTime.now(),
-                                                        firstDate:
-                                                            DateTime(1980),
-                                                        lastDate:
-                                                            DateTime(2021))
-                                                    .then((date) {
-                                                  setState(() {
-                                                    _date = date;
-                                                  });
-                                                });
-                                              }),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                                  onPressed: () {
+                                                    showDatePicker(
+                                                            context: context,
+                                                            initialDate:
+                                                                DateTime.now(),
+                                                            firstDate:
+                                                                DateTime(1980),
+                                                            lastDate:
+                                                                DateTime(2021))
+                                                        .then((date) {
+                                                      setState(() {
+                                                        _date = date;
+                                                      });
+                                                    });
+                                                  }),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * 0.1,
-                                MediaQuery.of(context).size.height * 0.005,
-                                MediaQuery.of(context).size.width * 0.05,
-                                MediaQuery.of(context).size.height * 0.05),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Container(
-                                  child: Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Back'),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(
+                                    MediaQuery.of(context).size.width * 0.1,
+                                    MediaQuery.of(context).size.height * 0.005,
+                                    MediaQuery.of(context).size.width * 0.05,
+                                    MediaQuery.of(context).size.height * 0.05),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Back'),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Container(
-                                  child: Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: ElevatedButton(
-                                      child: Text('Submit'),
-                                      onPressed: () {
-                                        inserting();
-                                        Navigator.pushNamed(
-                                            context, '/dashboard');
-                                      },
+                                    Container(
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: ElevatedButton(
+                                          child: Text('Submit'),
+                                          onPressed: () {
+                                            dynamic rst = inserting();
+                                            if (rst != null) {
+                                              _displaySnackBar(context);
+                                            }else{
+                                              AlertDialog alert = AlertDialog(
+                                                  title: Text('Error'),
+                                                  content:
+                                                      SingleChildScrollView(
+                                                    child: ListBody(
+                                                      children: <Widget>[
+                                                        Text(
+                                                            'Please try again leter'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text('Ok'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return alert;
+                                                  },
+                                                );
+                                            }
+                                           _clearText();
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ));
+  }
+
+  Widget showTextField(
+      String hintText, String inputName, TextEditingController controller) {
+    return TextFormField(
+      maxLines: 1,
+      controller: controller,   
+      decoration: InputDecoration(
+        //hintText: hintText,
+        labelText: hintText,
+        errorText: _validater ? 'This can\'t be empty' : null,
       ),
+      // ignore: missing_return
+      validator: (controller) {
+        if (controller.isEmpty) {
+          setState(() {
+            _validater = true;
+          });
+        }
+      },
+
+      onSaved: (input) => inputName = input,
     );
   }
-}
 
-Widget showTextField(String hintText, String inputName) {
-  return TextFormField(
-    maxLines: 1,
-    decoration: InputDecoration(
-      hintText: hintText,
-    ),
-    // ignore: missing_return
-    validator: (input) {
-      if (input.isEmpty) {
-        return 'This can\'t be empty';
-      }
-    },
-    onSaved: (input) => inputName = input,
-  );
+  Future<dynamic> inserting() async {
+    DateTime date = DateTime.now();
+    String dateConvert = date.year.toString() +
+        "/" +
+        date.month.toString() +
+        "/" +
+        date.day.toString();
+    DocumentReference userDocRef =
+        _firestore.collection('users').doc(_user.uid);
+    String name = _user.userCustomData['name'];
+    String midID = _user.userCustomData['midwifeID'];
+    
+    MediData medi = MediData(
+        name: name,
+        description: myController1.text,
+        nic: myController2.text,
+        vaccine: myController5.text,
+        doctorName: myController4.text,
+        mumRemarks: myController3.text,
+        date: _date.toString(),
+        regDate: dateConvert,
+        midwifeID: midID,
+        userDocRef: userDocRef);
+
+    return await FirebaseFirestore.instance
+        .collection("informMedical")
+        .add(medi.toJson())
+        .then((value) => print("record added"))
+        .catchError((err) {
+      return err;
+    });
+  }
+
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Successfully submited'),
+      action: SnackBarAction(
+        label: 'Go Back',
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      duration: Duration(seconds: 3),
+    );
+
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  _clearText() {
+    myController1.clear();
+    myController2.clear();
+    myController3.clear();
+    myController4.clear();
+  }
 }

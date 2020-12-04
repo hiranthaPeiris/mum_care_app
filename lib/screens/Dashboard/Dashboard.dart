@@ -11,7 +11,6 @@ import 'package:mun_care_app/widgets/Menu_card.dart';
 import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 import 'package:mun_care_app/widgets/Search_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:mun_care_app/models/UserReg.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -35,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     //_user = Provider.of<UserM>(context);
-    print(compFam);
+    //print(compFam);
   }
 
   @override
@@ -52,7 +51,7 @@ class _DashboardState extends State<Dashboard> {
         compFam = customData['competencyFam'];
         pregMum = customData['PregnanctFam'];
 
-        print(_user.userCustomData);
+        //print(_user.userCustomData);
         pending = false;
       });
     }).catchError((err) => print(err));
@@ -72,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
             key: _scaffoldKey,
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-               Navigator.pushNamed(context, '/chat');
+                Navigator.pushNamed(context, '/chat');
               },
               child: Icon(Icons.chat_rounded),
               backgroundColor: kActiveIconColor,
@@ -316,7 +315,7 @@ class _DashboardState extends State<Dashboard> {
             heading: "View Mother Medications",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/ViewleavingReport');
+              Navigator.pushNamed(context, '/ViewMedicalReport');
             },
           ),
           Menu_card(
@@ -324,10 +323,26 @@ class _DashboardState extends State<Dashboard> {
             heading: "View Leaving Report",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/ViewMedicalReport');
+              Navigator.pushNamed(context, '/ViewleavingReport');
             },
           ),
-           Menu_card(
+          Menu_card(
+            title: "Apply leaving for sister",
+            heading: "Apply Leaving",
+            svgSrc: "assets/icons/yoga.svg",
+            press: () {
+              //Navigator.pushNamed(context, '/');
+            },
+          ),
+          Menu_card(
+            title: "Reports",
+            heading: "Monthly and Daily Report",
+            svgSrc: "assets/icons/home-visits-sch.svg",
+            press: () {
+              Navigator.pushNamed(context, '/searchReport');
+            },
+          ),
+          Menu_card(
             title: "View reports on leaving residential area",
             heading: "Geo Location",
             svgSrc: "assets/icons/yoga.svg",
@@ -343,7 +358,10 @@ class _DashboardState extends State<Dashboard> {
           mainAxisSpacing: 20,
         ),
       );
-    } else if (role == 'user') {
+    }
+
+    //User widgets
+    else if (role == 'user') {
       return SliverGrid(
         delegate: SliverChildListDelegate([
           Menu_card(
@@ -379,6 +397,44 @@ class _DashboardState extends State<Dashboard> {
             svgSrc: "assets/icons/yoga.svg",
             press: () {
               Navigator.pushNamed(context, '/leavingReport');
+            },
+          ),
+        ]),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: .85,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+        ),
+      );
+    }
+
+    //Sister widgets
+    else if (role == 'sister') {
+      return SliverGrid(
+        delegate: SliverChildListDelegate([
+          Menu_card(
+            title: "See midwife leave requests",
+            heading: "Midwife Leaving",
+            svgSrc: "assets/icons/yoga.svg",
+            press: () {
+              Navigator.pushNamed(context, '/MedicalReport');
+            },
+          ),
+          Menu_card(
+            title: "Report leaving residential area",
+            heading: "Report Leaving",
+            svgSrc: "assets/icons/yoga.svg",
+            press: () {
+              Navigator.pushNamed(context, '/');
+            },
+          ),
+          Menu_card(
+            title: "View reports on leaving residential area",
+            heading: "Geo Location",
+            svgSrc: "assets/icons/yoga.svg",
+            press: () {
+              Navigator.pushNamed(context, '/geoLocate');
             },
           ),
         ]),

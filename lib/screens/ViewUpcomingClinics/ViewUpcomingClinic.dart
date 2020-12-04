@@ -7,6 +7,9 @@ import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewClinic.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/services/ClinicService.dart';
+import 'package:mun_care_app/services/GeoLocation.dart';
+import 'package:mun_care_app/widgets/Bottom_nav.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewUpcomingClinic extends StatefulWidget {
   ViewUpcomingClinic({Key key, this.title}) : super(key: key);
@@ -22,12 +25,13 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
   var user = new UserM.get();
   final ClinicService _clinicService = ClinicService();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  
+
   Widget build(BuildContext context) {
     print(user.userCustomData);
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
+      bottomNavigationBar: Bottom_nav(),
       body: Column(
         children: <Widget>[
           Container(
@@ -311,7 +315,7 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                                 Row(
                                   children: <Widget>[
                                     Text(
-                                      "Dear your clinic,",
+                                      "New Clinic",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -386,6 +390,20 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
                       height: 15.0,
                     ),
                     Container(
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            double latitudeData = 6.931970;
+                            double longitiduData = 79.857750;
+                            openMap(latitudeData, longitiduData);
+                            //Navigator.pop(context);
+                          },
+                          child: Text('Open in Maps'),
+                        ),
+                      ),
+                    ),
+                    Container(
                       child: Row(
                         children: <Widget>[
                           FlatButton(
@@ -427,6 +445,15 @@ class _ViewUpcomingClinicState extends State<ViewUpcomingClinic> {
             ),
           );
         });
+  }
+
+  Future<void> openMap(double lat, double lon) async {
+    String googleUrl = 'http://google.com/maps/search/?api=1&query=$lat,$lon';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map';
+    }
   }
 
   void forMidwife(

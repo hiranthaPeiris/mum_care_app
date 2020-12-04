@@ -323,7 +323,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                             );
                           });
                     default:
-                    print(snapshot.connectionState.toString());
+                      print(snapshot.connectionState.toString());
                       return Text("No data");
                   }
                 }
@@ -603,7 +603,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Text(itemTitle,
+                                          Text("Title: $itemTitle",
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -611,7 +611,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                           SizedBox(
                                             height: 10.0,
                                           ),
-                                          Text(itemStatus,
+                                          Text("Visit Status: $itemStatus",
                                               style: TextStyle(
                                                   color: Colors.red,
                                                   fontWeight: FontWeight.bold,
@@ -619,7 +619,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                           SizedBox(
                                             height: 10.0,
                                           ),
-                                          Text(itemDate,
+                                          Text("Visit Date: $itemDate",
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -644,8 +644,10 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                           Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              Text("Mother Details",
+                                              Text("Mother's Details",
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 18.0,
@@ -654,19 +656,25 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                               SizedBox(
                                                 height: 10.0,
                                               ),
-                                              Text("Name: $name",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16.0)),
-                                              Text(
-                                                  "Competency Familty : $compFam",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16.0)),
-                                              Text("Pregnant Mother: $pregMom",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16.0)),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0.0, 0.0, 0.0, 5.0),
+                                                child: Text(
+                                                    "Name of Mother: $name",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16.0)),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.fromLTRB(
+                                                        0.0, 0.0, 0.0, 5.0),
+                                                child: Text(
+                                                    "Mother Status : ${(compFam == 'true' && pregMom == 'true') ? "Pregnent Mother" : "Competency Family"}",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16.0)),
+                                              ),
                                             ],
                                           ),
                                         ],

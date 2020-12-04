@@ -137,6 +137,8 @@ class AuthService {
           'PregnanctFam': false,
           'midwifeID': 'null',
           'onDuty': false,
+          'tel':"",
+          'email':"",
           'nameSearch': getSearchParam(name)
         })
         .then((value) => print("user role added"))

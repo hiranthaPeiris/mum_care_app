@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:mun_care_app/models/UserReg.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 import 'package:mun_care_app/services/UserDataService.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatefulWidget {
   final String userEmail;
@@ -35,59 +37,75 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final UserDataSevice _userDataSevice = UserDataSevice();
-  
-  UserM _user = new UserM.get();
-  bool pending = true;
-  DocumentSnapshot compFamData;
-  DocumentSnapshot pregData;
 
+  UserM _user = new UserM.get();
+  String uid;
+  bool pending = true;
+  ComRegDB _compData;
+  PreRegDB _pregData;
+  Map<String, dynamic> userCustomData;
+  //DocumentSnapshot compFamData;
+  //DocumentSnapshot pregData;
+  Future<void> _launched;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(_user.userCustomData);
-    String role = _user.userCustomData['role'];
+    //print(userCustomData);
 
     if (widget.documentSnapshot != null) {
-    } else if (role == "midwife") {
-      print("you are a mid wife");
+      userCustomData = widget.documentSnapshot.data();
+      uid = widget.documentSnapshot.id;
+      print(widget.documentSnapshot.data());
     } else {
-      print(_user.userCustomData['PregnanctFam']);
-      print(_user.userCustomData['competencyFam']);
-      if (_user.userCustomData['competencyFam'] &&
-          _user.userCustomData['PregnanctFam']) {
-        _userDataSevice.getCompData(_user.uid).then((doc) {
-          setState(() {
-            compFamData = doc;
-            print(doc);
-          });
-        });
+      userCustomData = _user.getCustomdata();
+      uid = _user.uid;
+    }
 
-        _userDataSevice.getPregData(_user.uid).then((doc) {
-          setState(() {
-            pregData = doc;
-            print(doc);
-            pending = false;
-          });
-        });
-      } else if (_user.userCustomData['competencyFam']) {
-        _userDataSevice.getCompData(_user.uid).then((doc) {
-          setState(() {
-            compFamData = doc;
-            print(doc.data());
-            pending = false;
-          });
-        });
-      } else {
+    print(userCustomData['PregnanctFam']);
+    print(userCustomData['competencyFam']);
+
+    if (userCustomData['competencyFam'] && userCustomData['PregnanctFam']) {
+      _userDataSevice.getCompData(uid).then((doc) {
         setState(() {
+          _compData = ComRegDB.fromSnapshot(doc);
+          //compFamData = doc;
+          print(doc);
+        });
+      });
+
+      _userDataSevice.getPregData(uid).then((doc) {
+        setState(() {
+          _pregData = PreRegDB.fromSnapshot(doc);
+          //pregData = doc;
+          //print(doc);
           pending = false;
         });
-      }
+      });
+    } else if (userCustomData['competencyFam']) {
+      _userDataSevice.getCompData(uid).then((doc) {
+        setState(() {
+          //compFamData = doc;
+          _compData = ComRegDB.fromSnapshot(doc);
+          print(doc.data());
+          pending = false;
+        });
+      });
+    } else {
+      setState(() {
+        pending = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    String name = userCustomData['name'];
+    String tel = userCustomData['tel'];
+    String email = userCustomData['email'];
+    bool comp = userCustomData['competencyFam'];
+    bool preg = userCustomData['PregnanctFam'];
+    //print( _compData.regDate);
     return pending
         ? Loading()
         : DefaultTabController(
@@ -131,7 +149,7 @@ class _ProfileState extends State<Profile> {
                       UserAccountsDrawerHeader(
                         accountEmail: Text("Alice@gmail.com"),
                         accountName: Text(
-                          "Alice James",
+                          name,
                           style: TextStyle(fontSize: 20.0),
                         ),
                         currentAccountPicture: ClipRRect(
@@ -204,7 +222,7 @@ class _ProfileState extends State<Profile> {
                                     height: 10.0,
                                   ),
                                   Text(
-                                    "Alice James",
+                                    name,
                                     style: TextStyle(
                                       fontSize: 22.0,
                                       color: Colors.white,
@@ -239,7 +257,7 @@ class _ProfileState extends State<Profile> {
                                                   height: 5.0,
                                                 ),
                                                 Text(
-                                                  "Competency Family",
+                                                  (comp&&preg)?"Pregnant Mother":"Competency Family",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontSize: 14.0,
@@ -316,7 +334,7 @@ class _ProfileState extends State<Profile> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  const ListTile(
+                                  ListTile(
                                     leading: Icon(Icons.person),
                                     title: Text(
                                       'Name',
@@ -326,7 +344,7 @@ class _ProfileState extends State<Profile> {
                                           fontSize: 16),
                                     ),
                                     subtitle: Text(
-                                      'Nadeeka',
+                                      "$name",
                                       style: TextStyle(color: kMenuTextColor),
                                     ),
                                   ),
@@ -336,7 +354,7 @@ class _ProfileState extends State<Profile> {
                             Card(
                               child: Column(
                                 children: <Widget>[
-                                  const ListTile(
+                                  ListTile(
                                     leading: Icon(Icons.phone),
                                     title: Text(
                                       'Contact',
@@ -346,9 +364,14 @@ class _ProfileState extends State<Profile> {
                                           fontSize: 16),
                                     ),
                                     subtitle: Text(
-                                      '0714722261',
+                                      tel,
                                       style: TextStyle(color: kMenuTextColor),
                                     ),
+                                    onTap: () {
+                                      setState(() {
+                                        _launched = _makePhoneCall('tel:$tel');
+                                      });
+                                    },
                                   ),
                                 ],
                               ),
@@ -356,7 +379,7 @@ class _ProfileState extends State<Profile> {
                             Card(
                               child: Column(
                                 children: <Widget>[
-                                  const ListTile(
+                                  ListTile(
                                     leading: Icon(Icons.email),
                                     title: Text(
                                       'Email',
@@ -366,61 +389,78 @@ class _ProfileState extends State<Profile> {
                                           fontSize: 16),
                                     ),
                                     subtitle: Text(
-                                      '0714722261',
+                                      email,
                                       style: TextStyle(color: kMenuTextColor),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Card(
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(
-                                      "Competency Family Information",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(fontSize: 18.0),
+                            comp
+                                ? Card(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Text(
+                                            "Competency Family Information",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 18.0),
+                                          ),
+                                        ),
+                                        _buildTile(
+                                            "Full Name", _compData.wifeName),
+                                        _buildTile("Name of Husband",
+                                            _compData.husbandName),
+                                        _buildTile(
+                                            "Address", _compData.address),
+                                        _buildTile("NIC", _compData.nic),
+                                        _buildTile(
+                                            "Date of Birth", _compData.dateDOB),
+                                        _buildTile("Job", _compData.job),
+                                        _buildTile("PHM Area",
+                                            _compData.phmDropDownValue),
+                                        _buildTile("AHM Area",
+                                            _compData.mohDropDownValue),
+                                        // _buildTile("Date of Registration",
+                                        //     _compData.regDate),
+                                        _buildTile("Date of Marrage",
+                                            _compData.marrageDate)
+                                      ],
                                     ),
-                                  ),
-                                  _buildTile("Full Name", "Name in full"),
-                                  _buildTile("Name of Husband", "Husbund name"),
-                                  _buildTile("Address", "address, sri lanka"),
-                                  _buildTile("NIC", "986578123V"),
-                                  _buildTile("Date of Birth", "1996-02-30"),
-                                  _buildTile("Job", "None"),
-                                  _buildTile("PHM Area", "address, sri lanka"),
-                                  _buildTile("AHM Area", "address, sri lanka"),
-                                  _buildTile("Date of Registration",
-                                      "address, sri lanka")
-                                ],
-                              ),
-                            ),
-                            Card(
-                              child: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(
-                                      "Mother Pregnancy Information",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(fontSize: 18.0),
+                                  )
+                                : SizedBox(height: 5.0),
+                            preg
+                                ? Card(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Text(
+                                            "Mother Pregnancy Information",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 18.0),
+                                          ),
+                                        ),
+                                        _buildTile("Full Name", "Name in full"),
+                                        _buildTile(
+                                            "Name of Husband", "Husbund name"),
+                                        _buildTile(
+                                            "Address", "address, sri lanka"),
+                                        _buildTile("NIC", "986578123V"),
+                                        _buildTile(
+                                            "Date of Birth", "1996-02-30"),
+                                        _buildTile("Job", "None"),
+                                        _buildTile(
+                                            "PHM Area", "address, sri lanka"),
+                                        _buildTile(
+                                            "AHM Area", "address, sri lanka"),
+                                        _buildTile("Date of Registration",
+                                            "address, sri lanka")
+                                      ],
                                     ),
-                                  ),
-                                  _buildTile("Full Name", "Name in full"),
-                                  _buildTile("Name of Husband", "Husbund name"),
-                                  _buildTile("Address", "address, sri lanka"),
-                                  _buildTile("NIC", "986578123V"),
-                                  _buildTile("Date of Birth", "1996-02-30"),
-                                  _buildTile("Job", "None"),
-                                  _buildTile("PHM Area", "address, sri lanka"),
-                                  _buildTile("AHM Area", "address, sri lanka"),
-                                  _buildTile("Date of Registration",
-                                      "address, sri lanka")
-                                ],
-                              ),
-                            )
+                                  )
+                                : SizedBox(height: 5.0),
                           ],
                         ),
                       ),
@@ -433,6 +473,14 @@ class _ProfileState extends State<Profile> {
               ),
             ),
           );
+  }
+
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Future<DocumentSnapshot> getCompData(String uID) async {

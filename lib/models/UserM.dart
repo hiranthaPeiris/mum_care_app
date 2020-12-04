@@ -35,6 +35,10 @@ class UserM {
     return _userM;
   }
 
+  Map<String,dynamic> getCustomdata(){
+    return userCustomData;
+  }
+  
   UserM._internal();
 
   //properties

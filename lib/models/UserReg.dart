@@ -1,7 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class ComRegDB {
   String mohDropDownValue;
   String phmDropDownValue;
@@ -59,7 +58,6 @@ class ComRegDB {
   String womenBloodDropDownValue;
   String menBloodDropDownValue;
   String regDate;
-  String regMonth;
 
   DocumentReference documentReference;
 
@@ -116,7 +114,6 @@ class ComRegDB {
     this.womenBloodDropDownValue,
     this.menBloodDropDownValue,
     this.regDate,
-    this.regMonth,
   });
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
@@ -176,7 +173,6 @@ class ComRegDB {
     womenBloodDropDownValue = map["_womenBloodDropDownValue"];
     menBloodDropDownValue = map["_menBloodDropDownValue"];
     regDate = map['_regDate'];
-    regMonth = map['_regMonth'];
   }
   ComRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -235,7 +231,6 @@ class ComRegDB {
       '_womenBloodDropDownValue': womenBloodDropDownValue,
       '_menBloodDropDownValue': menBloodDropDownValue,
       '_regDate': regDate,
-      '_regMonth': regMonth,
     };
   }
 }
@@ -262,7 +257,6 @@ class PreRegDB {
   bool heartDisorder;
   bool kidneyDisorder;
   String regDate;
-  String regMonth;
 
   DocumentReference documentReference;
 
@@ -285,8 +279,7 @@ class PreRegDB {
       this.maleria,
       this.heartDisorder,
       this.kidneyDisorder,
-      this.regDate,
-      this.regMonth,});
+      this.regDate});
 
   PreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
     mohDropDownValue = map["_mohDropDownValue"];
@@ -310,7 +303,6 @@ class PreRegDB {
     heartDisorder = map["_heartDisorder"];
     maleria = map["_maleria"];
     regDate = map["_regDate"];
-    regMonth = map['_regMonth'];
   }
   PreRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -336,7 +328,7 @@ class PreRegDB {
       '_heartDisorder': heartDisorder,
       '_kidneyDisorder': kidneyDisorder,
       '_regDate': regDate,
-      '_regMonth': regMonth,
+
     };
   }
 }
@@ -404,19 +396,3 @@ class ComSetState {
     };
   }
 }
-
-/*class OndutyState {
-  bool onDuty;
-  String logTime;
-  DocumentReference documentReference;
-  OndutyState({this.onDuty, this.logTime});
-  OndutyState.fromMap(Map<String, dynamic> map, {this.documentReference}) {
-    onDuty = map["_onDuty"];
-    logTime = map["_logTime"];
-  }
-  OndutyState.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
-  toJson() {
-    return {'_onDuty': onDuty, '_logTime': logTime};
-  }
-}*/

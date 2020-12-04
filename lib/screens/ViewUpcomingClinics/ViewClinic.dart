@@ -23,6 +23,7 @@ class _ViewClinicState extends State<ViewClinic> {
   bool pending = true;
   String remarks = "";
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  
   @override
   void initState() {
     super.initState();

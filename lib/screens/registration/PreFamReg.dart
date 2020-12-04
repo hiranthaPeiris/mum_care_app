@@ -25,8 +25,10 @@ class ShapePainter extends CustomPainter {
 class _PreFamRegState extends State<PreFamReg> {
   int currentStep = 0;
   bool complete = false;
+
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
+
   String wombDropdownValue = "G1";
 
   bool diabetic_Yes = false;
@@ -36,6 +38,19 @@ class _PreFamRegState extends State<PreFamReg> {
 
   DateTime _dateDOB;
   DateTime _dateMarrage;
+  List<String> arr = [
+    'Select Area',
+    'Ambalangoda',
+    'Hikkaduwa',
+    'Rathgama',
+    'Habaraduwa',
+    'Mirissa',
+    'Weligama',
+    'Dodanduwa',
+    'Balapitiya',
+    'Ahangama',
+    'Thalgaswala'
+  ];
 
   TextEditingController myController12 = new TextEditingController();
   TextEditingController myController13 = new TextEditingController();
@@ -83,6 +98,7 @@ class _PreFamRegState extends State<PreFamReg> {
         onSaved: (input) => inputName = input,
       );
     }
+
     Widget mohDropDownMenu() {
       return DropdownButton<String>(
         value: mohDropdownValue,
@@ -91,19 +107,7 @@ class _PreFamRegState extends State<PreFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>[
-          'Select Area',
-          'Ambalangoda',
-          'Hikkaduwa',
-          'Rathgama',
-          'Habaraduwa',
-          'Mirissa',
-          'Weligama',
-          'Dodanduwa',
-          'Balapitiya',
-          'Ahangama',
-          'Thalgaswala'
-        ].map<DropdownMenuItem<String>>((String value) {
+        items: arr.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -162,6 +166,7 @@ class _PreFamRegState extends State<PreFamReg> {
         },
       );
     }
+
     Widget wombDropDownMenu() {
       return DropdownButton<String>(
         value: wombDropdownValue,
@@ -194,6 +199,7 @@ class _PreFamRegState extends State<PreFamReg> {
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
+
       String dateConvert = date.year.toString() +
           "/" +
           date.month.toString() +
@@ -213,6 +219,7 @@ class _PreFamRegState extends State<PreFamReg> {
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
           regDate: dateConvert);
+
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
           await Firestore.instance
@@ -312,7 +319,7 @@ class _PreFamRegState extends State<PreFamReg> {
                   ),
                 ),
               ),
-               Container(
+              Container(
                 child: Column(
                   children: <Widget>[
                     Row(
@@ -830,44 +837,63 @@ class _PreFamRegState extends State<PreFamReg> {
         goto(currentStep - 1);
       }
     }
-    Widget alertBox(){
-    return Expanded(
-                child: Center(
-                child: AlertDialog(
-                  title: Row(
-                    children: [
-                      Icon(Icons.warning,color: Colors.red,),
-                      Text("  Warning",style: TextStyle(color: Colors.red),),
-                    ],
-                  ),
-                  content: Text("You have to fill every details",style: TextStyle(color: Colors.blueAccent),),
-                  actions: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        
-                        FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                              });
-                            }),
-                      ],
-                    ),
-                  ],
-                ),
-              ));
-  }
 
-  bool validate() {
-    if (myController12.text.isEmpty && myController13.text.isEmpty && myController14.text.isEmpty && myController15.text.isEmpty && myController16.text.isEmpty&& myController17.text.isEmpty && myController18.text.isEmpty && myController19.text.isEmpty && myController20.text.isEmpty && myController21.text.isEmpty && myController22.text.isEmpty) {
-      print("This cant't be empty");
-      return false;
-      
+    Widget alertBox() {
+      return Expanded(
+          child: Center(
+        child: AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning,
+                color: Colors.red,
+              ),
+              Text(
+                "  Warning",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          content: Text(
+            "You have to fill every details",
+            style: TextStyle(color: Colors.blueAccent),
+          ),
+          actions: <Widget>[
+            Row(
+              children: <Widget>[
+                FlatButton(
+                    child: Text("OK"),
+                    onPressed: () {
+                      setState(() {
+                        complete = false;
+                      });
+                    }),
+              ],
+            ),
+          ],
+        ),
+      ));
     }
-    print("not empty");
-    return true;
-  }
+
+    bool validate() {
+      if (myController12.text.isEmpty &&
+          myController13.text.isEmpty &&
+          myController14.text.isEmpty &&
+          myController15.text.isEmpty &&
+          myController16.text.isEmpty &&
+          myController17.text.isEmpty &&
+          myController18.text.isEmpty &&
+          myController19.text.isEmpty &&
+          myController20.text.isEmpty &&
+          myController21.text.isEmpty &&
+          myController22.text.isEmpty) {
+        print("This cant't be empty");
+        return false;
+      }
+      print("not empty");
+      return true;
+    }
+
     return new Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -876,51 +902,49 @@ class _PreFamRegState extends State<PreFamReg> {
           height: 20,
         ),
         complete
-            ?
-            validate()
-            ?
-             Expanded(
-                child: Center(
-                child: AlertDialog(
-                  title: Text("Pregnancy Registration Succesfully"),
-                  content: Text("Congratulation"),
-                  actions: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                                stepOneReg();
-                                setPregnencyTrue();
-                                Navigator.pushNamed(context, '/dashboard');
-                                myController12.clear();
-                                myController13.clear();
-                                myController14.clear();
-                                myController15.clear();
-                                myController16.clear();
-                                myController17.clear();
-                                myController18.clear();
-                                myController19.clear();
-                                myController20.clear();
-                                myController21.clear();
-                                myController22.clear();
-                              });
-                            }),
-                        FlatButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                              });
-                            }),
+            ? validate()
+                ? Expanded(
+                    child: Center(
+                    child: AlertDialog(
+                      title: Text("Pregnancy Registration Succesfully"),
+                      content: Text("Congratulation"),
+                      actions: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            FlatButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  setState(() {
+                                    complete = false;
+                                    stepOneReg();
+                                    setPregnencyTrue();
+                                    Navigator.pushNamed(context, '/dashboard');
+                                    myController12.clear();
+                                    myController13.clear();
+                                    myController14.clear();
+                                    myController15.clear();
+                                    myController16.clear();
+                                    myController17.clear();
+                                    myController18.clear();
+                                    myController19.clear();
+                                    myController20.clear();
+                                    myController21.clear();
+                                    myController22.clear();
+                                  });
+                                }),
+                            FlatButton(
+                                child: Text("Cancel"),
+                                onPressed: () {
+                                  setState(() {
+                                    complete = false;
+                                  });
+                                }),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              ))
-              :alertBox()
+                  ))
+                : alertBox()
             : Expanded(
                 flex: 80,
                 child: Stepper(
@@ -959,12 +983,12 @@ class _PreFamRegState extends State<PreFamReg> {
                                         )),
                                     child: Container(
                                         child: Text(
-                                          "Prev",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )),
+                                      "Prev",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )),
                                     onPressed: onStepCancel,
                                   ),
                                 )),
