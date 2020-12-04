@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/services/HomeVisitService.dart';
 import 'package:uuid/uuid.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 var uuid = Uuid();
 
@@ -22,12 +22,13 @@ class ViewUpcomingHomevisit extends StatefulWidget {
 }
 
 class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
-  final UserM user = new UserM.get();
+  UserM _user;
   HomeVisitService _homeVisitService = HomeVisitService();
-  //var role = new UserM();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Widget build(BuildContext context) {
+    _user = Provider.of<UserM>(context);
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -53,7 +54,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "UpComing Homevisits",
+                            "Upcoming Home Visits",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24.0,
@@ -79,15 +80,14 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
           Expanded(
             flex: 1,
             child: StreamBuilder<QuerySnapshot>(
-              stream: (user.userCustomData['role'] == 'user')
+              stream: (_user.userCustomData['role'] == 'user')
                   ? widget._firestore
                       .collection('HomeVisits')
-                      .where('userID', isEqualTo: user.userCredential.user.uid)
+                      .where('userID', isEqualTo: _user.uid)
                       .snapshots()
                   : widget._firestore
                       .collection('HomeVisits')
-                      .where('midwifeID',
-                          isEqualTo: user.userCredential.user.uid)
+                      .where('midwifeID', isEqualTo: _user.uid)
                       .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -105,12 +105,13 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                               children: <Widget>[
                                 InkWell(
                                   onTap: () {
-                                    if (user.userCustomData['role'] ==
+                                    print(_user.userCustomData['role']);
+                                    if (_user.userCustomData['role'] ==
                                         "midwife") {
                                       //forUser(itemTitle,itemStatus,itemDate);
                                       forMidwife(snapshot.data.docs[index]);
                                       print("midwife");
-                                    } else if (user.userCustomData['role'] ==
+                                    } else if (_user.userCustomData['role'] ==
                                         "user") {
                                       print("user");
                                       forUser(snapshot.data.docs[index],
@@ -274,7 +275,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
       QueryDocumentSnapshot documentSnapshot, GlobalKey<ScaffoldState> scaf) {
     String id = documentSnapshot.id;
     //String uid = user.userCredential.user.uid;
-    String midID = user.userCustomData['midwifeID'];
+    String midID = _user.userCustomData['midwifeID'];
     //String midDocID = documentSnapshot['midDocID'];
 
     String itemTitle = documentSnapshot["description"];
@@ -413,6 +414,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                         // Some code to undo the change.
                                       },
                                     ),
+                                    duration: Duration(seconds: 2),
                                   );
 
                                   // Find the Scaffold in the widget tree and use
@@ -435,7 +437,21 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                     _homeVisitService.changeConfirmation(
                                         HOMEVISITCONFM.accept, id, midID);
                                   });
-                                  //Navigator.of(context).pop();
+                                  final snackBar = SnackBar(
+                                    content: Text('Successfully Updated'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () {
+                                        // Some code to undo the change.
+                                      },
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                  );
+
+                                  // Find the Scaffold in the widget tree and use
+                                  // it to show a SnackBar.
+                                  scaf.currentState.showSnackBar(snackBar);
+                                  Navigator.of(context).pop();
                                 },
                               ),
                             ],
@@ -634,7 +650,7 @@ class _ViewUpcomingHomevisitState extends State<ViewUpcomingHomevisit> {
                                                 builder: (context) =>
                                                     ScheduleHomeVisits(
                                                       document: userData,
-                                                      midwifeId: user.uid,
+                                                      midwifeId: _user.uid,
                                                     )));
                                       },
                                     ),

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _ComFamRegState extends State<ComFamReg> {
   int currentStep = 0;
   bool complete = false;
   bool isActive = false;
+  
   //StepState stepState=StepState.editing;
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
@@ -175,8 +177,19 @@ class _ComFamRegState extends State<ComFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>['Select Area', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10']
-            .map<DropdownMenuItem<String>>((String value) {
+        items: <String>[
+          'Select Area',
+          '01',
+          '02',
+          '03',
+          '04',
+          '05',
+          '06',
+          '07',
+          '08',
+          '09',
+          '10'
+        ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -380,9 +393,9 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
-
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
+      DateTime date = DateTime.now();
       ComRegDB comRegDB = ComRegDB(
         husbandName: myController1.text,
         wifeName: myController2.text,
@@ -435,6 +448,7 @@ class _ComFamRegState extends State<ComFamReg> {
         menHeight: myController11.text,
         womenBloodDropDownValue: womenBloodDropdownValue,
         menBloodDropDownValue: menBloodDropdownValue,
+        regDate:date.toString(),
       );
 
       try {
@@ -444,8 +458,6 @@ class _ComFamRegState extends State<ComFamReg> {
               .collection("ComDatabase")
               .doc(_auth.currentUser.uid)
               .set(comRegDB.toJson());
-
-
         });
       } catch (e) {
         print(e.toString());
@@ -460,7 +472,9 @@ class _ComFamRegState extends State<ComFamReg> {
             .runTransaction((Transaction transaction) async {
           await FirebaseFirestore.instance
               .collection("ComDatabase")
-              .doc(_auth.currentUser.uid).collection("State").doc(_auth.currentUser.uid)
+              .doc(_auth.currentUser.uid)
+              .collection("State")
+              .doc(_auth.currentUser.uid)
               .set(comSetState.toJson());
         });
       } catch (e) {
@@ -468,6 +482,17 @@ class _ComFamRegState extends State<ComFamReg> {
       }
     }
 
+    Future<void> setCompetencyTrue() async {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser.uid)
+          .update({
+            'competencyFam': true,
+          })
+          .then((value) => print("Competency true"))
+          .catchError((err) => print(err));
+    }
 
     List<Step> steps = [
       Step(
@@ -1816,26 +1841,27 @@ class _ComFamRegState extends State<ComFamReg> {
                         FlatButton(
                             child: Text("OK"),
                             onPressed: () {
-                                setState(() {
-                                  complete = false;
-                                  allreadyComReg = true;
-                                });
-                                stepOneReg();
-                                comRegComfirm();
-                                Navigator.pushNamed(context, '/dashboard');
-                                myController1.clear();
-                                myController2.clear();
-                                myController3.clear();
-                                myController4.clear();
-                                myController5.clear();
-                                myController6.clear();
-                                myController7.clear();
-                                myController8.clear();
-                                myController9.clear();
-                                myController10.clear();
-                                myController11.clear();
-                              }
-                            ),
+
+                              setState(() {
+                                complete = false;
+                                allreadyComReg = true;
+                              });
+                              stepOneReg();
+                              comRegComfirm();
+                              setCompetencyTrue();
+                              Navigator.pushNamed(context, '/dashboard');
+                              myController1.clear();
+                              myController2.clear();
+                              myController3.clear();
+                              myController4.clear();
+                              myController5.clear();
+                              myController6.clear();
+                              myController7.clear();
+                              myController8.clear();
+                              myController9.clear();
+                              myController10.clear();
+                              myController11.clear();
+                            }),
                         FlatButton(
                             child: Text("Cancel"),
                             onPressed: () {

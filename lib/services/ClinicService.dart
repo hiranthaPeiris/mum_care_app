@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum CLINICSTATE { active, done, cancle, rescheduled }
@@ -6,46 +7,59 @@ enum CLINICCONFM { accept, deny }
 class ClinicService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> SaveClinic(String desc, String dateTime, String midUID) async {
+  Future<void> saveClinics(String desc, String dateTime, String midUID) async {
     //get list of mother assigned for midwife
     QuerySnapshot query = await getMotherList(midUID);
+
+    //user list for midwife
     List<DocumentReference> userList = List();
+
+    //user clinic list for ref
     List<DocumentReference> userClinicRefList = List();
 
-    query.docs.forEach((doc) async {
+    CollectionReference midwifeVisit =
+        _firestore.collection('Bookings').doc(midUID).collection('Clinics');
+
+    await Future.forEach(query.docs, (doc) async {
       userList.add(_firestore.collection('user').doc(doc.id));
       CollectionReference clinic =
           _firestore.collection("Bookings").doc(doc.id).collection('Clinics');
 
-      await clinic.add({
+      DocumentReference docRef = await clinic.add({
         'description': desc,
         'dateTime': dateTime,
         'status': "active",
         'confirmation': 'pending'
       }).then((docRef) {
-        print("clinic added $docRef");
-        userClinicRefList.add(docRef);
+        return docRef;
       }).catchError((err) => print(err));
+
+      print("clinic added $docRef");
+      userClinicRefList.add(docRef);
     });
 
-    CollectionReference midwifeVisit =
-        _firestore.collection('Bookings').doc(midUID).collection('Clinics');
-
-    await midwifeVisit.add({
-      'description': desc,
-      'dateTime': dateTime,
-      'status': "active",
-      'count': 0,
-      'users': userList,
-      'userClinicRef': userClinicRefList
-    }).then((docRef) async {
-      //adding reference data of clinics userRef <--> clinicRef
-      CollectionReference clinicRef = _firestore.collection('ClinicRef');
-      await clinicRef
-          .add({'midwifeClinicRef': docRef, 'userClinicRef': userClinicRefList})
-          .then((value) => print("references added $value"))
-          .catchError((err) => print(err));
-    }).catchError((err) => print(err));
+    if (userClinicRefList.isNotEmpty) {
+      await midwifeVisit.add({
+        'description': desc,
+        'dateTime': dateTime,
+        'status': "active",
+        'count': 0,
+        'users': userList,
+        'userClinicRef': userClinicRefList
+      }).then((docRef) async {
+        //adding reference data of clinics userRef <--> clinicRef
+        CollectionReference clinicRef = _firestore.collection('ClinicRef');
+        print(userClinicRefList);
+        await clinicRef.add({
+          'midwifeClinicRef': docRef,
+          'userClinicRef': userClinicRefList
+        }).then((value) {
+          print("references added $value");
+        }).catchError((err) => print(err));
+      }).catchError((err) => print(err));
+    } else {
+      print("list empty");
+    }
   }
 
 //Done by only midwife
@@ -90,6 +104,7 @@ class ClinicService {
 
     //updating each mothers clinic recrod
     userClinicRefList.forEach((docRef) {
+      print(docRef);
       switch (status) {
         case CLINICSTATE.active:
           batch.update(docRef, {'status': "active"});
@@ -143,18 +158,19 @@ class ClinicService {
 
   //increase or decreace clinic count - trigger by user(mother)
   Future<int> changeConfirmation(
-      String UID, CLINICCONFM confm, DocumentReference userClinicRef) async {
+      String uID, CLINICCONFM confm, DocumentReference userClinicRef) async {
     QueryDocumentSnapshot doc = await _firestore
-        .collection('clinicRef')
+        .collection('ClinicRef')
         .where('userClinicRef', arrayContains: userClinicRef)
         .limit(1)
         .get()
         .then(((QuerySnapshot querySnapshot) {
       return querySnapshot.docs[0];
-    }));
+    })).catchError((err) => print(err));
 
     DocumentReference midwifeClinicRef = doc['midwifeClinicRef'];
-    print(doc);
+    print(doc.data());
+    print(midwifeClinicRef);
 
     return _firestore.runTransaction((transaction) async {
       // Get the document

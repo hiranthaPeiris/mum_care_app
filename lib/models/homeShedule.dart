@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:date_format/date_format.dart';
+
 //import 'package:firebase_core/firebase_core.dart';
 
 class HomeShedule {

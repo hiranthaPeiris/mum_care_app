@@ -25,8 +25,10 @@ class ShapePainter extends CustomPainter {
 class _PreFamRegState extends State<PreFamReg> {
   int currentStep = 0;
   bool complete = false;
+
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
+
   String wombDropdownValue = "G1";
 
   bool diabetic_Yes = false;
@@ -77,6 +79,8 @@ class _PreFamRegState extends State<PreFamReg> {
     myController22.dispose();
   }
 
+
+
   Widget build(BuildContext context) {
     Widget showTextField(
         String hintText, String inputName, TextEditingController controller) {
@@ -96,6 +100,7 @@ class _PreFamRegState extends State<PreFamReg> {
         onSaved: (input) => inputName = input,
       );
     }
+
     Widget mohDropDownMenu() {
       return DropdownButton<String>(
         value: mohDropdownValue,
@@ -123,7 +128,6 @@ class _PreFamRegState extends State<PreFamReg> {
         },
       );
     }
-
     Widget phmDropDownMenu() {
       return DropdownButton<String>(
         value: phmDropdownValue,
@@ -163,6 +167,7 @@ class _PreFamRegState extends State<PreFamReg> {
         },
       );
     }
+   
     Widget wombDropDownMenu() {
       return DropdownButton<String>(
         value: wombDropdownValue,
@@ -195,6 +200,7 @@ class _PreFamRegState extends State<PreFamReg> {
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
+
       String dateConvert = date.year.toString() +
           "/" +
           date.month.toString() +
@@ -213,7 +219,9 @@ class _PreFamRegState extends State<PreFamReg> {
           maleria: maleria_Yes,
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
+
           regDate: dateConvert);
+
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
           await Firestore.instance
@@ -259,6 +267,7 @@ class _PreFamRegState extends State<PreFamReg> {
             'PregnanctFam': true,
           })
           .then((value) => print("Pregnancy true"))
+
           .catchError((err) => print(err));
     }
 

@@ -18,14 +18,14 @@ class LoginComp extends StatefulWidget {
 class _LoginCompState extends State<LoginComp> {
   final AuthService _auth = AuthService();
 
-  String Email = '';
+  String email = '';
   String password = '';
   String error = '';
 
   bool pending = false;
 
   bool validate() {
-    if (Email.isEmpty && password.isEmpty) {
+    if (email.isEmpty && password.isEmpty) {
       print("empty");
       return false;
     }
@@ -97,7 +97,7 @@ class _LoginCompState extends State<LoginComp> {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(20),
                     child: Text(
-                      'or login with Email',
+                      'or login with email',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -110,11 +110,11 @@ class _LoginCompState extends State<LoginComp> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: new BorderRadius.circular(20.0)),
-                        labelText: 'Email',
+                        labelText: 'email',
                       ),
                       onChanged: (val) {
                         setState(() {
-                          Email = val;
+                          email = val;
                         });
                       },
                     ),
@@ -157,7 +157,7 @@ class _LoginCompState extends State<LoginComp> {
                           setState(() {
                             pending = true;
                           });
-                          dynamic result = await _auth.signIn(Email, password);
+                          dynamic result = await _auth.signIn(email, password);
                           if (result == null) {
                             setState(() {
                               pending = false;

@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:provider/provider.dart';
 
 var uuid = Uuid();
 
@@ -21,24 +22,13 @@ class _UpcomingHomeVisitFirebaseDemoState
   bool isEditing = false;
   bool textFieldVisibility = false;
   TimeOfDay now = TimeOfDay.now();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final UserM _user = new UserM.get();
-  
-  Stream<UserM> get user {
-    return _auth
-        .authStateChanges()
-        //.map((FirebaseUser user) => _userFromFirebaseUser(user));
-        .map(_userFromFirebase);
-  }
+  //final UserM _user = new UserM.get();
 
-  UserM _userFromFirebase(User user) {
-    //String uid = user.uid;
-    return user != null ? UserM.setUID(uid: user.uid) : null;
-  }
-
-  var useri = new UserM.get().userCredential.user.uid;
+  //var useri = new UserM.get().userCredential.user.uid;
 
   Widget build(BuildContext context) {
+    final user = Provider.of<UserM>(context);
+    String useri = user.uid;
 
     return Scaffold(
       backgroundColor: Colors.white,
