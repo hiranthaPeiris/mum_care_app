@@ -15,6 +15,7 @@ class _GeoLocationState extends State<GeoLocation> {
   void initState() {
     super.initState();
     getCurrentLocation();
+    openMap(latitudeData, longitiduData);
   }
   
   getCurrentLocation() async {
@@ -37,8 +38,8 @@ class _GeoLocationState extends State<GeoLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return Container(
+     /* appBar: AppBar(
         title: Text("My Location"),
       ),
       body: Column(
@@ -53,7 +54,7 @@ class _GeoLocationState extends State<GeoLocation> {
 
           
         ],
-      ),
+      ),*/
     );
   }
 }

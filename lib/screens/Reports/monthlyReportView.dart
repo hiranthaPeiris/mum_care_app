@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mun_care_app/screens/registration/ComDisplayData.dart';
+import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
 
 class MonthlyReportView extends StatefulWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -170,6 +172,8 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                           itemBuilder: (context, index) {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
+                                            String documentId =
+                                                  snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -177,8 +181,10 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                                     children: <Widget>[
                                                       InkWell(
                                                         onTap: () {
-                                                          openBottomSheet(
-                                                              itemTitle);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => ComGetIdDetails(documentId)),
+                                                          );
                                                         },
                                                         child: Stack(
                                                           alignment:
@@ -316,7 +322,9 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                         .snapshots(),
                                     //.collection('HomeVisits')
                                     //.snapshots(),
+                                    
                                     builder: (context, snapshot) {
+                                      
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }
@@ -327,6 +335,8 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                           itemBuilder: (context, index) {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
+                                            String documentId =
+                                                  snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -334,8 +344,10 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                                     children: <Widget>[
                                                       InkWell(
                                                         onTap: () {
-                                                          openBottomSheet(
-                                                              itemTitle);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => PreGetIdDetails(documentId)),
+                                                          );
                                                         },
                                                         child: Stack(
                                                           alignment:
@@ -487,6 +499,8 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                           itemBuilder: (context, index) {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
+                                            String documentId =
+                                                  snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(

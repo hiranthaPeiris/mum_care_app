@@ -223,8 +223,6 @@ Future<void> dutyChecking() async {
                                             svgSrc:
                                                 "assets/icons/Hamburger.svg",
                                             press: () {
-                                              print(getRole
-                                                  .userCustomData['role']);
                                               Navigator.pushNamed(
                                                   context, '/comReg');
                                             }),
@@ -326,6 +324,17 @@ Future<void> dutyChecking() async {
                                         // print(getRole.userCustomData['role']);
                                         Navigator.pushNamed(
                                             context, '/dutyChecking');
+                                      },
+                                    ),
+                                    Menu_card(
+                                      title: "Clinic Forms",
+                                      heading: "Clinic Details",
+                                      // heading: "Geo Loacation",
+                                      svgSrc: "assets/icons/Hamburger.svg",
+                                      press: () {
+                                        // print(getRole.userCustomData['role']);
+                                        Navigator.pushNamed(
+                                            context, '/clinicViews');
                                       },
                                     ),
                                   ]),

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mun_care_app/screens/registration/ComDisplayData.dart';
+import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
 
 class DairlyReportView extends StatefulWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -172,8 +174,8 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                           shrinkWrap: true,
                                           itemCount: snapshot.data.docs.length,
                                           itemBuilder: (context, index) {
-                                            // String itemTitle = snapshot
-                                            //  .data.docs[index]["_address"];
+                                            String documentId =
+                                                  snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -181,14 +183,14 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                     children: <Widget>[
                                                       InkWell(
                                                         onTap: () {
-                                                          openBottomSheet(
-                                                              itemTitle);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => ComGetIdDetails(documentId)),
+                                                          );
                                                         },
                                                         child: Stack(
                                                           alignment:
                                                               Alignment.center,
-                                                          // overflow:
-                                                          //  Overflow.visible,
                                                           children: <Widget>[
                                                             Container(
                                                               margin: EdgeInsets
@@ -323,6 +325,7 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                     //.collection('HomeVisits')
                                     //.snapshots(),
                                     builder: (context, snapshot) {
+                                      
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }
@@ -333,6 +336,8 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                           itemBuilder: (context, index) {
                                             // String itemTitle = snapshot
                                             //  .data.docs[index]["_address"];
+                                            String documentId =
+                                                  snapshot.data.docs[index].id;
                                             return Column(
                                               children: <Widget>[
                                                 SingleChildScrollView(
@@ -340,8 +345,10 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                                     children: <Widget>[
                                                       InkWell(
                                                         onTap: () {
-                                                          openBottomSheet(
-                                                              itemTitle);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => PreGetIdDetails(documentId)),
+                                                          );
                                                         },
                                                         child: Stack(
                                                           alignment:

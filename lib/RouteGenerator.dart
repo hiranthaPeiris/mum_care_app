@@ -1,9 +1,8 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:geolocation/geolocation.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:mun_care_app/Wapper.dart';
+import 'package:mun_care_app/screens/Clinic/ClinicForm.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
@@ -19,23 +18,16 @@ import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/leavingForm/leaveForm.dart';
-
-import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 
-import 'package:mun_care_app/screens/Reports/diary.dart';
 import 'package:mun_care_app/screens/registration/MotherList.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
 import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleClinic.dart';
-
-import 'package:mun_care_app/screens/reminders/CreateScreens/ScheduleHomeVisits.dart';
 import 'package:mun_care_app/screens/viewHomeVisit/viewUpcomingHomeVisit.dart';
-import 'package:mun_care_app/screens/reports/dairlyDiry.dart';
-import 'package:mun_care_app/screens/reports/monthlyReport.dart';
 import 'package:mun_care_app/screens/reports/dairlyReportView.dart';
 import 'package:mun_care_app/services/GeoLocation.dart';
 
@@ -90,7 +82,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => GeoLocation());
       case '/leaveForm':
         return MaterialPageRoute(builder: (_) => LeaveForm());
-
+      case '/clinicViews':
+        return MaterialPageRoute(builder: (_) => ClinicForm());
       case '/leaveFormsView':
         return MaterialPageRoute(builder: (_) => LeaveReportView());
       case '/leavingAccept':
