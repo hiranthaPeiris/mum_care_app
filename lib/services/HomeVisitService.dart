@@ -39,7 +39,7 @@ class HomeVisitService {
           'day':dateTime.day,
           'month':dateTime.month,
           'year':dateTime.year,
-          'status': "pending",
+          'status': "active",
           'confirmation': 'pending',
           'midwifeID': midwifeID,
           'userID':uid,

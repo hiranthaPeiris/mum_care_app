@@ -6,6 +6,7 @@ import 'package:mun_care_app/models/UserM.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/screens/registration/ComDisplayData.dart';
 import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
+import 'package:provider/provider.dart';
 
 class MonthlyReportView extends StatefulWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -22,14 +23,17 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
 
   DateTime selected;
   String itemTitle = "Description";
+  UserM _user;
 
-  var getUser = new UserM.get();
-  var useri = new UserM.get().userCredential.user.uid;
+  // var getUser = new UserM.get();
+  // var useri = new UserM.get().userCredential.user.uid;
 
   // var useri = 'IhiVRXSUfZPKoKpaNZgFtlPosj22';
 
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<UserM>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -147,7 +151,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                     stream: widget._firestore
                                         .collection('ComDatabase')
                                         .where('_phmDropDownValue',
-                                            isEqualTo: getUser
+                                            isEqualTo: _user
                                                 .userCustomData['area01'])
                                         .where("_regMonth",
                                             isEqualTo: widget.getMonth.year
@@ -160,7 +164,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                       print(widget.getMonth.year.toString() +
                                           "/" +
                                           widget.getMonth.month.toString());
-                                      print(getUser.userCustomData['role']);
+                                      print(_user.userCustomData['role']);
                                       if (!snapshot.hasData) {
                                         return Text('Loding...');
                                       }
@@ -313,7 +317,7 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                     stream: widget._firestore
                                         .collection('PreDatabase')
                                         .where('_phmDropDownValue',
-                                            isEqualTo: getUser
+                                            isEqualTo: _user
                                                 .userCustomData['area01'])
                                         .where("_regMonth",
                                             isEqualTo: widget.getMonth.year
@@ -477,7 +481,8 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('HomeVisits')
-                                        .where('midwifeID', isEqualTo: useri)
+                                        .where('midwifeID',
+                                            isEqualTo: _user.uid)
                                         .where('year',
                                             isEqualTo: widget.getMonth.year)
                                         .where('month',

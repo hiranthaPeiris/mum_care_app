@@ -240,7 +240,7 @@ class _DashboardState extends State<Dashboard> {
               content: "You have pending competency family data to review",
               svgSrc: "assets/icons/Hamburger.svg",
               press: () {
-                Navigator.pushNamed(context, '/');
+                Navigator.pushNamed(context, '/motherPregReview');
               }),
         ]),
       );

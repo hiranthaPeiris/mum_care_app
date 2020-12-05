@@ -509,13 +509,15 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('HomeVisits')
-                                        .where('midwifeID', isEqualTo: _user.uid)
+                                        .where('midwifeID',
+                                            isEqualTo: _user.uid)
                                         .where('year',
                                             isEqualTo: widget.getDate.year)
                                         .where('month',
                                             isEqualTo: widget.getDate.month)
                                         .where('day',
                                             isEqualTo: widget.getDate.day)
+                                        .where('status', isEqualTo: "done")
                                         .snapshots(),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {

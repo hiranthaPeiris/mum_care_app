@@ -14,12 +14,13 @@ import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Reports/DairlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/MonthlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
+import 'package:mun_care_app/screens/Reviews/PregReview.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
-import 'package:mun_care_app/screens/registration/MotherList.dart';
+import 'package:mun_care_app/screens/Reviews/MotherList.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
@@ -43,8 +44,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => PreFamReg());
       case '/renderData':
         return MaterialPageRoute(builder: (_) => ComRenderData());
+
+      //Midwife Mother reviews
       case '/motherAssign':
         return MaterialPageRoute(builder: (_) => MotherList());
+      case '/motherPregReview':
+        return MaterialPageRoute(builder: (_) => PregReview());
+
       case '/signup':
         return MaterialPageRoute(builder: (_) => Signup());
       case '/notification':
@@ -79,11 +85,15 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
-      case '/profile':
-        return MaterialPageRoute(builder: (_) => Profile());
       case '/viewupcominghomevisit':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
         
+      //Profile
+      case '/profile':
+        return MaterialPageRoute(
+            builder: (_) => Profile(
+                  review: false,
+                ));
       //Reports (Daily | Monthly)
       case '/searchReport':
         return MaterialPageRoute(builder: (_) => ReportSearch());
