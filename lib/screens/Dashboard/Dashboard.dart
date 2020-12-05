@@ -389,6 +389,17 @@ Future<void> dutyChecking() async {
                                             context, '/clinicViews');
                                       },
                                     ),
+                                    Menu_card(
+                                      title: "Mother List",
+                                      heading: "List of Mothers",
+                                      // heading: "Geo Loacation",
+                                      svgSrc: "assets/icons/Hamburger.svg",
+                                      press: () {
+                                        // print(getRole.userCustomData['role']);
+                                        Navigator.pushNamed(
+                                            context, '/motherList');
+                                      },
+                                    ),
                                   ]),
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(

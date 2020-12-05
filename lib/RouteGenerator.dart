@@ -8,6 +8,7 @@ import 'package:mun_care_app/screens/Clinic/ClinicHomeWapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
 import 'package:mun_care_app/screens/leavingForm/sisterLeaveView.dart';
+import 'package:mun_care_app/screens/registration/MotherListAndCount.dart';
 import 'package:mun_care_app/screens/reports/ReportSearch.dart';
 import 'package:mun_care_app/screens/reports/monthlyReportView.dart';
 import 'package:mun_care_app/sister/DutyChecking.dart';
@@ -102,7 +103,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => LeaveAccept());
       case '/dutyChecking':
         return MaterialPageRoute(builder: (_) => DutyCheck());
-
+      case '/motherList':
+        return MaterialPageRoute(builder: (_) => MotherListAndCount());
       case '/upcomingHomeVisit':
         return MaterialPageRoute(
             builder: (_) => UpcomingHomeVisitFirebaseDemo());

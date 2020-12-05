@@ -464,7 +464,8 @@ class _ComFamRegState extends State<ComFamReg> {
         regDate: dateConvert,
         regMonth: monthConvert,
         latitudeData: latitudeData,
-        longitiduData: longitiduData
+        longitiduData: longitiduData,
+        delete: false
       );
 
       try {

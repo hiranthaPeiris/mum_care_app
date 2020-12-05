@@ -226,7 +226,8 @@ class _PreFamRegState extends State<PreFamReg> {
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
           regDate: dateConvert,
-          regMonth: monthConvert,);
+          regMonth: monthConvert,
+          delete: false);
 
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {

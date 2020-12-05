@@ -63,66 +63,67 @@ class ComRegDB {
   String regMonth;
   double latitudeData;
   double longitiduData;
+  bool delete;
 
   DocumentReference documentReference;
 
-  ComRegDB({
-    this.husbandName,
-    this.wifeName,
-    this.address,
-    this.nic,
-    this.mohDropDownValue,
-    this.phmDropDownValue,
-    this.dateDOB,
-    this.contactNum,
-    this.email,
-    this.job,
-    this.eduDropDownValue,
-    this.marrageDate,
-    this.md1,
-    this.md2,
-    this.md3,
-    this.md4,
-    this.md5,
-    this.md6,
-    this.md7,
-    this.md8,
-    this.md9,
-    this.md10,
-    this.md11,
-    this.md12,
-    this.md13,
-    this.md14,
-    this.md15,
-    this.wd1,
-    this.wd2,
-    this.wd3,
-    this.wd4,
-    this.wd5,
-    this.wd6,
-    this.wd7,
-    this.wd8,
-    this.wd9,
-    this.wd10,
-    this.wd11,
-    this.wd12,
-    this.wd13,
-    this.wd14,
-    this.wd15,
-    this.rubellaDropDownValue,
-    this.formicDropDownValue,
-    this.conDropDownValue,
-    this.womenWeight,
-    this.menWeight,
-    this.womenHeight,
-    this.menHeight,
-    this.womenBloodDropDownValue,
-    this.menBloodDropDownValue,
-    this.regDate,
-    this.regMonth,
-    this.latitudeData,
-    this.longitiduData
-  });
+  ComRegDB(
+      {this.husbandName,
+      this.wifeName,
+      this.address,
+      this.nic,
+      this.mohDropDownValue,
+      this.phmDropDownValue,
+      this.dateDOB,
+      this.contactNum,
+      this.email,
+      this.job,
+      this.eduDropDownValue,
+      this.marrageDate,
+      this.md1,
+      this.md2,
+      this.md3,
+      this.md4,
+      this.md5,
+      this.md6,
+      this.md7,
+      this.md8,
+      this.md9,
+      this.md10,
+      this.md11,
+      this.md12,
+      this.md13,
+      this.md14,
+      this.md15,
+      this.wd1,
+      this.wd2,
+      this.wd3,
+      this.wd4,
+      this.wd5,
+      this.wd6,
+      this.wd7,
+      this.wd8,
+      this.wd9,
+      this.wd10,
+      this.wd11,
+      this.wd12,
+      this.wd13,
+      this.wd14,
+      this.wd15,
+      this.rubellaDropDownValue,
+      this.formicDropDownValue,
+      this.conDropDownValue,
+      this.womenWeight,
+      this.menWeight,
+      this.womenHeight,
+      this.menHeight,
+      this.womenBloodDropDownValue,
+      this.menBloodDropDownValue,
+      this.regDate,
+      this.regMonth,
+      this.latitudeData,
+      this.longitiduData,
+      this.delete});
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
     mohDropDownValue = map["_mohDropDownValue"];
@@ -184,6 +185,8 @@ class ComRegDB {
     regMonth = map['_regMonth'];
     latitudeData = map['_latitudeData'];
     longitiduData = map['_longitiduData'];
+    delete = map['_delete'];
+    
   }
   ComRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -245,6 +248,7 @@ class ComRegDB {
       '_regMonth': regMonth,
       '_latitudeData': latitudeData,
       '_longitiduData': longitiduData,
+      '_delete': delete,
     };
   }
 }
@@ -272,31 +276,32 @@ class PreRegDB {
   bool kidneyDisorder;
   String regDate;
   String regMonth;
+  bool delete;
 
   DocumentReference documentReference;
 
-  PreRegDB({
-    this.mohDropDownValue,
-    this.phmDropDownValue,
-    this.gnDivision,
-    this.fcName,
-    this.hcName,
-    this.coName,
-    this.womb,
-    this.result,
-    this.details,
-    this.kgWeight,
-    this.gWeight,
-    this.sex,
-    this.pvb,
-    this.bloodPresure,
-    this.diabetic,
-    this.maleria,
-    this.heartDisorder,
-    this.kidneyDisorder,
-    this.regDate,
-    this.regMonth,
-  });
+  PreRegDB(
+      {this.mohDropDownValue,
+      this.phmDropDownValue,
+      this.gnDivision,
+      this.fcName,
+      this.hcName,
+      this.coName,
+      this.womb,
+      this.result,
+      this.details,
+      this.kgWeight,
+      this.gWeight,
+      this.sex,
+      this.pvb,
+      this.bloodPresure,
+      this.diabetic,
+      this.maleria,
+      this.heartDisorder,
+      this.kidneyDisorder,
+      this.regDate,
+      this.regMonth,
+      this.delete});
 
   PreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
     mohDropDownValue = map["_mohDropDownValue"];
@@ -321,6 +326,7 @@ class PreRegDB {
     maleria = map["_maleria"];
     regDate = map["_regDate"];
     regMonth = map['_regMonth'];
+    delete = map['_delete'];
   }
   PreRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -347,6 +353,7 @@ class PreRegDB {
       '_kidneyDisorder': kidneyDisorder,
       '_regDate': regDate,
       '_regMonth': regMonth,
+      '_delete': delete,
     };
   }
 }
