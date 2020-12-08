@@ -12,25 +12,10 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatefulWidget {
-  // final String userEmail;
-  // final String userName;
-  // final String userBio;
-  // final String status;
-  // final String nameOfMidwife;
   final bool review;
   final String reviewType;
   final DocumentSnapshot documentSnapshot;
-  const Profile(
-      {Key key,
-      // this.userEmail,
-      // this.userName,
-      // this.userBio,
-      // this.status,
-      // this.nameOfMidwife,
-      // this.area,
-      this.documentSnapshot,
-      this.review,
-      this.reviewType})
+  const Profile({Key key, this.documentSnapshot, this.review, this.reviewType})
       : super(key: key);
 
   @override
@@ -44,7 +29,7 @@ class _ProfileState extends State<Profile> {
   UserM _user = new UserM.get();
   String uid;
   bool pending = true;
-  bool drawer = true;
+  bool drawer = true; //used for side drawer
   ComRegDB _compData;
   PreRegDB _pregData;
   Map<String, dynamic> userCustomData;
@@ -69,12 +54,12 @@ class _ProfileState extends State<Profile> {
     //print(userCustomData['PregnanctFam']);
     //print(userCustomData['competencyFam']);
 
-    if (userCustomData['competencyFam'] && userCustomData['PregnanctFam']) {
+    if ((userCustomData['compApp'] && userCustomData['pregApp'])||(userCustomData['PregnanctFam'] && userCustomData['competencyFam'])) {
       _userDataSevice.getCompData(uid).then((doc) {
         setState(() {
           _compData = ComRegDB.fromSnapshot(doc);
           //compFamData = doc;
-          print(doc);
+          //print(doc);
         });
       });
 
@@ -82,16 +67,16 @@ class _ProfileState extends State<Profile> {
         setState(() {
           _pregData = PreRegDB.fromSnapshot(doc);
           //pregData = doc;
-          //print(doc);
+          //print(_pregData.m);
           pending = false;
         });
       });
-    } else if (userCustomData['competencyFam']) {
+    } else if (userCustomData['compApp']||userCustomData['competencyFam']) {
       _userDataSevice.getCompData(uid).then((doc) {
         setState(() {
           //compFamData = doc;
           _compData = ComRegDB.fromSnapshot(doc);
-          print(doc.data());
+          //print(doc.data());
           pending = false;
         });
       });
@@ -107,8 +92,17 @@ class _ProfileState extends State<Profile> {
     String name = userCustomData['name'];
     String tel = userCustomData['tel'];
     String email = userCustomData['email'];
-    bool comp = userCustomData['competencyFam'];
-    bool preg = userCustomData['PregnanctFam'];
+    bool comp;
+    bool preg;
+
+    if (widget.review) {
+      comp = userCustomData['compApp'];
+      preg = userCustomData['pregApp'];
+    } else {
+      comp = userCustomData['competencyFam'];
+      preg = userCustomData['PregnanctFam'];
+    }
+
     //print( _compData.regDate);
     return pending
         ? Loading()
@@ -300,24 +294,69 @@ class _ProfileState extends State<Profile> {
                                                           fontSize: 18.0),
                                                     ),
                                                   ),
-                                                  _buildTile("Full Name",
-                                                      "Name in full"),
-                                                  _buildTile("Name of Husband",
-                                                      "Husbund name"),
-                                                  _buildTile("Address",
-                                                      "address, sri lanka"),
                                                   _buildTile(
-                                                      "NIC", "986578123V"),
+                                                      "MOH Area",
+                                                      _pregData
+                                                          .mohDropDownValue),
+                                                  _buildTile(
+                                                      "PHM Area",
+                                                      _pregData
+                                                          .phmDropDownValue),
+                                                  _buildTile(
+                                                      "Grama Niladhari Division",
+                                                      _pregData.gnDivision),
+                                                  _buildTile("Field Clinic",
+                                                      _pregData.fcName),
                                                   _buildTile("Date of Birth",
                                                       "1996-02-30"),
-                                                  _buildTile("Job", "None"),
-                                                  _buildTile("PHM Area",
-                                                      "address, sri lanka"),
-                                                  _buildTile("AHM Area",
+                                                  _buildTile(
+                                                      "Hospital in Clinic",
+                                                      _pregData.hcName),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                        "Consultant Obstetrician"),
+                                                  ),
+                                                  _buildTile("Pregnancy Count",
+                                                      _pregData.womb),
+                                                  _buildTile("Pregnancy Count",
                                                       "address, sri lanka"),
                                                   _buildTile(
                                                       "Date of Registration",
-                                                      "address, sri lanka")
+                                                      "address, sri lanka"),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                        "Present Obstetric History"),
+                                                  ),
+                                                  _buildTile(
+                                                      "Present vaginal bleeding",
+                                                      _pregData.pvb),
+                                                  _buildTile("Blood Pressure",
+                                                      _pregData.bloodPresure),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                        "Medical/Surgical History"),
+                                                  ),
+                                                  _buildTile(
+                                                      "Maleria",
+                                                      _pregData.maleria
+                                                          .toString()),
+                                                  _buildTile(
+                                                      "Diabetic",
+                                                      _pregData.diabetic
+                                                          .toString()),
+                                                  _buildTile(
+                                                      "Heart Disorders",
+                                                      _pregData.heartDisorder
+                                                          .toString()),
                                                 ],
                                               ),
                                             )

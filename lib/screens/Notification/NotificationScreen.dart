@@ -54,18 +54,25 @@ class _NotificationState extends State<NotificationScreen> {
                   },
                 );
               } else if (asyncSnapshot.hasError) {
-                widget = Column(
-                  children: <Widget>[
-                    Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.green,
-                      size: 60,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Text('Result: ${asyncSnapshot.data}'),
-                    )
-                  ],
+                widget = Center(heightFactor: 2.0,
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.green,
+                        size: 60,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text(
+                            'Result: ${asyncSnapshot.hasError.toString()}'),
+                      ),Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text(
+                            'Error on getting notifications'),
+                      )
+                    ],
+                  ),
                 );
               } else {
                 widget = Loading();
@@ -76,10 +83,21 @@ class _NotificationState extends State<NotificationScreen> {
         ));
   }
 
-  void _handleTapped(NotificationM nofication) {
-    setState(() {
-      _selectedNotific = nofication;
-    });
+  void _handleTapped(NotificationM notification) {
+    // setState(() {
+    //   _selectedNotific = nofication;
+    // });
+    String type = notification.type;
+    switch (type) {
+      case "home":
+        Navigator.pushNamed(context, '/viewupcominghomevisit');
+        break;
+      case "clinic":
+        Navigator.pushNamed(context, '/UpcomingClinics');
+        break;
+      default:
+        Navigator.pushNamed(context, '/error');
+    }
   }
 }
 
@@ -102,9 +120,10 @@ class NotificationListScreen extends StatelessWidget {
             ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.deepPurpleAccent,
+                  child: Icon(Icons.medical_services),
                 ),
-                title: Text(notifc.header),
-                subtitle: Text(notifc.content,
+                title: Text(notifc.title),
+                subtitle: Text(notifc.topicDate,
                     style: TextStyle(color: Colors.black26)),
                 onTap: () => onTapped(notifc))
         ],
@@ -145,13 +164,26 @@ class NotificationDetailsScreen extends StatelessWidget {
       appBar: AppBar(),
       body: Column(
         children: [
-          if (notification != null)
-            Text(notification.header,
-                style: Theme.of(context).textTheme.headline5),
-          Text(
-            notification.content,
-            style: TextStyle(color: Colors.black26),
-          )
+          (notification != null)
+              ? {
+                  Text(notification.title,
+                      style: Theme.of(context).textTheme.headline5),
+                  Text(
+                    notification.body,
+                    style: TextStyle(color: Colors.black26),
+                  ),
+                  Text(
+                    notification.topicDate,
+                    style: TextStyle(color: Colors.black26),
+                  ),
+                  Text(
+                    notification.topicRef,
+                    style: TextStyle(color: Colors.black26),
+                  )
+                }
+              : SizedBox(
+                  height: 10.0,
+                )
         ],
       ),
     );

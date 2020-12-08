@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
-
+import 'package:mun_care_app/models/Notification.model.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
 
 class Bottom_nav extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final NotificationService _notification = NotificationService();
+  Bottom_nav({Key key, this.scaffoldKey}) : super(key: key);
 
-  Bottom_nav({
-    Key key,
-    this.scaffoldKey
-  }) : super(key: key);
-
-  void _openDrawer(){
+  void _openDrawer() {
     scaffoldKey.currentState.openEndDrawer();
   }
 
@@ -27,18 +25,27 @@ class Bottom_nav extends StatelessWidget {
           BottomNavItem(
             title: "Today",
             svgScr: "assets/icons/calendar.svg",
+            press: () {
+              //      NotificationM notification =
+              // NotificationM("New Clinic assigned", "desc", "dateTime", "doc.id", new DateTime.now());
+
+              //     dynamic rst = await _notification.sendMessageTopic(notification.getMap(), "midwife1");
+              //      print(rst);
+            },
           ),
           BottomNavItem(
             title: "Menu",
             svgScr: "assets/icons/menu-bottom.svg",
             isActive: true,
             press: () {
-              Navigator.pushNamedAndRemoveUntil(context, '/dashboard',ModalRoute.withName('/'));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/dashboard', ModalRoute.withName('/'));
             },
           ),
           BottomNavItem(
             title: "Settings",
-            svgScr: "assets/icons/Settings.svg",press: _openDrawer,
+            svgScr: "assets/icons/Settings.svg",
+            press: _openDrawer,
           ),
         ],
       ),
@@ -61,7 +68,8 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(onTap: press,
+    return InkWell(
+      onTap: press,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/helpers/enums.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
@@ -487,7 +488,7 @@ class _ComFamRegState extends State<ComFamReg> {
           .collection('users')
           .doc(_auth.currentUser.uid)
           .update({
-            'competencyFam': true,
+            'compApp': familyState.Applied,
           })
           .then((value) => print("Competency true"))
           .catchError((err) => print(err));

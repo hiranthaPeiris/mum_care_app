@@ -267,7 +267,7 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                                 description.text,
                                 _date,
                                 _time,
-                                widget.document.id,
+                                widget.document,
                                 widget.midwifeId);
                             if (result == null) {
                               setState(() {

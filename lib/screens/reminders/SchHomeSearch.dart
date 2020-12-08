@@ -97,13 +97,15 @@ class _SchHomeVisitSearchState extends State<SchHomeVisitSearch> {
                                   ? collection
                                       .where('midwifeID',
                                           isEqualTo: _user.user.uid)
+                                      .where("competencyFam", isEqualTo: true)
                                       .snapshots()
                                   : collection
                                       .where('nameSearch',
                                           arrayContains: searchPara)
                                       .where('midwifeID',
                                           isEqualTo: _user.user.uid)
-                                      .snapshots(includeMetadataChanges: true),
+                                      .where("competencyFam", isEqualTo: true)
+                                      .snapshots(),
                               builder: (BuildContext context,
                                   AsyncSnapshot<QuerySnapshot> snapshot) {
                                 if (snapshot.hasError) {

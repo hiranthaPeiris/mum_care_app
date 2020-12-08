@@ -11,7 +11,7 @@ class DataHolder{
   DataHolder._internal();
 
   List<NotificationM> notifications = [
-    new NotificationM("Test header1", "test Content 1", new DateTime(2000))
+    new NotificationM("Test header1", "test Content 1", "test topic data","test topic ref",new DateTime(2000),"clinic")
   ];
 
   void addNotification(Map<String, dynamic> message) {
@@ -20,8 +20,8 @@ class DataHolder{
     print(data);
     print("from data");
     notifications.add(new NotificationM(
-        data.customData, data.click_action, new DateTime.now()));
-    print(notifications[1].header);
+        data.customData, data.click_action, "test topic data","test topic ref", new DateTime.now(), "clinic"));
+    print(notifications[1].title);
   }
   List<NotificationM> getList(){
     return notifications;

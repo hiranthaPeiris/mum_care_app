@@ -75,11 +75,13 @@ class _MotherListState extends State<MotherList> {
                         ? collection
                             .where('midwifeID', isEqualTo: _user.user.uid)
                             .where('compApp', isEqualTo: true)
+                            .where('competencyFam', isEqualTo: false)
                             .snapshots()
                         : collection
                             .where('nameSearch', arrayContains: searchPara)
                             .where('midwifeID', isEqualTo: _user.uid)
                             .where('compApp', isEqualTo: true)
+                            .where('competencyFam', isEqualTo: false)
                             .snapshots(includeMetadataChanges: true),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -182,7 +184,9 @@ class _MotherListState extends State<MotherList> {
             context,
             new MaterialPageRoute(
                 builder: (context) => Profile(
-                      documentSnapshot: document,review: true,reviewType: "comp",
+                      documentSnapshot: document,
+                      review: true,
+                      reviewType: "comp",
                     )));
       },
     );

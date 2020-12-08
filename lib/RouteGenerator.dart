@@ -81,6 +81,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ViewLeaving());
       case '/ViewMedicalReport':
         return MaterialPageRoute(builder: (_) => ViewMedication());
+      //  
+      // Upcomming home visits and clinics
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/UpcomingHome':

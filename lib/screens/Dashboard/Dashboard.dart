@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/helpers/enums.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
@@ -48,10 +49,10 @@ class _DashboardState extends State<Dashboard> {
         UserM.setCustomData(customData: customData);
         role = customData['role'];
         name = customData['name'];
-        compFam = customData['competencyFam'];
-        pregMum = customData['PregnanctFam'];
+        compFam = customData['compApp'];
+        pregMum = customData['pregApp'];
 
-        //print(_user.userCustomData);
+        print(_user.userCustomData);
         pending = false;
       });
     }).catchError((err) => print(err));
@@ -123,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -255,21 +256,23 @@ class _DashboardState extends State<Dashboard> {
                 press: () {
                   Navigator.pushNamed(context, '/comReg');
                 }),
-            Menu_liner_card(
-                heading: "Pregnancy Registration",
-                content: "Complete the pregnancy registration",
-                svgSrc: "assets/icons/Hamburger.svg",
-                press: () {}),
+            // Menu_liner_card(
+            //     heading: "Pregnancy Registration",
+            //     content: "Complete the pregnancy registration",
+            //     svgSrc: "assets/icons/Hamburger.svg",
+            //     press: () {}),
           ]),
         );
-      } else if (compFam) {
+      } else if (!pregMum) {
         return SliverList(
           delegate: SliverChildListDelegate([
             Menu_liner_card(
                 heading: "Pregnancy Registration",
                 content: "Complete the pregnancy registration",
                 svgSrc: "assets/icons/Hamburger.svg",
-                press: () {}),
+                press: () {
+                   Navigator.pushNamed(context,'/preReg');
+                }),
           ]),
         );
       } else {

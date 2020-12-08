@@ -46,7 +46,7 @@ class AuthService {
           await _auth.signInWithEmailAndPassword(email: email, password: pass);
       Map<String, dynamic> customData =
           await getUserCustomData(userCredential.user.uid);
-
+      await setUserMessageToken();
       new UserM(user: userCredential, data: customData);
       return _userFromFirebase(userCredential.user);
     } on FirebaseAuthException catch (e) {
@@ -80,17 +80,13 @@ class AuthService {
 
         // Save it to Firestore
         if (fcmToken != null) {
-          var tokens = _firestore
-              .collection('users')
-              .doc(uid)
-              .collection('tokens')
-              .doc(fcmToken);
+          var tokens = _firestore.collection('users').doc(uid);
 
-          await tokens.set({
+          await tokens.update({
             'token': fcmToken,
-            'createdAt': FieldValue.serverTimestamp(), // optional
-            'platform': Platform.operatingSystem // optional
+            'timeStamp': FieldValue.serverTimestamp(), // optional
           });
+          print("token updated");
         } else {
           print("firebase message token null");
         }
@@ -113,8 +109,8 @@ class AuthService {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      await setUserMessageToken();
       await setUserRole(userCredential.user.uid, name);
+      await setUserMessageToken();
 
       print(userCredential.user.uid);
       return (_userFromFirebase(userCredential.user));
@@ -135,10 +131,14 @@ class AuthService {
           'area01': 'notSelect',
           'competencyFam': false,
           'PregnanctFam': false,
+          'compApp': false,
+          'pregApp': false,
           'midwifeID': 'null',
           'onDuty': false,
-          'tel':"",
-          'email':"",
+          'tel': "",
+          'email': "",
+          'token': "",
+          'timeStamp': FieldValue.serverTimestamp(),
           'nameSearch': getSearchParam(name)
         })
         .then((value) => print("user role added"))

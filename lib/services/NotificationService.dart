@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'dart:io';
 
@@ -10,11 +11,11 @@ import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
 import 'package:uuid/uuid.dart';
 import '../Locator.dart';
+import 'package:http/http.dart' as http;
 
 var uuid = Uuid();
 
 class NotificationService {
-
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final NavigationService _navigationService = locator<NavigationService>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -22,8 +23,6 @@ class NotificationService {
   UserM _userM = new UserM.get();
 
   StreamSubscription iosSubscription;
-  final String serverToken =
-      "AAAAqFEjYNg:APA91bE5WjAxNlmJyboK8iIQD8WCDRqleMfOQhBOuJJ0hHLe_cDGO__Qh0Q-bTnJt-JKd2MXIP71kGXCs1EWGqdIEGxkCaaonhlItDWiUhuaW7b3_MHkl_zj9yq0k1rQ4xRUwO-xucLf";
 
   Future InitalizeMessaging() async {
     if (Platform.isIOS) {
@@ -38,21 +37,28 @@ class NotificationService {
         store(message);
         _messageStream.addMessage(message);
       },
-     onLaunch: (Map<String, dynamic> message) async {
+      onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         store(message);
+        _messageStream.addMessage(message);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         store(message);
+        _messageStream.addMessage(message);
       },
     );
+  }
+
+  Future<dynamic> subscribeTopic(String topicpro) async {
+    return await _firebaseMessaging.subscribeToTopic("midwife1");
   }
 
   Future<List<NotificationM>> getNotifications() async {
     String uid = _userM.uid;
     List<NotificationM> notifications = [
-      new NotificationM("Test header1", "test Content 1", new DateTime(2000))
+      new NotificationM("Test header1", "test Content 1", "test topic date",
+          "test topic ref", new DateTime(2000), "clinic")
     ];
     await _firestore
         .collection('notifications')
@@ -62,11 +68,16 @@ class NotificationService {
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.size > 0) {
         querySnapshot.docs.forEach((doc) {
-          notifications.add(
-              new NotificationM(doc['title'], doc['body'], new DateTime.now()));
-          //print(doc["createdAt"]);
+          notifications.add(new NotificationM(
+              doc['title'],
+              doc['body'],
+              doc['topicDate'],
+              doc['topicRef'],
+              new DateTime.now(),
+              doc['type']));
+          print(doc["createdAt"]);
         });
-        //print(notifications.length);
+        print(notifications.length);
       }
     });
     return notifications;
@@ -87,19 +98,26 @@ class NotificationService {
       await notifi.set({
         'title': notification['title'],
         'body': notification['body'],
+        'topicDate': notification['topicDate'],
+        'topicRef': notification['topicRef'],
+        'type':notification['type'],
         'createdAt': FieldValue.serverTimestamp(), // optional
         'platform': Platform.operatingSystem // optional
       });
     }
   }
-/*
-  Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
-    await _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(
-          sound: true, badge: true, alert: true, provisional: false),
-    );
 
-    await http.post(
+  final String serverToken =
+      'AAAAqFEjYNg:APA91bE5WjAxNlmJyboK8iIQD8WCDRqleMfOQhBOuJJ0hHLe_cDGO__Qh0Q-bTnJt-JKd2MXIP71kGXCs1EWGqdIEGxkCaaonhlItDWiUhuaW7b3_MHkl_zj9yq0k1rQ4xRUwO-xucLf';
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+  Future<void> sendAndRetrieveMessage(
+      Map<String, dynamic> data, String token) async {
+    // await firebaseMessaging.requestNotificationPermissions(
+    //   const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
+    // );
+    print(data['title']);
+    return await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -108,30 +126,65 @@ class NotificationService {
       body: jsonEncode(
         <String, dynamic>{
           'notification': <String, dynamic>{
-            'body': 'this is a body',
-            'title': 'this is a title'
+            'body': data['title'],
+            'title': data['body']
           },
           'priority': 'high',
-          'data': <String, dynamic>{
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'id': '1',
-            'status': 'done'
-          },
-          'to': await _firebaseMessaging.getToken(),
+          'data': data,
+          'to': '$token',
         },
       ),
     );
 
-    final Completer<Map<String, dynamic>> completer =
-        Completer<Map<String, dynamic>>();
+    // final Completer<Map<String, dynamic>> completer =
+    //    Completer<Map<String, dynamic>>();
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async =>
-          completer.complete(message),
-    );
-    return completer.future;
+    // firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     completer.complete(message);
+    //   },
+    // );
+
+    //return completer.future;
   }
-*/
+
+  Future<dynamic> sendMessageTopic(
+      Map<String, dynamic> data, String topic) async {
+    // await firebaseMessaging.requestNotificationPermissions(
+    //   const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
+    // );
+    print(data['title']);
+    return await http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key=$serverToken',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{
+            'body': data['title'],
+            'title': data['body']
+          },
+          'priority': 'high',
+          'data': data,
+          'topic': '$topic',
+        },
+      ),
+    );
+
+    // final Completer<Map<String, dynamic>> completer =
+    //    Completer<Map<String, dynamic>>();
+
+    // firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     completer.complete(message);
+    //   },
+    // );
+
+    //return completer.future;
+  }
+
   void _NavigateToNotification(Map<String, dynamic> message) {
     _navigationService.navigateTo('/notification');
   }
