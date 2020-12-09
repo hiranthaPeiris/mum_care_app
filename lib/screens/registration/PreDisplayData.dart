@@ -18,7 +18,17 @@ class PreGetIdDetails extends StatelessWidget {
             .collection(wombNum)
             .doc(wombNum)
             .snapshots(),
-        builder: (context, snapshot) {
+        builder: (context, snapshot) { 
+          if(snapshot.hasError){
+             return Center(
+              child: Text("Not yet added "+snapshot.data["_womb"]+" details ",style: TextStyle(color: Colors.red),),
+            );
+          }
+          if(!snapshot.hasData){
+            return Center(
+              child: Text("Not yet added "+snapshot.data["_womb"]+" details ",style: TextStyle(color: Colors.red),),
+            );
+          }
           if (snapshot.hasData) {
             var value = snapshot.data;
             return ListView(
@@ -185,22 +195,7 @@ class PreGetIdDetails extends StatelessWidget {
                                   child: getState(context, "G2"),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: getState(context, "G1"),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: getState(context, "G1"),
-                                ),
-                              ),
+                              
                             ],
                           )),
                     ),

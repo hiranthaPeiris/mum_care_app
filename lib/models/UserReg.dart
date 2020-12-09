@@ -11,7 +11,8 @@ class ComRegDB {
   String address;
   String nic;
 
-  String dateDOB;
+  String menDOB;
+  String womenDOB;
   String contactNum;
   String email;
   String job;
@@ -74,7 +75,8 @@ class ComRegDB {
       this.nic,
       this.mohDropDownValue,
       this.phmDropDownValue,
-      this.dateDOB,
+      this.menDOB,
+      this.womenDOB,
       this.contactNum,
       this.email,
       this.job,
@@ -133,7 +135,8 @@ class ComRegDB {
     address = map["_address"];
     nic = map["_nic"];
 
-    dateDOB = map["_dateDOB"];
+    menDOB = map["_menDOB"];
+    womenDOB = map["_womenDOB"];
     contactNum = map["_contactNumber"];
     email = map["_email"];
     job = map["_job"];
@@ -199,7 +202,8 @@ class ComRegDB {
       '_wifeName': wifeName,
       '_address': address,
       '_nic': nic,
-      '_dateDOB': dateDOB,
+      '_menDOB': menDOB,
+      '_womenDOB': womenDOB,
       '_contactNumber': contactNum,
       '_email': email,
       '_job': job,

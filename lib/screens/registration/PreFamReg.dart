@@ -29,7 +29,7 @@ class _PreFamRegState extends State<PreFamReg> {
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
 
-  String wombDropdownValue = "G1";
+  String wombDropdownValue = "1st Child";
 
   bool diabetic_Yes = false;
   bool maleria_Yes = false;
@@ -38,19 +38,21 @@ class _PreFamRegState extends State<PreFamReg> {
 
   DateTime _dateDOB;
   DateTime _dateMarrage;
-  List<String> arr=[
-          'Select Area',
-          'Ambalangoda',
-          'Hikkaduwa',
-          'Rathgama',
-          'Habaraduwa',
-          'Mirissa',
-          'Weligama',
-          'Dodanduwa',
-          'Balapitiya',
-          'Ahangama',
-          'Thalgaswala'
-        ];
+  List<String> arr = [
+    'Select Area',
+    'Ambalangoda',
+    'Hikkaduwa',
+    'Rathgama',
+    'Habaraduwa',
+    'Mirissa',
+    'Weligama',
+    'Dodanduwa',
+    'Balapitiya',
+    'Ahangama',
+    'Thalgaswala'
+  ];
+
+  String _pohSex = '';
 
   TextEditingController myController12 = new TextEditingController();
   TextEditingController myController13 = new TextEditingController();
@@ -79,8 +81,6 @@ class _PreFamRegState extends State<PreFamReg> {
     myController22.dispose();
   }
 
-
-
   Widget build(BuildContext context) {
     Widget showTextField(
         String hintText, String inputName, TextEditingController controller) {
@@ -100,7 +100,6 @@ class _PreFamRegState extends State<PreFamReg> {
         onSaved: (input) => inputName = input,
       );
     }
-   
 
     Widget mohDropDownMenu() {
       return DropdownButton<String>(
@@ -110,7 +109,7 @@ class _PreFamRegState extends State<PreFamReg> {
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items:arr.map<DropdownMenuItem<String>>((String value) {
+        items: arr.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -169,16 +168,27 @@ class _PreFamRegState extends State<PreFamReg> {
         },
       );
     }
+
     Widget wombDropDownMenu() {
       return DropdownButton<String>(
         value: wombDropdownValue,
-        icon: Icon(Icons.arrow_downward),
+        icon: Icon(
+          Icons.arrow_circle_down_rounded,
+          size: 20,
+        ),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
         // style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7']
-            .map<DropdownMenuItem<String>>((String value) {
+        items: <String>[
+          '1st Child',
+          '2nd Child',
+          '3rd Child',
+          '4th Child',
+          '5th Child',
+          '6th Child',
+          '7th Child'
+        ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -208,9 +218,7 @@ class _PreFamRegState extends State<PreFamReg> {
           "/" +
           date.day.toString();
 
-      String monthConvert = date.year.toString() +
-          "/" +
-          date.month.toString();
+      String monthConvert = date.year.toString() + "/" + date.month.toString();
 
       PreRegDB preRegDB = PreRegDB(
           mohDropDownValue: mohDropdownValue,
@@ -249,7 +257,7 @@ class _PreFamRegState extends State<PreFamReg> {
         details: myController17.text,
         kgWeight: myController18.text,
         gWeight: myController19.text,
-        sex: myController20.text,
+        sex: _pohSex,
       );
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
@@ -308,19 +316,18 @@ class _PreFamRegState extends State<PreFamReg> {
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: CustomPaint(
-                  painter: ShapePainter(),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width * 0.05,
-                        MediaQuery.of(context).size.height * 0.016,
-                        MediaQuery.of(context).size.width * 0.3,
-                        MediaQuery.of(context).size.height * 0.01),
+                height: MediaQuery.of(context).size.height * 0.08,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Center(
                     child: Text(
                       "Pregnency Family",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 25,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -328,7 +335,10 @@ class _PreFamRegState extends State<PreFamReg> {
                   ),
                 ),
               ),
-               Container(
+              SizedBox(
+                height: 15,
+              ),
+              Container(
                 child: Column(
                   children: <Widget>[
                     Row(
@@ -356,7 +366,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                                 height: 25,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
+                                    borderRadius: BorderRadius.circular(12),
                                     color: Colors.grey[300],
                                     border: Border.all(
                                         color: Colors.black,
@@ -393,7 +403,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                                 height: 25,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
+                                    borderRadius: BorderRadius.circular(12),
                                     color: Colors.grey[300],
                                     border: Border.all(
                                         color: Colors.black,
@@ -495,7 +505,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                               height: 25,
                               child: Text(
-                                "What a Womb",
+                                "Child Number  :",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 15,
@@ -642,7 +652,82 @@ class _PreFamRegState extends State<PreFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
-                child: showTextField("Sex", "pohSex", myController20),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 30,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 25,
+                            child: Text(
+                              "Sex   :",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        )),
+                    Expanded(
+                      flex: 70,
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio(
+                                    value: "male",
+                                    groupValue: _pohSex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _pohSex = value;
+                                        print(_pohSex);
+                                      });
+                                    },
+                                  ),
+                                  const Text('Male'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio(
+                                    value: "female",
+                                    groupValue: _pohSex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _pohSex = value;
+                                        print(_pohSex);
+                                      });
+                                    },
+                                  ),
+                                  const Text('Female'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio(
+                                    value: "others",
+                                    groupValue: _pohSex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _pohSex = value;
+                                        print(_pohSex);
+                                      });
+                                    },
+                                  ),
+                                  const Text('Others'),
+                                ],
+                              ),
+                            ],
+                          )),
+                    )
+                  ],
+                ),
               ),
             ),
             Container(
@@ -846,44 +931,63 @@ class _PreFamRegState extends State<PreFamReg> {
         goto(currentStep - 1);
       }
     }
-    Widget alertBox(){
-    return Expanded(
-                child: Center(
-                child: AlertDialog(
-                  title: Row(
-                    children: [
-                      Icon(Icons.warning,color: Colors.red,),
-                      Text("  Warning",style: TextStyle(color: Colors.red),),
-                    ],
-                  ),
-                  content: Text("You have to fill every details",style: TextStyle(color: Colors.blueAccent),),
-                  actions: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        
-                        FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                              });
-                            }),
-                      ],
-                    ),
-                  ],
-                ),
-              ));
-  }
 
-  bool validate() {
-    if (myController12.text.isEmpty && myController13.text.isEmpty && myController14.text.isEmpty && myController15.text.isEmpty && myController16.text.isEmpty&& myController17.text.isEmpty && myController18.text.isEmpty && myController19.text.isEmpty && myController20.text.isEmpty && myController21.text.isEmpty && myController22.text.isEmpty) {
-      print("This cant't be empty");
-      return false;
-      
+    Widget alertBox() {
+      return Expanded(
+          child: Center(
+        child: AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning,
+                color: Colors.red,
+              ),
+              Text(
+                "  Warning",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          content: Text(
+            "You have to fill every details",
+            style: TextStyle(color: Colors.blueAccent),
+          ),
+          actions: <Widget>[
+            Row(
+              children: <Widget>[
+                FlatButton(
+                    child: Text("OK"),
+                    onPressed: () {
+                      setState(() {
+                        complete = false;
+                      });
+                    }),
+              ],
+            ),
+          ],
+        ),
+      ));
     }
-    print("not empty");
-    return true;
-  }
+
+    bool validate() {
+      if (myController12.text.isEmpty &&
+          myController13.text.isEmpty &&
+          myController14.text.isEmpty &&
+          myController15.text.isEmpty &&
+          myController16.text.isEmpty &&
+          myController17.text.isEmpty &&
+          myController18.text.isEmpty &&
+          myController19.text.isEmpty &&
+          myController20.text.isEmpty &&
+          myController21.text.isEmpty &&
+          myController22.text.isEmpty) {
+        print("This cant't be empty");
+        return false;
+      }
+      print("not empty");
+      return true;
+    }
+
     return new Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -892,51 +996,49 @@ class _PreFamRegState extends State<PreFamReg> {
           height: 20,
         ),
         complete
-            ?
-            validate()
-            ?
-             Expanded(
-                child: Center(
-                child: AlertDialog(
-                  title: Text("Pregnancy Registration Succesfully"),
-                  content: Text("Congratulation"),
-                  actions: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        FlatButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                                stepOneReg();
-                                setPregnencyTrue();
-                                Navigator.pushNamed(context, '/dashboard');
-                                myController12.clear();
-                                myController13.clear();
-                                myController14.clear();
-                                myController15.clear();
-                                myController16.clear();
-                                myController17.clear();
-                                myController18.clear();
-                                myController19.clear();
-                                myController20.clear();
-                                myController21.clear();
-                                myController22.clear();
-                              });
-                            }),
-                        FlatButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              setState(() {
-                                complete = false;
-                              });
-                            }),
+            ? validate()
+                ? Expanded(
+                    child: Center(
+                    child: AlertDialog(
+                      title: Text("Pregnancy Registration Succesfully"),
+                      content: Text("Congratulation"),
+                      actions: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            FlatButton(
+                                child: Text("OK"),
+                                onPressed: () {
+                                  setState(() {
+                                    complete = false;
+                                    stepOneReg();
+                                    setPregnencyTrue();
+                                    Navigator.pushNamed(context, '/dashboard');
+                                    myController12.clear();
+                                    myController13.clear();
+                                    myController14.clear();
+                                    myController15.clear();
+                                    myController16.clear();
+                                    myController17.clear();
+                                    myController18.clear();
+                                    myController19.clear();
+                                    myController20.clear();
+                                    myController21.clear();
+                                    myController22.clear();
+                                  });
+                                }),
+                            FlatButton(
+                                child: Text("Cancel"),
+                                onPressed: () {
+                                  setState(() {
+                                    complete = false;
+                                  });
+                                }),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              ))
-              :alertBox()
+                  ))
+                : alertBox()
             : Expanded(
                 flex: 80,
                 child: Stepper(
@@ -975,12 +1077,12 @@ class _PreFamRegState extends State<PreFamReg> {
                                         )),
                                     child: Container(
                                         child: Text(
-                                          "Prev",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )),
+                                      "Prev",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )),
                                     onPressed: onStepCancel,
                                   ),
                                 )),
