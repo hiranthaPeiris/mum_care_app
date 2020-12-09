@@ -19,11 +19,7 @@ class PreGetIdDetails extends StatelessWidget {
             .doc(wombNum)
             .snapshots(),
         builder: (context, snapshot) { 
-          if(snapshot.hasError){
-             return Center(
-              child: Text("Not yet added "+snapshot.data["_womb"]+" details ",style: TextStyle(color: Colors.red),),
-            );
-          }
+          
           if(!snapshot.hasData){
             return Center(
               child: Text("Not yet added "+snapshot.data["_womb"]+" details ",style: TextStyle(color: Colors.red),),
