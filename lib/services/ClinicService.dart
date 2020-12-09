@@ -26,7 +26,7 @@ class ClinicService {
         "New Clinic assigned", desc, dateTime, "doc.id", new DateTime.now(), "clinic");
 
     await Future.forEach(query.docs, (doc) async {
-      userList.add(_firestore.collection('user').doc(doc.id));
+      userList.add(_firestore.collection('users').doc(doc.id));
       CollectionReference clinic =
           _firestore.collection("Bookings").doc(doc.id).collection('Clinics');
 

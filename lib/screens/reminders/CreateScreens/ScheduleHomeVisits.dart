@@ -60,36 +60,7 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
 
   String firestoreCollectionName = 'ShedulehomeVisit';
   String selectedType;
-/*
-  Future<void> addHomeVisit(String desc, String dateTime) async {
-    try {
-  
-      var homeVisit = _firestore
-          .collection("Bookings")
-          .doc('IhiVRXSUfZPKoKpaNZgFtlPosj22')
-          .collection('HomeVisits');
 
-      var midwifeVisit = _firestore
-          .collection('Bookings')
-          .doc(widget.midwifeId)
-          .collection('HomeVisits');
-      //data for user's home visit collection
-      await homeVisit.add({
-        'description': desc,
-        'dateTime': dateTime,
-        'status': "pending"
-      });
-      //data for midwife's home visit collection
-      await midwifeVisit.add({
-        'description': desc,
-        'dateTime': dateTime,
-        'status': "pending"
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-*/
   @override
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;

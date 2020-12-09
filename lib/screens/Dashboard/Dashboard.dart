@@ -124,7 +124,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -245,6 +246,14 @@ class _DashboardState extends State<Dashboard> {
               }),
         ]),
       );
+    } else if (role == 'sister') {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          SizedBox(
+            height: 5.0,
+          )
+        ]),
+      );
     } else {
       if (!pregMum && !compFam) {
         return SliverList(
@@ -271,7 +280,7 @@ class _DashboardState extends State<Dashboard> {
                 content: "Complete the pregnancy registration",
                 svgSrc: "assets/icons/Hamburger.svg",
                 press: () {
-                   Navigator.pushNamed(context,'/preReg');
+                  Navigator.pushNamed(context, '/preReg');
                 }),
           ]),
         );
@@ -330,11 +339,11 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           Menu_card(
-            title: "Apply leaving for sister",
+            title: "Apply day leave",
             heading: "Apply Leaving",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              //Navigator.pushNamed(context, '/');
+              Navigator.pushNamed(context, '/midLeave');
             },
           ),
           Menu_card(
@@ -351,6 +360,14 @@ class _DashboardState extends State<Dashboard> {
             svgSrc: "assets/icons/yoga.svg",
             press: () {
               Navigator.pushNamed(context, '/geoLocate');
+            },
+          ),
+          Menu_card(
+            title: "Send Special and Emergancy Notices",
+            heading: "Special Notice",
+            svgSrc: "assets/icons/yoga.svg",
+            press: () {
+              Navigator.pushNamed(context, '/specialNotice');
             },
           ),
         ]),
@@ -417,11 +434,11 @@ class _DashboardState extends State<Dashboard> {
       return SliverGrid(
         delegate: SliverChildListDelegate([
           Menu_card(
-            title: "See midwife leave requests",
+            title: "View midwife leave requests",
             heading: "Midwife Leaving",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/MedicalReport');
+              Navigator.pushNamed(context, '/midLeaveView');
             },
           ),
           Menu_card(

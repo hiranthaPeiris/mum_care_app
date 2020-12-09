@@ -63,6 +63,10 @@ class AuthService {
     }
   }
 
+  DocumentReference getUserRef(String uid) {
+    return _firestore.collection('users').doc(uid);
+  }
+
   Future<void> setUserMessageToken() async {
     _auth.authStateChanges().listen((User user) async {
       if (user == null) {

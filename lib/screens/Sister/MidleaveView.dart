@@ -21,7 +21,7 @@ class LeaveReportView extends StatefulWidget {
 class _LeaveReportViewState extends State<LeaveReportView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String searchPara = "";
-  UserM user=new UserM.get();
+  UserM user = new UserM.get();
 
   DateTime selected;
   //String itemTitle = "Description";
@@ -101,14 +101,6 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                         Container(
                           color: Colors.blue,
                           child: TabBar(
-                            // labelColor: Colors.blue,
-                            // unselectedLabelColor: Colors.white,
-                            //indicatorSize: TabBarIndicatorSize.label,
-                            // indicator: BoxDecoration(
-                            //     borderRadius: BorderRadius.only(
-                            //         topLeft: Radius.circular(10),
-                            //         topRight: Radius.circular(10)),
-                            //     color: Colors.white),
                             tabs: [
                               Tab(
                                 icon: Icon(Icons.request_page),
@@ -148,7 +140,9 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                     child: StreamBuilder<QuerySnapshot>(
                                       stream: widget._firestore
                                           .collection('MidwifeLeaveforms')
-                                          .where('_mohDropDownValue',isEqualTo: user.userCustomData['mohArea'])
+                                          .where('_mohDropDownValue',
+                                              isEqualTo: user
+                                                  .userCustomData['mohArea'])
                                           .where('_accept', isEqualTo: false)
                                           .where('_reject', isEqualTo: false)
                                           .snapshots(),
@@ -170,118 +164,21 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                                   SingleChildScrollView(
                                                     child: Column(
                                                       children: <Widget>[
-                                                        InkWell(
-                                                          onTap: () {
-                                                            openBottomSheet(
-                                                                documentId);
-                                                          },
-                                                          child: Stack(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            // overflow:
-                                                            //  Overflow.visible,
-                                                            children: <Widget>[
-                                                              Container(
-                                                                margin: EdgeInsets
-                                                                    .all(11.0),
-                                                                height: 70.0,
-                                                                width: 300.0,
-                                                                decoration: BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .blue),
-                                                                    color: Colors
-                                                                            .blue[
-                                                                        100],
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0)),
-                                                              ),
-                                                              Positioned(
-                                                                bottom: 20.0,
-                                                                child:
-                                                                    Container(
-                                                                  height: 50.0,
-                                                                  width: 330.0,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                          .blue,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              15.0)),
-                                                                ),
-                                                              ),
-                                                              Positioned(
-                                                                // bottom: 25.0,
-                                                                child:
-                                                                    Container(
-                                                                  // height: 80.0,
-                                                                  width: 350.0,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .blue[50],
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0),
-                                                                  ),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            2.0),
-                                                                    child: Row(
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Expanded(
-                                                                          flex:
-                                                                              2,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                EdgeInsets.symmetric(vertical: 2, horizontal: 1),
-                                                                            child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  border: Border.all(color: Colors.black),
-                                                                                  borderRadius: BorderRadius.circular(4.0),
-                                                                                ),
-                                                                                child: SingleChildScrollView(
-                                                                                  child: ListTile(
-                                                                                    title: Column(
-                                                                                      children: <Widget>[
-                                                                                        Row(
-                                                                                          children: <Widget>[
-                                                                                            Icon(
-                                                                                              Icons.message,
-                                                                                              color: Colors.blue,
-                                                                                            ),
-                                                                                            Text(snapshot.data.docs[index]['_applicantName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
-                                                                                          ],
-                                                                                        ),
-                                                                                        Divider(),
-                                                                                        Row(
-                                                                                          children: <Widget>[
-                                                                                            /*Icon(
-                                                                                              Icons.person,
-                                                                                              color: Colors.purple,
-                                                                                            ),*/
-                                                                                            //Spacer(),
-                                                                                            Text(snapshot.data.docs[index]['_department'].toString(), textAlign: TextAlign.left),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ),
-                                                                                )),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          height: 100.0,
+                                                          child: InkWell(
+                                                              onTap: () {
+                                                                openBottomSheet(
+                                                                    documentId);
+                                                              },
+                                                              child:
+                                                                  _buildListItem(
+                                                                      snapshot,
+                                                                      index)),
                                                         ),
                                                       ],
                                                     ),
@@ -301,11 +198,11 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                     child: StreamBuilder<QuerySnapshot>(
                                       stream: widget._firestore
                                           .collection('MidwifeLeaveforms')
-                                          .where('_mohDropDownValue',isEqualTo: user.userCustomData['mohArea'])
+                                          .where('_mohDropDownValue',
+                                              isEqualTo: user
+                                                  .userCustomData['mohArea'])
                                           .where('_accept', isEqualTo: true)
                                           .snapshots(),
-                                      //.collection('HomeVisits')
-                                      //.snapshots(),
                                       builder: (context, snapshot) {
                                         if (!snapshot.hasData) {
                                           return Text('Loding...');
@@ -323,117 +220,21 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                                   SingleChildScrollView(
                                                     child: Column(
                                                       children: <Widget>[
-                                                        InkWell(
-                                                          onTap: () {
-                                                            openBottomSheet(
-                                                                itemId);
-                                                          },
-                                                          child: Stack(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            // overflow:
-                                                            //  Overflow.visible,
-                                                            children: <Widget>[
-                                                              Container(
-                                                                margin: EdgeInsets
-                                                                    .all(11.0),
-                                                                height: 70.0,
-                                                                width: 300.0,
-                                                                decoration: BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .blue),
-                                                                    color: Colors
-                                                                            .blue[
-                                                                        100],
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0)),
-                                                              ),
-                                                              Positioned(
-                                                                bottom: 20.0,
-                                                                child:
-                                                                    Container(
-                                                                  height: 50.0,
-                                                                  width: 330.0,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                          .blue,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              15.0)),
-                                                                ),
-                                                              ),
-                                                              Positioned(
-                                                                // bottom: 25.0,
-                                                                child:
-                                                                    Container(
-                                                                  // height: 80.0,
-                                                                  width: 350.0,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .blue[50],
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0),
-                                                                  ),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            2.0),
-                                                                    child: Row(
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Expanded(
-                                                                          flex:
-                                                                              2,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                EdgeInsets.symmetric(vertical: 2, horizontal: 1),
-                                                                            child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  border: Border.all(color: Colors.black),
-                                                                                  borderRadius: BorderRadius.circular(4.0),
-                                                                                ),
-                                                                                child: SingleChildScrollView(
-                                                                                  child: ListTile(
-                                                                                    title: Column(
-                                                                                      children: <Widget>[
-                                                                                        Row(
-                                                                                          children: <Widget>[
-                                                                                            Icon(
-                                                                                              Icons.message,
-                                                                                              color: Colors.blue,
-                                                                                            ),
-                                                                                            Text(snapshot.data.docs[index]['_applicantName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
-                                                                                          ],
-                                                                                        ),
-                                                                                        Divider(),
-                                                                                        Row(
-                                                                                          children: <Widget>[
-                                                                                            /*Icon(
-                                                                                              Icons.person,
-                                                                                              color: Colors.purple,
-                                                                                            ),*/
-                                                                                            //Spacer(),
-                                                                                            Text(snapshot.data.docs[index]['_department'].toString(), textAlign: TextAlign.left),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ),
-                                                                                )),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            ],
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          height: 100.0,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              openBottomSheet(
+                                                                  itemId);
+                                                            },
+                                                            child:
+                                                                _buildListItem(
+                                                                    snapshot,
+                                                                    index),
                                                           ),
                                                         ),
                                                       ],
@@ -454,7 +255,9 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                     child: StreamBuilder<QuerySnapshot>(
                                       stream: widget._firestore
                                           .collection('MidwifeLeaveforms')
-                                          .where('_mohDropDownValue',isEqualTo: user.userCustomData['mohArea'])
+                                          .where('_mohDropDownValue',
+                                              isEqualTo: user
+                                                  .userCustomData['mohArea'])
                                           .where('_reject', isEqualTo: true)
                                           .snapshots(),
                                       //.collection('HomeVisits')
@@ -476,118 +279,21 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                                                   SingleChildScrollView(
                                                     child: Column(
                                                       children: <Widget>[
-                                                        InkWell(
-                                                          onTap: () {
-                                                            openBottomSheet(
-                                                                itemId);
-                                                          },
-                                                          child: Stack(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            // overflow:
-                                                            //  Overflow.visible,
-                                                            children: <Widget>[
-                                                              Container(
-                                                                margin: EdgeInsets
-                                                                    .all(11.0),
-                                                                height: 70.0,
-                                                                width: 300.0,
-                                                                decoration: BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .blue),
-                                                                    color: Colors
-                                                                            .blue[
-                                                                        100],
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0)),
-                                                              ),
-                                                              Positioned(
-                                                                bottom: 20.0,
-                                                                child:
-                                                                    Container(
-                                                                  height: 50.0,
-                                                                  width: 330.0,
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                          .blue,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              15.0)),
-                                                                ),
-                                                              ),
-                                                              Positioned(
-                                                                // bottom: 25.0,
-                                                                child:
-                                                                    Container(
-                                                                  // height: 80.0,
-                                                                  width: 350.0,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .blue[50],
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0),
-                                                                  ),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            2.0),
-                                                                    child: Row(
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Expanded(
-                                                                          flex:
-                                                                              2,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                EdgeInsets.symmetric(vertical: 2, horizontal: 1),
-                                                                            child: Container(
-                                                                                decoration: BoxDecoration(
-                                                                                  border: Border.all(color: Colors.black),
-                                                                                  borderRadius: BorderRadius.circular(4.0),
-                                                                                ),
-                                                                                child: SingleChildScrollView(
-                                                                                  child: ListTile(
-                                                                                    title: Column(
-                                                                                      children: <Widget>[
-                                                                                        Row(
-                                                                                          children: <Widget>[
-                                                                                            Icon(
-                                                                                              Icons.message,
-                                                                                              color: Colors.blue,
-                                                                                            ),
-                                                                                            Text(snapshot.data.docs[index]['_applicantName'], style: TextStyle(fontSize: 15), textAlign: TextAlign.left),
-                                                                                          ],
-                                                                                        ),
-                                                                                        Divider(),
-                                                                                        Row(
-                                                                                          children: <Widget>[
-                                                                                            /*Icon(
-                                                                                              Icons.person,
-                                                                                              color: Colors.purple,
-                                                                                            ),*/
-                                                                                            //Spacer(),
-                                                                                            Text(snapshot.data.docs[index]['_department'].toString(), textAlign: TextAlign.left),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ),
-                                                                                )),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          height: 100.0,
+                                                          child: InkWell(
+                                                              onTap: () {
+                                                                openBottomSheet(
+                                                                    itemId);
+                                                              },
+                                                              child:
+                                                                  _buildListItem(
+                                                                      snapshot,
+                                                                      index)),
                                                         ),
                                                       ],
                                                     ),
@@ -627,6 +333,99 @@ class _LeaveReportViewState extends State<LeaveReportView> {
         })
         .then((value) => print("Leave Rejected"))
         .catchError((err) => print(err));
+  }
+
+  Widget _buildListItem(AsyncSnapshot<QuerySnapshot> snapshot, int index) {
+    return Stack(
+      alignment: Alignment.center,
+      // overflow:
+      //  Overflow.visible,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(11.0),
+          height: 70.0,
+          width: 300.0,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.blue),
+              color: Colors.blue[100],
+              borderRadius: BorderRadius.circular(15.0)),
+        ),
+        Positioned(
+          bottom: 20.0,
+          child: Container(
+            height: 50.0,
+            width: 330.0,
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(15.0)),
+          ),
+        ),
+        Positioned(
+          // bottom: 25.0,
+          child: Container(
+            // height: 80.0,
+            width: 350.0,
+            decoration: BoxDecoration(
+              color: Colors.blue[50],
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 1),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: SingleChildScrollView(
+                            child: ListTile(
+                              title: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.message,
+                                        color: Colors.blue,
+                                      ),
+                                      Text(
+                                          snapshot.data.docs[index]
+                                              ['_applicantName'],
+                                          style: TextStyle(fontSize: 15),
+                                          textAlign: TextAlign.left),
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Row(
+                                    children: <Widget>[
+                                      /*Icon(
+                                                                                              Icons.person,
+                                                                                              color: Colors.purple,
+                                                                                            ),*/
+                                      //Spacer(),
+                                      Text(
+                                          snapshot
+                                              .data.docs[index]['_department']
+                                              .toString(),
+                                          textAlign: TextAlign.left),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   void openBottomSheet(String itemId) {
@@ -694,8 +493,8 @@ class _LeaveReportViewState extends State<LeaveReportView> {
                               return Text("Something went wrong");
                             }
                             if (!snapshot.hasData) {
-                              return Scaffold(
-                                body: Text("No data"),
+                              return Container(
+                                child: Text("No data"),
                               );
                             }
                             if (snapshot.hasData) {
