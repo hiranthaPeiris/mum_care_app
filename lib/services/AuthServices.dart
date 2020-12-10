@@ -142,6 +142,7 @@ class AuthService {
           'tel': "",
           'email': "",
           'token': "",
+          'condition':"normal",
           'timeStamp': FieldValue.serverTimestamp(),
           'nameSearch': getSearchParam(name)
         })

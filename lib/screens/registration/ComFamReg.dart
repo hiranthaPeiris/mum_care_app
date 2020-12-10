@@ -488,7 +488,7 @@ class _ComFamRegState extends State<ComFamReg> {
           .collection('users')
           .doc(_auth.currentUser.uid)
           .update({
-            'compApp': familyState.Applied,
+            'compApp': true,
           })
           .then((value) => print("Competency true"))
           .catchError((err) => print(err));
