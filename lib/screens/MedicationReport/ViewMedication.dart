@@ -19,12 +19,13 @@ class _ViewMedicationState extends State<ViewMedication> {
     _user = Provider.of<UserM>(context);
     return Scaffold(
         body: Container(
+          color: Colors.lightBlue,
             child: ListView(children: <Widget>[
       Column(children: <Widget>[
         Container(
           height: MediaQuery.of(context).copyWith().size.height / 5,
           width: MediaQuery.of(context).copyWith().size.width,
-          color: Colors.lightBlue,
+          
           child: Container(
             child: Text(
               'View Medication Reports',

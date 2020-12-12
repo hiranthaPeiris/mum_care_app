@@ -54,7 +54,8 @@ class _NotificationState extends State<NotificationScreen> {
                   },
                 );
               } else if (asyncSnapshot.hasError) {
-                widget = Center(heightFactor: 2.0,
+                widget = Center(
+                  heightFactor: 2.0,
                   child: Column(
                     children: <Widget>[
                       Icon(
@@ -66,10 +67,10 @@ class _NotificationState extends State<NotificationScreen> {
                         padding: const EdgeInsets.only(top: 16),
                         child: Text(
                             'Result: ${asyncSnapshot.hasError.toString()}'),
-                      ),Padding(
+                      ),
+                      Padding(
                         padding: const EdgeInsets.only(top: 16),
-                        child: Text(
-                            'Error on getting notifications'),
+                        child: Text('Error on getting notifications'),
                       )
                     ],
                   ),
@@ -95,6 +96,9 @@ class _NotificationState extends State<NotificationScreen> {
       case "clinic":
         Navigator.pushNamed(context, '/UpcomingClinics');
         break;
+      case "reg":
+        Navigator.pushNamed(context, '/profile');
+        break;
       default:
         Navigator.pushNamed(context, '/error');
     }
@@ -111,7 +115,7 @@ class NotificationListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(title: Text("Notifications"),
         backgroundColor: kBackground,
       ),
       body: ListView(

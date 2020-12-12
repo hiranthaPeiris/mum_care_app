@@ -1,14 +1,18 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/models/Notification.model.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
+import 'package:mun_care_app/services/StorageService.dart';
 import 'package:mun_care_app/services/UserDataService.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatefulWidget {
@@ -25,7 +29,9 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final UserDataSevice _userDataSevice = UserDataSevice();
-
+  final StorageService _storageService = StorageService();
+  final NotificationService _notificationService = NotificationService();
+    
   TextEditingController remarks = TextEditingController();
   UserM _user = new UserM.get();
   String uid;
@@ -34,9 +40,13 @@ class _ProfileState extends State<Profile> {
   ComRegDB _compData;
   PreRegDB _pregData;
   Map<String, dynamic> userCustomData;
+  String _profileImage =
+      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
+
   //DocumentSnapshot compFamData;
   //DocumentSnapshot pregData;
   Future<void> _launched;
+
   @override
   void initState() {
     super.initState();
@@ -52,8 +62,8 @@ class _ProfileState extends State<Profile> {
       uid = _user.uid;
     }
 
-    print(userCustomData['PregnanctFam']);
-    print(userCustomData['competencyFam']);
+    //print(userCustomData['PregnanctFam']);
+    //print(userCustomData['competencyFam']);
 
     if ((userCustomData['compApp'] && userCustomData['pregApp']) ||
         (userCustomData['PregnanctFam'] && userCustomData['competencyFam'])) {
@@ -61,7 +71,7 @@ class _ProfileState extends State<Profile> {
         setState(() {
           _compData = ComRegDB.fromSnapshot(doc);
           //compFamData = doc;
-          print(doc.data());
+          //print(doc.data());
         });
       });
 
@@ -79,8 +89,17 @@ class _ProfileState extends State<Profile> {
           //compFamData = doc;
           _compData = ComRegDB.fromSnapshot(doc);
           //print(doc.data());
-          pending = false;
         });
+      });
+
+      _storageService.downloadProfileImage("profile",uid).then((url) {
+        if (url != null) {
+          setState(() {
+            _profileImage = url;
+            pending = false;
+            print("image came");
+          });
+        }
       });
     } else {
       setState(() {
@@ -120,12 +139,6 @@ class _ProfileState extends State<Profile> {
                       IconButton(icon: Icon(Icons.search), onPressed: () {}),
                       IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
                     ],
-                    /*bottom: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.directions_car)),
-                Tab(icon: Icon(Icons.directions_transit)),
-                Tab(icon: Icon(Icons.directions_bike)),
-              ],*/
                   ),
                   drawer: Drawer(
                     child: ListView(
@@ -141,7 +154,7 @@ class _ProfileState extends State<Profile> {
                             borderRadius: BorderRadius.circular(80),
                             child: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+                                _profileImage,
                               ),
                             ),
                             //child: ,
@@ -492,8 +505,7 @@ class _ProfileState extends State<Profile> {
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Row(
                                       children: <Widget>[
@@ -696,7 +708,7 @@ class _ProfileState extends State<Profile> {
         return "Danger";
         break;
       default:
-      return "okay";
+        return "okay";
     }
   }
 
@@ -710,12 +722,17 @@ class _ProfileState extends State<Profile> {
       type = "PregnanctFam";
       apply = "pregApp";
     }
-    return await _firestore
+    await _firestore
         .collection('users')
         .doc(uID)
         .update({type: true, apply: false, 'condition': condition})
         .then((value) => print("User status Updated"))
         .catchError((error) => print("Failed to update user: $error"));
+
+     NotificationM notification =
+        NotificationM("New Home visit", "Your $type application has accepted ", new DateTime.now().toString(),widget.documentSnapshot.id, new DateTime.now(),"CompFam");
+    await _notificationService.sendAndRetrieveMessage(
+        notification.getMap(), userCustomData['token']);
   }
 
   _buildSnackBar(BuildContext context) {
@@ -744,7 +761,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             CircleAvatar(
               backgroundImage: NetworkImage(
-                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+               _profileImage,
               ),
               radius: 40.0,
             ),

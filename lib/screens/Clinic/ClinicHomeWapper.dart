@@ -108,7 +108,7 @@ class _ClinicHomeWapperState extends State<ClinicHomeWapper> {
                                 heading: "View\nHome Visit",
                                 svgSrc: "assets/icons/home-visits.svg",
                                 press: () {
-                                  Navigator.pushNamed(context, '/UpcomingHome');
+                                  Navigator.pushNamed(context, '/viewupcominghomevisit');
                                 },
                               ),
                               Menu_card(

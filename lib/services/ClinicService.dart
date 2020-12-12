@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart';
 import 'package:mun_care_app/services/NotificationService.dart';
 import 'package:mun_care_app/models/Notification.model.dart';
 
@@ -22,8 +23,8 @@ class ClinicService {
     CollectionReference midwifeVisit =
         _firestore.collection('Bookings').doc(midUID).collection('Clinics');
 
-    NotificationM notification = NotificationM(
-        "New Clinic assigned", desc, dateTime, "doc.id", new DateTime.now(), "clinic");
+    NotificationM notification = NotificationM("New Clinic assigned", desc,
+        dateTime, "doc.id", new DateTime.now(), "clinic");
 
     await Future.forEach(query.docs, (doc) async {
       userList.add(_firestore.collection('users').doc(doc.id));
@@ -66,10 +67,9 @@ class ClinicService {
       print("list empty");
     }
 
-    // await Future.forEach(query.docs, (doc) async {
-    //   await _notificationService.sendAndRetrieveMessage(notification.getMap(), doc['token']);
-    // });
-
+    Response rst = await _notificationService.sendMessageTopic(
+        notification.getMap(), "midwife1");
+    print(rst.body);
   }
 
 //Done by only midwife

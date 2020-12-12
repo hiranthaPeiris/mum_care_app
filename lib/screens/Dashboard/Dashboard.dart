@@ -457,6 +457,14 @@ class _DashboardState extends State<Dashboard> {
               Navigator.pushNamed(context, '/geoLocate');
             },
           ),
+          Menu_card(
+            title: "Send Special and Emergancy Notices",
+            heading: "Special Notice",
+            svgSrc: "assets/icons/yoga.svg",
+            press: () {
+              Navigator.pushNamed(context, '/specialNotice');
+            },
+          ),
         ]),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

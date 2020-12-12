@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/models/Notification.model.dart';
 import 'package:mun_care_app/services/NotificationService.dart';
@@ -25,12 +26,13 @@ class Bottom_nav extends StatelessWidget {
           BottomNavItem(
             title: "Today",
             svgScr: "assets/icons/calendar.svg",
-            press: () {
-              //      NotificationM notification =
-              // NotificationM("New Clinic assigned", "desc", "dateTime", "doc.id", new DateTime.now());
+            press: () async {
+              // NotificationM notification = NotificationM("New Clinic assigned",
+              //     "desc", "dateTime", "doc.id", new DateTime.now(), "home");
 
-              //     dynamic rst = await _notification.sendMessageTopic(notification.getMap(), "midwife1");
-              //      print(rst);
+              // Response rst = await _notification.sendMessageTopic(
+              //     notification.getMap(), "midwife1");
+              // print(rst.body);
             },
           ),
           BottomNavItem(

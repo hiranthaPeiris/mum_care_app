@@ -22,6 +22,8 @@ class _SendNoticeState extends State<SendNotice> {
   final NoticeService _noticeService = NoticeService();
   UserM _user;
   bool pending = false;
+  List<bool> _selections = List.generate(3, (_) => false);
+
   @override
   Widget build(BuildContext context) {
     String dropdownSubject = 'Home visits';
@@ -259,7 +261,106 @@ class _SendNoticeState extends State<SendNotice> {
                                                     ],
                                                   ),
                                                 ],
-                                              )),
+                                              )),Text("Send to: "),
+                                          Row(
+                                            children: [
+                                              ToggleButtons(
+                                                selectedColor: kBackground,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: Row(
+                                                      children: [
+                                                        Text("All Mothers"),
+                                                        SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Icon(
+                                                            Icons
+                                                                .adjust_outlined,
+                                                            color: Colors.green)
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: Row(
+                                                      children: [
+                                                        Text("Midwife Group"),
+                                                        SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Icon(
+                                                            Icons
+                                                                .adjust_outlined,
+                                                            color:
+                                                                Colors.orange),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: Row(
+                                                      children: [
+                                                        Text("Eligible Familis"),
+                                                        SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Icon(
+                                                            Icons
+                                                                .adjust_outlined,
+                                                            color: Colors.red),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: Row(
+                                                      children: [
+                                                        Text("Pregnant Mothers"),
+                                                        SizedBox(
+                                                          width: 5.0,
+                                                        ),
+                                                        Icon(
+                                                            Icons
+                                                                .adjust_outlined,
+                                                            color: Colors.red),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                                onPressed: (int index) {
+                                                  setState(() {
+                                                    for (int buttonIndex = 0;
+                                                        buttonIndex <
+                                                            _selections.length;
+                                                        buttonIndex++) {
+                                                      if (buttonIndex ==
+                                                          index) {
+                                                        _selections[
+                                                            buttonIndex] = true;
+                                                      } else {
+                                                        _selections[
+                                                                buttonIndex] =
+                                                            false;
+                                                      }
+                                                    }
+                                                  });
+                                                },
+                                                isSelected: _selections,
+                                              ),
+                                            ],
+                                          ),
                                           Expanded(
                                             flex: 1,
                                             child: Container(
@@ -300,6 +401,12 @@ class _SendNoticeState extends State<SendNotice> {
                                                       ),
                                                     ),
                                                     onPressed: () async {
+                                                      String condition =
+                                                          getCondition(_selections
+                                                              .indexWhere(
+                                                                  (element) =>
+                                                                      element ==
+                                                                      true));
                                                       if (_formKey.currentState
                                                           .validate()) {
                                                         setState(() {
@@ -416,6 +523,22 @@ class _SendNoticeState extends State<SendNotice> {
                         ],
                       ),
                     )));
+  }
+
+  String getCondition(int index) {
+    switch (index) {
+      case 0:
+        return "All Mothers";
+        break;
+      case 1:
+        return "Midwife Group";
+        break;
+      case 2:
+        return "Eligible Family";
+        break;
+      default:
+        return "okay";
+    }
   }
 
   _displaySnackBar(BuildContext context) {
@@ -619,7 +742,6 @@ class _SendNoticeState extends State<SendNotice> {
                                 children: <Widget>[
                                   Row(
                                     children: <Widget>[
-                                      
                                       Text(snapshot.data.docs[index]['title'],
                                           style: TextStyle(fontSize: 15),
                                           textAlign: TextAlign.left),

@@ -50,8 +50,8 @@ class NotificationService {
     );
   }
 
-  Future<dynamic> subscribeTopic(String topicpro) async {
-    return await _firebaseMessaging.subscribeToTopic("midwife1");
+  Future<dynamic> subscribeTopic(String topic) async {
+    return await _firebaseMessaging.subscribeToTopic(topic);
   }
 
   Future<List<NotificationM>> getNotifications() async {
@@ -100,7 +100,7 @@ class NotificationService {
         'body': notification['body'],
         'topicDate': notification['topicDate'],
         'topicRef': notification['topicRef'],
-        'type':notification['type'],
+        'type': notification['type'],
         'createdAt': FieldValue.serverTimestamp(), // optional
         'platform': Platform.operatingSystem // optional
       });
@@ -111,12 +111,13 @@ class NotificationService {
       'AAAAqFEjYNg:APA91bE5WjAxNlmJyboK8iIQD8WCDRqleMfOQhBOuJJ0hHLe_cDGO__Qh0Q-bTnJt-JKd2MXIP71kGXCs1EWGqdIEGxkCaaonhlItDWiUhuaW7b3_MHkl_zj9yq0k1rQ4xRUwO-xucLf';
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
-  Future<void> sendAndRetrieveMessage(
+  Future<dynamic> sendAndRetrieveMessage(
       Map<String, dynamic> data, String token) async {
     // await firebaseMessaging.requestNotificationPermissions(
     //   const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
     // );
     print(data['title']);
+
     return await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -148,41 +149,28 @@ class NotificationService {
     //return completer.future;
   }
 
-  Future<dynamic> sendMessageTopic(
+  Future<http.Response> sendMessageTopic(
       Map<String, dynamic> data, String topic) async {
-    // await firebaseMessaging.requestNotificationPermissions(
-    //   const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
-    // );
-    print(data['title']);
+
+    var uri = Uri.https('https://mumcareservice.azurewebsites.net', '/api/notifi/topic', {
+      'topic': topic,
+    });
+
     return await http.post(
-      'https://fcm.googleapis.com/fcm/send',
+      uri,
       headers: <String, String>{
         'Content-Type': 'application/json',
-        'Authorization': 'key=$serverToken',
       },
       body: jsonEncode(
         <String, dynamic>{
-          'notification': <String, dynamic>{
-            'body': data['title'],
-            'title': data['body']
-          },
-          'priority': 'high',
-          'data': data,
-          'topic': '$topic',
+          'body': data['title'],
+          'title': data['body'],
+          "topicDate": data['topicDate'],
+          "topicRef": data['topicRef'],
+          "type": data['type']
         },
       ),
     );
-
-    // final Completer<Map<String, dynamic>> completer =
-    //    Completer<Map<String, dynamic>>();
-
-    // firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     completer.complete(message);
-    //   },
-    // );
-
-    //return completer.future;
   }
 
   void _NavigateToNotification(Map<String, dynamic> message) {

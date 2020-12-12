@@ -1,11 +1,18 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mun_care_app/helpers/enums.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/services/StorageService.dart';
+import 'package:path/path.dart' as path;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:provider/provider.dart';
 
 class ComFamReg extends StatefulWidget {
   @override
@@ -26,10 +33,13 @@ class ShapePainter extends CustomPainter {
 }
 
 class _ComFamRegState extends State<ComFamReg> {
+  StorageService _storageService = StorageService();
+
   int currentStep = 0;
   bool complete = false;
   bool isActive = false;
 
+  UserM _user;
   //StepState stepState=StepState.editing;
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
@@ -116,8 +126,15 @@ class _ComFamRegState extends State<ComFamReg> {
     'Ahangama',
     'Thalgaswala'
   ];
+
+  File _image;
+  final picker = ImagePicker();
+  FirebaseStorage storage = FirebaseStorage.instance;
+  
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<UserM>(context);
+
     Widget showTextField(
         String hintText, String inputName, TextEditingController controller) {
       return TextFormField(
@@ -494,6 +511,15 @@ class _ComFamRegState extends State<ComFamReg> {
           .catchError((err) => print(err));
     }
 
+    Future getImage() async {
+      var image = await picker.getImage(source: ImageSource.gallery);
+      setState(() {
+        _image = File(image.path);
+        print(_image);
+      });
+    }
+
+    
     List<Step> steps = [
       Step(
           title: const Text(
@@ -506,48 +532,42 @@ class _ComFamRegState extends State<ComFamReg> {
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.height * 0.001,
-                    MediaQuery.of(context).size.height * 0.01,
-                    MediaQuery.of(context).size.width * 0.4,
-                    MediaQuery.of(context).size.height * 0.03),
-                child: Container(
-                  child: Text(
-                    "Registration",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(500, 21, 166, 211),
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: CustomPaint(
-                  painter: ShapePainter(),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width * 0.05,
-                        MediaQuery.of(context).size.height * 0.016,
-                        MediaQuery.of(context).size.width * 0.3,
-                        MediaQuery.of(context).size.height * 0.01),
-                    child: Text(
-                      "Competency Family",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               Container(
                 child: Column(
                   children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            radius: 60.0,
+                            backgroundColor: Color(0xff476cfb),
+                            child: ClipOval(
+                              child: SizedBox(
+                                height: 110.0,
+                                width: 110.0,
+                                child: (_image == null)
+                                    ? Image(image: AssetImage("assets/images/profile.png"))
+                                    : Image.file(
+                                        _image,
+                                        fit: BoxFit.fill,
+                                      ),
+                              ),
+                            ),                         
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: IconButton(
+                            icon: Icon(Icons.camera),
+                            onPressed: () {
+                              getImage();
+                            },
+                          ),
+                        )
+                      ],
+                    ),
                     Row(
                       children: <Widget>[
                         Expanded(flex: 10, child: Container()),
@@ -556,12 +576,12 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                height: 25,
+                                height: 20,
                                 child: Text(
                                   "MOH Area  -",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ),
@@ -571,7 +591,7 @@ class _ComFamRegState extends State<ComFamReg> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                                height: 25,
+                                height: 20,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
@@ -593,12 +613,12 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                height: 25,
+                                height: 20,
                                 child: Text(
                                   "PHM Area  -",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ),
@@ -608,7 +628,7 @@ class _ComFamRegState extends State<ComFamReg> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                                height: 25,
+                                height: 20,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
@@ -629,7 +649,7 @@ class _ComFamRegState extends State<ComFamReg> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
+                      MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
                   child: showTextField(
@@ -1843,8 +1863,25 @@ class _ComFamRegState extends State<ComFamReg> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(
-          height: 20,
+        Container(
+          height: MediaQuery.of(context).copyWith().size.height / 5,
+          width: MediaQuery.of(context).copyWith().size.width,
+          color: Colors.lightBlue,
+          child: Container(
+            child: Text(
+              'Competency Family Registration',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.06,
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.04),
+          ),
         ),
         complete
             ? validate()
@@ -1864,6 +1901,7 @@ class _ComFamRegState extends State<ComFamReg> {
                                     allreadyComReg = true;
                                   });
                                   stepOneReg();
+                                  _storageService.uploadProfileImage(_image, _user.uid,"profile");
                                   comRegComfirm();
                                   setCompetencyTrue();
                                   Navigator.pushNamed(context, '/dashboard');
