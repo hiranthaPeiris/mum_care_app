@@ -14,6 +14,7 @@ import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Reports/DairlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/MonthlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
+import 'package:mun_care_app/screens/Diary/dairlyDiary.dart';
 import 'package:mun_care_app/screens/Reviews/PregReview.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
@@ -87,7 +88,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
       case '/viewupcominghomevisit':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
-        
+
       //Profile
       case '/profile':
         return MaterialPageRoute(
@@ -101,6 +102,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => DairlyReportView());
       case '/monthlyReportView':
         return MaterialPageRoute(builder: (_) => MonthlyReportView());
+      //DairlyDiary
+      case '/diary':
+        return MaterialPageRoute(builder: (_) => DairlyDiary());
 
       case '/error':
         return MaterialPageRoute(

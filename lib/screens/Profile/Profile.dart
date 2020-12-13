@@ -199,7 +199,7 @@ class _ProfileState extends State<Profile> {
                                       gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
-                                    colors: [kBackground, kBlueColor],
+                                    //colors: [kBackground, kBlueColor],
                                     //tileMode: TileMode.repeated,
                                   )),
                                   child: _buildTopRow(comp, preg, name),

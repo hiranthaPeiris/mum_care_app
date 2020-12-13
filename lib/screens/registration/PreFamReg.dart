@@ -993,27 +993,28 @@ class _PreFamRegState extends State<PreFamReg> {
                                   ),
                                 )),
                             Expanded(
-                                flex: 50,
-                                child: Container(
-                                  alignment: Alignment.centerRight,
-                                  child: RaisedButton(
-                                    color: Color.fromARGB(500, 21, 166, 211),
-                                    textColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        side: BorderSide(color: Colors.white)),
-                                    child: Container(
-                                      child: Text(
-                                        "Continue",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                              flex: 50,
+                              child: Container(
+                                alignment: Alignment.centerRight,
+                                child: RaisedButton(
+                                  color: Color.fromARGB(500, 21, 166, 211),
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: BorderSide(color: Colors.white)),
+                                  child: Container(
+                                    child: Text(
+                                      "Continue",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    onPressed: onStepContinue,
                                   ),
-                                ))
+                                  onPressed: onStepContinue,
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
