@@ -16,11 +16,14 @@ import 'package:mun_care_app/screens/Reports/MonthlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
 import 'package:mun_care_app/screens/Reviews/PregReview.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
+import 'package:mun_care_app/screens/Sister/MidleaveView.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
+import 'package:mun_care_app/screens/chat/setUsers.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/Reviews/MotherList.dart';
+import 'package:mun_care_app/screens/registration/MotherAssign.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
@@ -47,7 +50,8 @@ class RouteGenerator {
 
       //Midwife Mother reviews
       case '/motherAssign':
-        return MaterialPageRoute(builder: (_) => MotherList());
+        return MaterialPageRoute(builder: (_) => MotherAssign());
+
       case '/motherPregReview':
         return MaterialPageRoute(builder: (_) => PregReview());
 
@@ -70,11 +74,13 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => GeoLocation());
 
       case '/chat':
-        return MaterialPageRoute(builder: (_) => HomeChat());
+        return MaterialPageRoute(builder: (_) => SetChatUser());
       case '/motherList':
         return MaterialPageRoute(builder: (_) => MotherList());
       case '/leavingReport':
         return MaterialPageRoute(builder: (_) => LeavingReport());
+      case '/midwifeleaveReport':
+        return MaterialPageRoute(builder: (_) => LeaveReportView());
       case '/MedicalReport':
         return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/ViewleavingReport':
@@ -88,7 +94,7 @@ class RouteGenerator {
       case '/viewupcominghomevisit':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
         
-      //Profile
+      //Profile 
       case '/profile':
         return MaterialPageRoute(
             builder: (_) => Profile(

@@ -259,7 +259,9 @@ class _DashboardState extends State<Dashboard> {
                 heading: "Pregnancy Registration",
                 content: "Complete the pregnancy registration",
                 svgSrc: "assets/icons/Hamburger.svg",
-                press: () {}),
+                press: () {
+                  Navigator.pushNamed(context, '/motherAssign');
+                }),
           ]),
         );
       } else if (compFam) {
@@ -269,7 +271,9 @@ class _DashboardState extends State<Dashboard> {
                 heading: "Pregnancy Registration",
                 content: "Complete the pregnancy registration",
                 svgSrc: "assets/icons/Hamburger.svg",
-                press: () {}),
+                press: () {
+                  Navigator.pushNamed(context, '/motherAssign');
+                }),
           ]),
         );
       } else {
@@ -418,7 +422,7 @@ class _DashboardState extends State<Dashboard> {
             heading: "Midwife Leaving",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/MedicalReport');
+              Navigator.pushNamed(context, '/midwifeleaveReport');
             },
           ),
           Menu_card(

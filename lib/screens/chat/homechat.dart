@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mun_care_app/widgets/Bottom_nav.dart';
+import 'package:mun_care_app/screens/chat/setUsers.dart';
 import 'package:mun_care_app/widgets/categoryslector.dart';
-import 'package:mun_care_app/widgets/recent_chats.dart';
+
 
 class HomeChat extends StatefulWidget {
   @override
@@ -12,8 +12,8 @@ class _HomeChatState extends State<HomeChat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      bottomNavigationBar: Bottom_nav(),
+      //backgroundColor: Theme.of(context).primaryColor,
+      //bottomNavigationBar: Bottom_nav(),
       appBar: AppBar(
         /*leading: IconButton(
           icon: Icon(Icons.menu),
@@ -38,25 +38,28 @@ class _HomeChatState extends State<HomeChat> {
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
+        scrollDirection: Axis.vertical,
         children: <Widget>[
+         // SetChatUser(),
           CategorySelector(),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0),
-                ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  RecentChats(),
-                ],
-              ),
-            ),
-          ),
+          SetChatUser(),
+          // Expanded(
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       color: Theme.of(context).accentColor,
+          //       borderRadius: BorderRadius.only(
+          //         topLeft: Radius.circular(20.0),
+          //         topRight: Radius.circular(20.0),
+          //       ),
+          //     ),
+          //     child: Column(
+          //       children: <Widget>[
+          //         SetChatUser(),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
