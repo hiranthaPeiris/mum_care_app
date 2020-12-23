@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/screens/chat/chatscreen.dart';
 
@@ -29,31 +30,35 @@ class SetChatUser extends StatefulWidget {
 class _SetChatUserState extends State<SetChatUser> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   UserM user = new UserM.get();
-
+  bool pending = true;
 
   getData01(String area) {
-      return FirebaseFirestore.instance
-            .collection("users")
-            .where('role', isEqualTo: 'user')
-            .where('area01', isEqualTo: area)
-            .snapshots();  
-  }
-  getData02(String area){
     return FirebaseFirestore.instance
-            .collection("users")
-            .where('role', isEqualTo: 'midwife')
-            .where('area01', isEqualTo: area)
-            .snapshots();
+        .collection("users")
+        .where('role', isEqualTo: 'user')
+        .where('area01', isEqualTo: area)
+        .snapshots();
+  }
+
+  getData02(String area) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .where('role', isEqualTo: 'midwife')
+        .where('area01', isEqualTo: area)
+        .snapshots();
   }
 
   Widget buildBody01(BuildContext context, String abc) {
     return StreamBuilder(
         stream: user.userCustomData['role'] == 'midwife'
-           ?  getData01(abc)
-           :  getData02(abc),
+            ? getData01(abc)
+            : getData02(abc),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
+          }
+          if (!snapshot.hasData) {
+            return Loading();
           }
           if (snapshot.hasData) {
             print("Document -> ${snapshot.data.documents.length}");
@@ -129,14 +134,14 @@ class _SetChatUserState extends State<SetChatUser> {
             ),
             Column(
               children: <Widget>[
-                Text(
-                  "Sender Name",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                // Text(
+                //   "Sender Name",
+                //   style: TextStyle(
+                //     color: Colors.grey,
+                //     fontSize: 15.0,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
                 SizedBox(height: 5.0),
                 // chat.unread
                 //     ? Container(
@@ -175,10 +180,12 @@ class _SetChatUserState extends State<SetChatUser> {
             .snapshots(),
         builder: (context, snapshot) {
           var value = snapshot.data;
-          String area = value['area01'].toString();
-
-          print(area);
           print(_auth.currentUser.uid);
+          if (!snapshot.hasData) {
+            return Loading();
+          }
+          String area = value['area01'].toString();
+          print(area);
           if (snapshot.hasData) {
             return buildBody01(context, area);
           }

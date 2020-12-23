@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
-
 
 class ChatScreen extends StatefulWidget {
   final String userID;
@@ -19,6 +19,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String chatID;
   String mTime;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  bool pending = true;
   // ignore: must_call_super
   void initState() {
     super.initState();
@@ -166,8 +167,10 @@ class _ChatScreenState extends State<ChatScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           var value = snapshot.data;
+          if (!snapshot.hasData) {
+            return Loading();
+          }
           String name = value['name'].toString();
-
           print(name);
           //print(_auth.currentUser.uid);
           if (snapshot.hasData) {
@@ -248,8 +251,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        // return Center(
-                        //     child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(themeColor)));
+                        return Loading();
                       } else {
                         ///listMessage = snapshot.data.documents;
                         return ListView.builder(
@@ -262,8 +264,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             final bool isMe = snapshot.data.documents[index]
                                     ['idFrom'] ==
                                 _auth.currentUser.uid;
-                            
-                            return _buildMessage(message, isMe, readTimestamp(mTimeStamp));
+
+                            return _buildMessage(
+                                message, isMe, readTimestamp(mTimeStamp));
                           },
                           itemCount: snapshot.data.documents.length,
                           reverse: true,
