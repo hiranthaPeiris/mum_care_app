@@ -7,6 +7,8 @@ import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NoticeService.dart';
 import 'package:provider/provider.dart';
 
+enum NoticeAudiance { General, Midwife, Eligible, Pregnanc }
+
 class SendNotice extends StatefulWidget {
   SendNotice({Key key}) : super(key: key);
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -22,7 +24,7 @@ class _SendNoticeState extends State<SendNotice> {
   final NoticeService _noticeService = NoticeService();
   UserM _user;
   bool pending = false;
-  List<bool> _selections = List.generate(3, (_) => false);
+  NoticeAudiance _audiance = NoticeAudiance.General;
 
   @override
   Widget build(BuildContext context) {
@@ -87,20 +89,14 @@ class _SendNoticeState extends State<SendNotice> {
                                   ]),
                                 ),
                                 Container(
-                                  height: 400,
+                                  height: 600,
                                   child: TabBarView(children: [
                                     Container(
                                       padding:
                                           EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                      height: MediaQuery.of(context)
-                                              .copyWith()
-                                              .size
-                                              .height *
-                                          (5 / 6),
-                                      width: MediaQuery.of(context)
-                                          .copyWith()
-                                          .size
-                                          .width,
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      width: MediaQuery.of(context).size.width,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.only(
@@ -110,10 +106,10 @@ class _SendNoticeState extends State<SendNotice> {
                                       ),
                                       child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                            MainAxisAlignment.end,
                                         children: [
                                           Expanded(
-                                              flex: 2,
+                                              flex: 9,
                                               child: Column(
                                                 children: [
                                                   Form(
@@ -260,113 +256,103 @@ class _SendNoticeState extends State<SendNotice> {
                                                       ),
                                                     ],
                                                   ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Text("Send to: "),
+                                                      SizedBox(
+                                                        width: 20.0,
+                                                      ),
+                                                      Expanded(
+                                                        child: Column(
+                                                          children: [
+                                                            RadioListTile<
+                                                                NoticeAudiance>(
+                                                              title: const Text(
+                                                                  'General Notice'),
+                                                              value:
+                                                                  NoticeAudiance
+                                                                      .General,
+                                                              groupValue:
+                                                                  _audiance,
+                                                              onChanged:
+                                                                  (NoticeAudiance
+                                                                      value) {
+                                                                setState(() {
+                                                                  _audiance =
+                                                                      value;
+                                                                });
+                                                              },
+                                                            ),
+                                                            RadioListTile<
+                                                                NoticeAudiance>(
+                                                              title: const Text(
+                                                                  'Midwife Group'),
+                                                              value:
+                                                                  NoticeAudiance
+                                                                      .Midwife,
+                                                              groupValue:
+                                                                  _audiance,
+                                                              onChanged:
+                                                                  (NoticeAudiance
+                                                                      value) {
+                                                                setState(() {
+                                                                  _audiance =
+                                                                      value;
+                                                                });
+                                                              },
+                                                            ),
+                                                            RadioListTile<
+                                                                NoticeAudiance>(
+                                                              title: const Text(
+                                                                  'Eligible Families'),
+                                                              value:
+                                                                  NoticeAudiance
+                                                                      .Eligible,
+                                                              groupValue:
+                                                                  _audiance,
+                                                              onChanged:
+                                                                  (NoticeAudiance
+                                                                      value) {
+                                                                setState(() {
+                                                                  _audiance =
+                                                                      value;
+                                                                });
+                                                              },
+                                                            ),
+                                                            RadioListTile<
+                                                                NoticeAudiance>(
+                                                              title: const Text(
+                                                                  'Pregnancy Families'),
+                                                              value:
+                                                                  NoticeAudiance
+                                                                      .Pregnanc,
+                                                              groupValue:
+                                                                  _audiance,
+                                                              onChanged:
+                                                                  (NoticeAudiance
+                                                                      value) {
+                                                                setState(() {
+                                                                  _audiance =
+                                                                      value;
+                                                                });
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ],
-                                              )),Text("Send to: "),
-                                          Row(
-                                            children: [
-                                              ToggleButtons(
-                                                selectedColor: kBackground,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10)),
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Row(
-                                                      children: [
-                                                        Text("All Mothers"),
-                                                        SizedBox(
-                                                          width: 5.0,
-                                                        ),
-                                                        Icon(
-                                                            Icons
-                                                                .adjust_outlined,
-                                                            color: Colors.green)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Row(
-                                                      children: [
-                                                        Text("Midwife Group"),
-                                                        SizedBox(
-                                                          width: 5.0,
-                                                        ),
-                                                        Icon(
-                                                            Icons
-                                                                .adjust_outlined,
-                                                            color:
-                                                                Colors.orange),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Row(
-                                                      children: [
-                                                        Text("Eligible Familis"),
-                                                        SizedBox(
-                                                          width: 5.0,
-                                                        ),
-                                                        Icon(
-                                                            Icons
-                                                                .adjust_outlined,
-                                                            color: Colors.red),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Row(
-                                                      children: [
-                                                        Text("Pregnant Mothers"),
-                                                        SizedBox(
-                                                          width: 5.0,
-                                                        ),
-                                                        Icon(
-                                                            Icons
-                                                                .adjust_outlined,
-                                                            color: Colors.red),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                                onPressed: (int index) {
-                                                  setState(() {
-                                                    for (int buttonIndex = 0;
-                                                        buttonIndex <
-                                                            _selections.length;
-                                                        buttonIndex++) {
-                                                      if (buttonIndex ==
-                                                          index) {
-                                                        _selections[
-                                                            buttonIndex] = true;
-                                                      } else {
-                                                        _selections[
-                                                                buttonIndex] =
-                                                            false;
-                                                      }
-                                                    }
-                                                  });
-                                                },
-                                                isSelected: _selections,
-                                              ),
-                                            ],
-                                          ),
+                                              )),
                                           Expanded(
-                                            flex: 1,
+                                            flex: 2,
                                             child: Container(
                                               padding: EdgeInsets.fromLTRB(
                                                   10, 30, 10, 0),
-                                              alignment: Alignment.bottomRight,
+                                              alignment: Alignment.bottomCenter,
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -401,12 +387,7 @@ class _SendNoticeState extends State<SendNotice> {
                                                       ),
                                                     ),
                                                     onPressed: () async {
-                                                      String condition =
-                                                          getCondition(_selections
-                                                              .indexWhere(
-                                                                  (element) =>
-                                                                      element ==
-                                                                      true));
+                                                      
                                                       if (_formKey.currentState
                                                           .validate()) {
                                                         setState(() {
@@ -425,7 +406,7 @@ class _SendNoticeState extends State<SendNotice> {
                                                                 subject:
                                                                     dropdownSubject,
                                                                 midwifeID:
-                                                                    _user.uid);
+                                                                    _user.uid,audiance: _audiance.toString());
                                                         dynamic result =
                                                             _noticeService
                                                                 .sendNotice(

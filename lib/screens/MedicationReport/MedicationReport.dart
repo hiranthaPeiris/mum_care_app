@@ -29,6 +29,9 @@ class _MedicationReportState extends State<MedicationReport> {
   File _image;
   bool _uploaded = false;
   String _downloadUrl;
+  String dropdownMediDesc = "Normal";
+  String dropdownVaccine = "BCC";
+
   final picker = ImagePicker();
 
   void dispose() {
@@ -63,7 +66,7 @@ class _MedicationReportState extends State<MedicationReport> {
                           color: Colors.lightBlue,
                           child: Container(
                             child: Text(
-                              'Private Medication Report',
+                              'Submit Medi Info',
                               style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -109,21 +112,40 @@ class _MedicationReportState extends State<MedicationReport> {
                                           "_Description", myController1),
                                     ),
                                   ),
-                                  Container(
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          MediaQuery.of(context).size.width *
-                                              0.05,
-                                          MediaQuery.of(context).size.height *
-                                              0.005,
-                                          MediaQuery.of(context).size.width *
-                                              0.05,
-                                          MediaQuery.of(context).size.height *
-                                              0.005),
-                                      child: showTextField("NIC Number",
-                                          "_NICnumber", myController2),
-                                    ),
+                                  Row(
+                                    children: [Text("Medication Description"),
+                                      DropdownButton<String>(
+                                        value: dropdownMediDesc,
+                                        icon: Icon(Icons.arrow_downward),
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        style: TextStyle(color: Colors.deepPurple),
+                                        underline: Container(
+                                          height: 2,
+                                          color: Colors.deepPurpleAccent,
+                                        ),
+                                        onChanged: (String newValue) {
+                                          setState(() {
+                                            dropdownMediDesc = newValue;
+                                          });
+                                        },
+                                        items: <String>[
+                                          'Normal',
+                                          'Medication Type 1',
+                                          'Medication Type 3',
+                                          'Medication Type 3',
+                                          'Other'
+                                        ].map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ],
                                   ),
+                                  
                                   Container(
                                     padding: EdgeInsets.fromLTRB(
                                         MediaQuery.of(context).size.width * 0.1,
@@ -150,7 +172,7 @@ class _MedicationReportState extends State<MedicationReport> {
                                         //SizedBox(height: 10.0),
                                         Row(
                                           children: <Widget>[
-                                            Text("Upload the Receipt",
+                                            Text("Upload the Image",
                                                 style:
                                                     TextStyle(fontSize: 17.0)),
                                             SizedBox(
@@ -186,7 +208,7 @@ class _MedicationReportState extends State<MedicationReport> {
                                                               .fromLTRB(10.0,
                                                           30.0, 10.0, 10.0),
                                                       child: Text(
-                                                        'Your Receipt',
+                                                        'Preview',
                                                         style: TextStyle(
                                                             fontSize: 20),
                                                         textAlign:
@@ -216,19 +238,39 @@ class _MedicationReportState extends State<MedicationReport> {
                                     child: showTextField("Doctor's Name",
                                         "_Doctor's_name", myController4),
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width *
-                                            0.05,
-                                        MediaQuery.of(context).size.height *
-                                            0.005,
-                                        MediaQuery.of(context).size.width *
-                                            0.05,
-                                        MediaQuery.of(context).size.height *
-                                            0.005),
-                                    child: showTextField("Vaccines Name",
-                                        "_Vacciness_name", myController5),
+                                   Row(
+                                     children: [Text("Vaccine Name"),
+                                       DropdownButton<String>(
+                                        value: dropdownMediDesc,
+                                        icon: Icon(Icons.arrow_downward),
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        style: TextStyle(color: Colors.deepPurple),
+                                        underline: Container(
+                                          height: 2,
+                                          color: Colors.deepPurpleAccent,
+                                        ),
+                                        onChanged: (String newValue) {
+                                          setState(() {
+                                            dropdownVaccine = newValue;
+                                          });
+                                        },
+                                        items: <String>[
+                                          'Normal',
+                                          'Medication Type 1',
+                                          'Medication Type 3',
+                                          'Medication Type 3',
+                                          'Other'
+                                        ].map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
                                   ),
+                                     ],
+                                   ),
                                   Container(
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(
@@ -350,8 +392,9 @@ class _MedicationReportState extends State<MedicationReport> {
                                                 setState(() {
                                                   pending = true;
                                                 });
-                                                DocumentReference rst = await inserting();
-                                                
+                                                DocumentReference rst =
+                                                    await inserting();
+
                                                 dynamic rstImg =
                                                     await _storageService
                                                         .uploadProfileImage(
@@ -471,7 +514,6 @@ class _MedicationReportState extends State<MedicationReport> {
     MediData medi = MediData(
         name: name,
         description: myController1.text,
-        nic: myController2.text,
         vaccine: myController5.text,
         doctorName: myController4.text,
         mumRemarks: myController3.text,

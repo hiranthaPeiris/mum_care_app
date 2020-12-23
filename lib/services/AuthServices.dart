@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final NotificationService _notification = NotificationService();
   var userInstance = new UserM.get();
 
   UserM _userFromFirebase(User user) {
@@ -115,7 +117,8 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
       await setUserRole(userCredential.user.uid, name);
       await setUserMessageToken();
-
+      _notification.subscribeTopic("general");
+      
       print(userCredential.user.uid);
       return (_userFromFirebase(userCredential.user));
     } catch (e) {

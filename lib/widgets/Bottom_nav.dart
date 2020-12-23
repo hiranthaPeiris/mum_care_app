@@ -27,12 +27,7 @@ class Bottom_nav extends StatelessWidget {
             title: "Today",
             svgScr: "assets/icons/calendar.svg",
             press: () async {
-              // NotificationM notification = NotificationM("New Clinic assigned",
-              //     "desc", "dateTime", "doc.id", new DateTime.now(), "home");
-
-              // Response rst = await _notification.sendMessageTopic(
-              //     notification.getMap(), "midwife1");
-              // print(rst.body);
+              Navigator.pushNamed(context, '/diary');
             },
           ),
           BottomNavItem(

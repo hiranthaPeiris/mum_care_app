@@ -27,6 +27,8 @@ class _DashboardState extends State<Dashboard> {
   UserM _user;
   String role = "";
   String name = "null";
+  bool compApp = false;
+  bool pregApp = false;
   bool compFam = false;
   bool pregMum = false;
   DateTime now;
@@ -35,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     //_user = Provider.of<UserM>(context);
-    //print(compFam);
+    //print(compApp);
   }
 
   @override
@@ -49,8 +51,10 @@ class _DashboardState extends State<Dashboard> {
         UserM.setCustomData(customData: customData);
         role = customData['role'];
         name = customData['name'];
-        compFam = customData['compApp'];
-        pregMum = customData['pregApp'];
+        compApp = customData['compApp'];
+        pregApp = customData['pregApp'];
+        compFam = customData['competencyFam'];
+        pregMum = customData['PregnanctFam'];
 
         print(_user.userCustomData);
         pending = false;
@@ -255,7 +259,7 @@ class _DashboardState extends State<Dashboard> {
         ]),
       );
     } else {
-      if (!pregMum && !compFam) {
+      if (!compFam && !compApp) {
         return SliverList(
           delegate: SliverChildListDelegate([
             Menu_liner_card(
@@ -264,15 +268,10 @@ class _DashboardState extends State<Dashboard> {
                 svgSrc: "assets/icons/Hamburger.svg",
                 press: () {
                   Navigator.pushNamed(context, '/comReg');
-                }),
-            // Menu_liner_card(
-            //     heading: "Pregnancy Registration",
-            //     content: "Complete the pregnancy registration",
-            //     svgSrc: "assets/icons/Hamburger.svg",
-            //     press: () {}),
+                }),         
           ]),
         );
-      } else if (!pregMum) {
+      } else if (!pregApp && !pregMum) {
         return SliverList(
           delegate: SliverChildListDelegate([
             Menu_liner_card(
@@ -323,21 +322,21 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           Menu_card(
-            title: "View reports on private medications",
-            heading: "View Mother Medications",
+            title: "View Medications & Leaving Reports",
+            heading: "Medications & Area Leaving",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/ViewMedicalReport');
+              Navigator.pushNamed(context, '/MediLeaveWap');
             },
           ),
-          Menu_card(
-            title: "View reports on leaving residential area",
-            heading: "View Leaving Report",
-            svgSrc: "assets/icons/yoga.svg",
-            press: () {
-              Navigator.pushNamed(context, '/ViewleavingReport');
-            },
-          ),
+          // Menu_card(
+          //   title: "View reports on leaving residential area",
+          //   heading: "View Leaving Report",
+          //   svgSrc: "assets/icons/yoga.svg",
+          //   press: () {
+          //     Navigator.pushNamed(context, '/ViewleavingReport');
+          //   },
+          // ),
           Menu_card(
             title: "Apply day leave",
             heading: "Apply Leaving",
@@ -354,14 +353,7 @@ class _DashboardState extends State<Dashboard> {
               Navigator.pushNamed(context, '/searchReport');
             },
           ),
-          Menu_card(
-            title: "View reports on leaving residential area",
-            heading: "Geo Location",
-            svgSrc: "assets/icons/yoga.svg",
-            press: () {
-              Navigator.pushNamed(context, '/geoLocate');
-            },
-          ),
+         
           Menu_card(
             title: "Send Special and Emergancy Notices",
             heading: "Special Notice",

@@ -1,5 +1,6 @@
 class NotificationM {
   final String title;
+  final String subTitle;
   final String body;
   final String type;
   final String topicDate;
@@ -13,6 +14,7 @@ class NotificationM {
       'id': '1',
       'status': 'done',
       'title': this.title,
+      'subTitle':this.subTitle,
       'body': this.body,
       'topicDate': this.topicDate,
       'topicRef': this.topicRef,
@@ -21,5 +23,5 @@ class NotificationM {
   }
 
   NotificationM(
-      this.title, this.body, this.topicDate, this.topicRef, this.dateTime, this.type);
+      this.title, this.body, this.topicDate, this.topicRef, this.dateTime, this.type, this.subTitle);
 }

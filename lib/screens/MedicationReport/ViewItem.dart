@@ -99,16 +99,7 @@ class _ViewItemState extends State<ViewItem> {
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16.0),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  10.0, 0.0, 0.0, 10.0),
-                              child: Text(
-                                "NIC: ${mediData.nic}",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                              ),
-                            ),
+                            ),                            
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
                                   10.0, 0.0, 0.0, 10.0),

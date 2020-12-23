@@ -42,7 +42,8 @@ class _LeaveFormState extends State<LeaveForm> {
         backgroundColor: Colors.lightBlue,
         body: Builder(
             builder: (context) => SingleChildScrollView(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Container(
                         height:
@@ -63,9 +64,8 @@ class _LeaveFormState extends State<LeaveForm> {
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        height:
-                            MediaQuery.of(context).copyWith().size.height *
-                                (6 / 7),
+                        height: MediaQuery.of(context).copyWith().size.height *
+                            (6 / 7),
                         width: MediaQuery.of(context).copyWith().size.width,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -75,127 +75,11 @@ class _LeaveFormState extends State<LeaveForm> {
                           ),
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Container(
                               child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(flex: 10, child: Container()),
-                                      Expanded(
-                                        flex: 100,
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(2, 2, 2, 2),
-                                          child: TextFormField(
-                                            controller: name,
-                                            decoration: InputDecoration(
-                                              labelText: "Name",
-                                              hintText:
-                                                  "Enter the name of midwife",
-                                            ),
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return "Please Enter a name";
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(flex: 10, child: Container()),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(flex: 10, child: Container()),
-                                      Expanded(
-                                          flex: 40,
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              height: 25,
-                                              child: Text(
-                                                "MOH Area  -",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                            ),
-                                          )),
-                                      Expanded(
-                                        flex: 40,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                              height: 25,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey[300],
-                                                  border: Border.all(
-                                                      color: Colors.black,
-                                                      style:
-                                                          BorderStyle.solid,
-                                                      width: 0.5)),
-                                              child: mohDropDownMenu()),
-                                        ),
-                                      ),
-                                      Expanded(flex: 5, child: Container()),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      //Expanded(flex: 10, child: Container()),
-                                      Text(
-                                        "Date :             ",
-                                        style: TextStyle(fontSize: 15.0),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      Text(_date4 == null
-                                          ? "Select Date"
-                                          : _date4.year.toString() +
-                                              "/" +
-                                              _date4.month.toString() +
-                                              "/" +
-                                              _date4.day.toString()),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      RaisedButton.icon(
-                                        onPressed: () {
-                                          showDatePicker(
-                                                  context: context,
-                                                  initialDate:
-                                                      new DateTime.now(),
-                                                  firstDate: DateTime(1980),
-                                                  lastDate: DateTime(2025))
-                                              .then((date) {
-                                            setState(() {
-                                              _date4 = date;
-                                            });
-                                          });
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        label: Text(
-                                          '',
-                                          style:
-                                              TextStyle(color: Colors.white),
-                                        ),
-                                        icon: Icon(
-                                          Icons.event_available,
-                                          color: Colors.white,
-                                        ),
-                                        textColor: Colors.white,
-                                        splashColor: Colors.red,
-                                        color: Colors.blue,
-                                      ),
-                                    ],
-                                  ),
+                                children: <Widget>[                                
                                   Row(
                                     children: <Widget>[
                                       Expanded(flex: 5, child: Container()),
@@ -260,8 +144,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                                 Radius.circular(10.0))),
                                         label: Text(
                                           '',
-                                          style:
-                                              TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                         icon: Icon(
                                           Icons.event_available,
@@ -286,8 +169,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                             decoration: InputDecoration(
                                               labelText:
                                                   "Num of days for leave applied for",
-                                              hintText:
-                                                  "Enter the Num of days",
+                                              hintText: "Enter the Num of days",
                                             ),
                                             validator: (value) {
                                               if (value.isEmpty) {
@@ -307,7 +189,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                     children: <Widget>[
                                       // Expanded(flex: 10, child: Container()),
                                       Text(
-                                        "Leave to commence on:             ",
+                                        "Commence on:             ",
                                         style: TextStyle(fontSize: 15.0),
                                         textAlign: TextAlign.left,
                                       ),
@@ -340,8 +222,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                                 Radius.circular(10.0))),
                                         label: Text(
                                           '',
-                                          style:
-                                              TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                         icon: Icon(
                                           Icons.event_available,
@@ -354,15 +235,15 @@ class _LeaveFormState extends State<LeaveForm> {
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      Expanded(flex: 2, child: Container()),
+                                      // Expanded(flex: 2, child: Container()),
                                       Text(
-                                        "Leave to end on:                       ",
+                                        "End on:                       ",
                                         style: TextStyle(fontSize: 15.0),
                                         textAlign: TextAlign.left,
                                       ),
+                                      SizedBox(width: 5.0,),
                                       Text(_date3 == null
                                           ? "Select Date"
                                           : _date3.year.toString() +
@@ -370,9 +251,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                               _date3.month.toString() +
                                               "/" +
                                               _date3.day.toString()),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
+                                      
                                       RaisedButton.icon(
                                         onPressed: () {
                                           showDatePicker(
@@ -392,8 +271,7 @@ class _LeaveFormState extends State<LeaveForm> {
                                                 Radius.circular(10.0))),
                                         label: Text(
                                           '',
-                                          style:
-                                              TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                         icon: Icon(
                                           Icons.event_available,
@@ -463,13 +341,13 @@ class _LeaveFormState extends State<LeaveForm> {
                               ),
                             ),
                             SizedBox(
-                              height: 20.0,
+                              height: 40.0,
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              padding: EdgeInsets.fromLTRB(20, 0, 0,10),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Container(
                                     child: Align(
@@ -488,12 +366,11 @@ class _LeaveFormState extends State<LeaveForm> {
                                       child: ElevatedButton(
                                         child: Text('Submit'),
                                         onPressed: () {
-                                          LeaveFormDB leaveFormDB =
-                                              LeaveFormDB(
-                                            applicantName: name.text,
-                                            mohDropDownValue:
-                                                mohDropdownValue,
-                                            applyDate: _date4,
+                                          LeaveFormDB leaveFormDB = LeaveFormDB(
+                                            applicantName:
+                                                _user.userCustomData['name'],
+                                            mohDropDownValue: _user.userCustomData['mohArea'],
+                                            applyDate: new DateTime.now(),
                                             department: department.text,
                                             appoimentDate: _date1,
                                             numOfDays: numOfdays.text,
@@ -526,16 +403,14 @@ class _LeaveFormState extends State<LeaveForm> {
                                                 TextButton(
                                                   child: Text('Ok'),
                                                   onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop();
+                                                    Navigator.of(context).pop();
                                                   },
                                                 ),
                                               ],
                                             );
                                             showDialog(
                                               context: context,
-                                              builder:
-                                                  (BuildContext context) {
+                                              builder: (BuildContext context) {
                                                 return alert;
                                               },
                                             );

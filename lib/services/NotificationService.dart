@@ -50,15 +50,18 @@ class NotificationService {
     );
   }
 
-  Future<dynamic> subscribeTopic(String topic) async {
+  Future<void> subscribeTopic(String topic) async {
     return await _firebaseMessaging.subscribeToTopic(topic);
+  }
+   Future<void> unsubscribeTopic(String topic) async {
+    return await _firebaseMessaging.unsubscribeFromTopic(topic);
   }
 
   Future<List<NotificationM>> getNotifications() async {
     String uid = _userM.uid;
     List<NotificationM> notifications = [
       new NotificationM("Test header1", "test Content 1", "test topic date",
-          "test topic ref", new DateTime(2000), "clinic")
+          "test topic ref", new DateTime(2000), "clinic","sub title")
     ];
     await _firestore
         .collection('notifications')
@@ -74,7 +77,7 @@ class NotificationService {
               doc['topicDate'],
               doc['topicRef'],
               new DateTime.now(),
-              doc['type']));
+              doc['type'],doc['subtitle']));
           print(doc["createdAt"]);
         });
         print(notifications.length);
@@ -152,7 +155,7 @@ class NotificationService {
   Future<http.Response> sendMessageTopic(
       Map<String, dynamic> data, String topic) async {
 
-    var uri = Uri.https('https://mumcareservice.azurewebsites.net', '/api/notifi/topic', {
+    var uri = Uri.https('mumcareservice.azurewebsites.net', '/api/notifi/topic', {
       'topic': topic,
     });
 
@@ -172,7 +175,28 @@ class NotificationService {
       ),
     );
   }
+Future<http.Response> sendMessageToList(Map<String, dynamic> data,
+      List<String>tokenList) async {
 
+    var uri = Uri.https('mumcareservice.azurewebsites.net','/api/notifi/cluster');
+
+    return await http.post(
+      uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'body': data['title'],
+          'title': data['body'],
+          "topicDate": data['topicDate'],
+          "topicRef": data['topicRef'],
+          "type": data['type'],
+          "tokens":tokenList
+        },
+      ),
+    );
+  }
   void _NavigateToNotification(Map<String, dynamic> message) {
     _navigationService.navigateTo('/notification');
   }

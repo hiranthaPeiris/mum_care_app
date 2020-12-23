@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MediData {
   String name;
   String description;
-  String nic;
   String doctorName;
   String vaccine;
   String hospital;
@@ -12,6 +11,7 @@ class MediData {
   String regDate;
   String midwifeID;
   String midwifeRemarks;
+  String status;
   DocumentReference userDocRef;
 
   DocumentReference documentReference;
@@ -19,19 +19,18 @@ class MediData {
   MediData(
       {this.name,
       this.description,
-      this.nic,
       this.doctorName,
       this.vaccine,
       this.mumRemarks,
       this.date,
       this.regDate,
       this.midwifeID,
+      this.status,
       this.userDocRef});
 
   MediData.fromMap(Map<String, dynamic> map, {this.documentReference}) {
     name = map["_Name"];
     description =  map["_Description"];
-    nic = map["_NICnumber"];
     doctorName = map["_Doctors_name"];
     vaccine = map["_Vacciness_name"];
     mumRemarks = map["_MumRemarks"];
@@ -39,6 +38,7 @@ class MediData {
     midwifeID =  map["_midwifeID"];
     midwifeRemarks = map["_midwifeRemarks"];
     regDate = map['_regDate'];
+    status = map['_status'];
     userDocRef = map['_userDocRef'];
   }
   MediData.fromSnapshot(DocumentSnapshot snapshot)
@@ -48,7 +48,6 @@ class MediData {
     return {
       '_Name':name,
       '_Description': description,
-      '_NICnumber': nic,
       '_midwifeID': midwifeID,
       '_midwifeRemarks':midwifeRemarks,
       '__Doctors_name': doctorName,
@@ -56,6 +55,7 @@ class MediData {
       '_MumRemarks':mumRemarks,
       '_date': date,
       '_regDate': regDate,
+      '_status':status,
       '_userDocRef': userDocRef
     };
   }
@@ -71,6 +71,7 @@ class LeaveData {
   String regDate;
   String midwifeID;
   String midwifeRemarks;
+  String status;
   DocumentReference userDocRef;
 
   DocumentReference documentReference;
@@ -84,6 +85,8 @@ class LeaveData {
     this.midwifeID,
     this.mohDropDownValue,
     this.phmDropDownValue,
+    this.midwifeRemarks,
+    this.status
   });
 
   LeaveData.fromMap(Map<String, dynamic> map, {this.documentReference}) {
@@ -97,6 +100,7 @@ class LeaveData {
     phmDropDownValue = map["_phmDropDownValue"];
     userDocRef = map['_userDocRef'];
     regDate = map['_regDate'];
+    status = map['_status'];
   }
   LeaveData.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -112,7 +116,8 @@ class LeaveData {
       '_mohDropDownValue': mohDropDownValue,
       '_phmDropDownValue': phmDropDownValue,
       '_regDate': regDate,
-      '_userDocRef':userDocRef
+      '_userDocRef':userDocRef,
+      '_status':status
     };
   }
 }

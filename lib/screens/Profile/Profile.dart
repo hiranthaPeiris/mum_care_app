@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/helpers/interfaces/CustomPopMenu.dart';
 import 'package:mun_care_app/models/Notification.model.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
@@ -27,11 +29,13 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final UserDataSevice _userDataSevice = UserDataSevice();
   final StorageService _storageService = StorageService();
   final NotificationService _notificationService = NotificationService();
-    
+  final picker = ImagePicker();
+
   TextEditingController remarks = TextEditingController();
   UserM _user = new UserM.get();
   String uid;
@@ -42,16 +46,45 @@ class _ProfileState extends State<Profile> {
   Map<String, dynamic> userCustomData;
   String _profileImage =
       "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
+  File _image;
 
+  /// App bar pop up menu items
+  List<String> choices = [
+    "Change Profile Picture",
+    "Update Profile",
+    "Settings"
+  ];
   //DocumentSnapshot compFamData;
   //DocumentSnapshot pregData;
+
+  //For url luncher
   Future<void> _launched;
+
+  Future getImage() async {
+    var image = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      pending = true;
+      if (image != null) {
+        _image = File(image.path);
+        _storageService.uploadProfileImage(_image, _user.uid, "profile");
+      }
+      pending = false;
+    });
+  }
+
+  void choiceAction(String choice) {
+    if (choice == "Change Profile Picture") {
+      getImage();
+    } else if (choice == "Update Profile") {
+      //getImage();
+      print('Subscribe');
+    } else if (choice == "Settings") {
+      print('SignOut');
+    }
+  }
 
   @override
   void initState() {
-    super.initState();
-    //print(userCustomData);
-
     if (widget.documentSnapshot != null) {
       userCustomData = widget.documentSnapshot.data();
       uid = widget.documentSnapshot.id;
@@ -64,6 +97,15 @@ class _ProfileState extends State<Profile> {
 
     //print(userCustomData['PregnanctFam']);
     //print(userCustomData['competencyFam']);
+    _storageService.downloadProfileImage("profile", uid).then((url) {
+      if (url != null) {
+        setState(() {
+          _profileImage = url;
+          //pending = false;
+          print("image came");
+        });
+      }
+    });
 
     if ((userCustomData['compApp'] && userCustomData['pregApp']) ||
         (userCustomData['PregnanctFam'] && userCustomData['competencyFam'])) {
@@ -87,25 +129,17 @@ class _ProfileState extends State<Profile> {
       _userDataSevice.getCompData(uid).then((doc) {
         setState(() {
           //compFamData = doc;
+           pending = false;
           _compData = ComRegDB.fromSnapshot(doc);
           //print(doc.data());
         });
-      });
-
-      _storageService.downloadProfileImage("profile",uid).then((url) {
-        if (url != null) {
-          setState(() {
-            _profileImage = url;
-            pending = false;
-            print("image came");
-          });
-        }
       });
     } else {
       setState(() {
         pending = false;
       });
     }
+    super.initState();
   }
 
   @override
@@ -131,13 +165,27 @@ class _ProfileState extends State<Profile> {
             length: 3,
             child: SafeArea(
               child: Scaffold(
-                  bottomNavigationBar: (drawer) ? Bottom_nav() : null,
+                  key: _scaffoldKey,
+                  bottomNavigationBar: (drawer)
+                      ? Bottom_nav(
+                          scaffoldKey: _scaffoldKey,
+                        )
+                      : null,
                   appBar: AppBar(
                     title: Text("Profile"),
                     backgroundColor: kBackground,
                     actions: <Widget>[
-                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
-                      IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+                      PopupMenuButton(
+                        onSelected: choiceAction,
+                        itemBuilder: (BuildContext context) {
+                          return choices.map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                      )
                     ],
                   ),
                   drawer: Drawer(
@@ -729,8 +777,14 @@ class _ProfileState extends State<Profile> {
         .then((value) => print("User status Updated"))
         .catchError((error) => print("Failed to update user: $error"));
 
-     NotificationM notification =
-        NotificationM("New Home visit", "Your $type application has accepted ", new DateTime.now().toString(),widget.documentSnapshot.id, new DateTime.now(),"CompFam");
+    NotificationM notification = NotificationM(
+        "Application Status",
+        "Your $type application has accepted ",
+        new DateTime.now().toString(),
+        widget.documentSnapshot.id,
+        new DateTime.now(),
+        "reg",
+        "Registration confirmation");
     await _notificationService.sendAndRetrieveMessage(
         notification.getMap(), userCustomData['token']);
   }
@@ -761,7 +815,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             CircleAvatar(
               backgroundImage: NetworkImage(
-               _profileImage,
+                _profileImage,
               ),
               radius: 40.0,
             ),

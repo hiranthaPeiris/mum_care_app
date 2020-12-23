@@ -9,6 +9,7 @@ import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
 import 'package:mun_care_app/services/NotificationService.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Locator.dart';
 import 'helpers/Constants.dart';
 
@@ -30,15 +31,22 @@ class _MyAppState extends State<MyApp> {
 
   Future startUp() async {
     await _notificationService.InitalizeMessaging();
-    print("notifi start");
+    //print("notifi start");
+  }
+
+  @override
+  void initState() {
+    startUp();
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    startUp();
     return StreamProvider<UserM>.value(
       value: AuthService().user,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         navigatorKey: locator<NavigationService>().navigatorKey,
         title: 'Mun & Baby',
         theme: ThemeData(
@@ -47,7 +55,7 @@ class _MyAppState extends State<MyApp> {
           textTheme:
               Theme.of(context).textTheme.apply(displayColor: kTextColor),
         ),
-        initialRoute: '/',
+        initialRoute: "/welcome",
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );

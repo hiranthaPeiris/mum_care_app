@@ -55,7 +55,7 @@ class HomeVisitService {
         .catchError((err) => print(err));
         
     NotificationM notification =
-        NotificationM("New Home visit", desc, dateTimeSlug, doc.id, new DateTime.now(),"home");
+        NotificationM("New Home visit", desc, dateTimeSlug, doc.id, new DateTime.now(),"home","New Home visit");
     await _notificationService.sendAndRetrieveMessage(
         notification.getMap(), doc['token']);
   }

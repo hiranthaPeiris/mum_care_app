@@ -35,7 +35,7 @@ class StorageService {
       //print('Uploaded ${snapshot.bytesTransferred} bytes.');
       return url;
     } on FirebaseException catch (e) {
-      print(e);
+      print("error now:  $e");
 
       if (e.code == 'permission-denied') {
         print('User does not have permission to upload to this reference.');

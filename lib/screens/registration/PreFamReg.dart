@@ -279,46 +279,7 @@ class _PreFamRegState extends State<PreFamReg> {
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.height * 0.001,
-                    MediaQuery.of(context).size.height * 0.01,
-                    MediaQuery.of(context).size.width * 0.4,
-                    MediaQuery.of(context).size.height * 0.03),
-                child: Container(
-                  child: Text(
-                    "Registration",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(500, 21, 166, 211),
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: CustomPaint(
-                  painter: ShapePainter(),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width * 0.05,
-                        MediaQuery.of(context).size.height * 0.016,
-                        MediaQuery.of(context).size.width * 0.3,
-                        MediaQuery.of(context).size.height * 0.01),
-                    child: Text(
-                      "Pregnency Family",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            children: <Widget>[               
               Container(
                 child: Column(
                   children: <Widget>[
@@ -898,8 +859,25 @@ class _PreFamRegState extends State<PreFamReg> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(
-          height: 20,
+       Container(
+          height: MediaQuery.of(context).copyWith().size.height / 5,
+          width: MediaQuery.of(context).copyWith().size.width,
+          color: Colors.lightBlue,
+          child: Container(
+            child: Text(
+              'Mother Pregnancy Registration',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.06,
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.04),
+          ),
         ),
         complete
             ? validate()

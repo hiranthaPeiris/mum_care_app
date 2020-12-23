@@ -99,9 +99,127 @@ class _NotificationState extends State<NotificationScreen> {
       case "reg":
         Navigator.pushNamed(context, '/profile');
         break;
+      case "notice":
+        openBottomSheet(context, notification);
+        break;
+      case "MidLeave":
+        openBottomSheet(context, notification);
+        break;
       default:
         Navigator.pushNamed(context, '/error');
     }
+  }
+
+  void openBottomSheet(BuildContext cont, NotificationM notification) {
+    showModalBottomSheet(
+        context: cont,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc) {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              height: 500.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Container(),
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      "Special Notice",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.blue[700],
+                                    ),
+                                    Icon(
+                                      Icons.more_vert,
+                                      color: Colors.blue[700],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 30.0,
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Expanded(
+                        child: Column(
+                      children: [
+                        Text("${notification.body}",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0)),
+                        Text("Description: ${notification.body}",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0)),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text("Received on: ${notification.dateTime.toString()}",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0)),
+                      ],
+                    )),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      "Thank you,",
+                      style: TextStyle(color: Colors.black, fontSize: 18.0),
+                    ),
+                    Container(
+                      child: FlatButton(
+                        child: Text(
+                          "Okay",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 
@@ -115,7 +233,8 @@ class NotificationListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Notifications"),
+      appBar: AppBar(
+        title: Text("Notifications"),
         backgroundColor: kBackground,
       ),
       body: ListView(

@@ -9,5 +9,5 @@ const kBlueLightColor = Color(0xFFC7B8F5);
 const kBlueColor = Color(0xFF817DC0);
 const kShadowColor = Color(0xFFE6E6E6);
 const kBackground = Color(0xFF19b6fd);
-
+const kBackgrount2 = Color(0xFFC2185B);
 const loading = SpinKitCubeGrid(color: kActiveIconColor, size: 50.0);

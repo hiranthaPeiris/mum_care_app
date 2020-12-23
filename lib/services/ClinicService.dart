@@ -24,7 +24,7 @@ class ClinicService {
         _firestore.collection('Bookings').doc(midUID).collection('Clinics');
 
     NotificationM notification = NotificationM("New Clinic assigned", desc,
-        dateTime, "doc.id", new DateTime.now(), "clinic");
+        dateTime, "doc.id", new DateTime.now(), "clinic","New Clinic");
 
     await Future.forEach(query.docs, (doc) async {
       userList.add(_firestore.collection('users').doc(doc.id));
