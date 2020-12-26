@@ -20,14 +20,73 @@ class _ChatScreenState extends State<ChatScreen> {
   String mTime;
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool pending = true;
+  num msgUnread = 0;
+  String lastContent;
+
+  setMsgRead() async {
+    FirebaseFirestore.instance
+        .collection('messages')
+        .doc(chatID)
+        .collection(chatID)
+        .where('idFrom', isEqualTo: widget.userID)
+        .where(
+          'unread',
+          isEqualTo: true,
+        )
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        print(result.data()['unread'].toString() + "This is unread areas");
+        print(result.data().length / 2);
+        result.reference.update(<String, dynamic>{'unread': false});
+        setState(() {
+          lastContent = result.data()['content'].toString();
+        });
+      });
+    });
+  }
+
+  Future<void> setUnreadField() async {
+    var documentReference01 = FirebaseFirestore.instance
+        .collection('messages')
+        .doc(_auth.currentUser.uid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      await transaction.set(
+        documentReference01,
+        {
+          'numUnread': msgUnread,
+          'lastContent':lastContent,
+        },
+      );
+    });
+  }
+
+  Future<void> updateUnreadField() async {
+    var documentReference01 = FirebaseFirestore.instance
+        .collection('messages')
+        .doc(_auth.currentUser.uid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      await transaction.update(
+        documentReference01,
+        {
+          'numUnread': msgUnread,
+          'lastContent':lastContent,
+        },
+      );
+    });
+  }
+
   // ignore: must_call_super
   void initState() {
     super.initState();
     user.userCustomData['role'] == 'midwife'
         ? chatID = _auth.currentUser.uid + widget.userID
         : chatID = widget.userID + _auth.currentUser.uid;
-
     print(user.userCustomData['role']);
+    //print(chatID + "This is chat screen");
+
+    setMsgRead();
+    //print("this is run");
   }
 
   @override
@@ -54,9 +113,13 @@ class _ChatScreenState extends State<ChatScreen> {
               'timestamp': DateTime.now().millisecondsSinceEpoch,
               'content': content,
               'chatId': chatID,
+              'unread': true,
             },
           );
         });
+        msgUnread = msgUnread + 1;
+        msgUnread == 1 ? setUnreadField() : updateUnreadField();
+
         // listScrollController.animateTo(0.0,
         //     duration: Duration(milliseconds: 300), curve: Curves.easeOut);
       } else {
@@ -130,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              time,
+              time.toString(),
               style: TextStyle(
                 color: Colors.blueGrey,
                 fontSize: 16.0,
@@ -190,7 +253,7 @@ class _ChatScreenState extends State<ChatScreen> {
       var now = new DateTime.now();
       var format = new DateFormat('HH:mm a');
       var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-      var diff = date.difference(now);
+      var diff = now.difference(date);
       var time = '';
 
       if (diff.inSeconds <= 0 ||
@@ -200,12 +263,11 @@ class _ChatScreenState extends State<ChatScreen> {
         time = format.format(date);
       } else {
         if (diff.inDays == 1) {
-          time = diff.inDays.toString() + 'DAY AGO';
+          time = diff.inDays.toString() + ' DAY AGO';
         } else {
-          time = diff.inDays.toString() + 'DAYS AGO';
+          time = diff.inDays.toString() + ' DAYS AGO';
         }
       }
-
       return time;
     }
 
@@ -253,7 +315,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (!snapshot.hasData) {
                         return Loading();
                       } else {
-                        ///listMessage = snapshot.data.documents;
+                        //listMessage = snapshot.data.documents;
                         return ListView.builder(
                           padding: EdgeInsets.all(10.0),
                           itemBuilder: (context, index) {
@@ -264,7 +326,18 @@ class _ChatScreenState extends State<ChatScreen> {
                             final bool isMe = snapshot.data.documents[index]
                                     ['idFrom'] ==
                                 _auth.currentUser.uid;
-
+                            var documentReference01 = FirebaseFirestore.instance
+                                .collection('messages')
+                                .doc(widget.userID);
+                            FirebaseFirestore.instance
+                                .runTransaction((transaction) async {
+                              await transaction.update(
+                                documentReference01,
+                                {
+                                  'numUnread': 0,
+                                },
+                              );
+                            });
                             return _buildMessage(
                                 message, isMe, readTimestamp(mTimeStamp));
                           },

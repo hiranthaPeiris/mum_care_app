@@ -31,6 +31,7 @@ class _SetChatUserState extends State<SetChatUser> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   UserM user = new UserM.get();
   bool pending = true;
+  String chatID;
 
   getData01(String area) {
     return FirebaseFirestore.instance
@@ -47,6 +48,95 @@ class _SetChatUserState extends State<SetChatUser> {
         .where('area01', isEqualTo: area)
         .snapshots();
   }
+
+  Widget getUnreadCount(BuildContext context, String id) {
+    return StreamBuilder(
+      stream:
+          FirebaseFirestore.instance.collection("messages").doc(id).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot == null) {
+          return Text(" ");
+        }
+        if (snapshot.hasError) {
+          return Text(" ");
+        }
+        if (!snapshot.hasData) {
+          return Text(" ");
+        }
+        var value = snapshot.data;
+        num count = value["numUnread"];
+
+        if (snapshot.hasData) {
+          return count == 0
+              ? Text(" ")
+              : Container(
+                  width: 40.0,
+                  height: 20.0,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    count.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+        } else {
+          Text(" ");
+        }
+      },
+    );
+  }
+
+  Widget getLastContent(BuildContext context, String id) {
+    return StreamBuilder(
+      stream:
+          FirebaseFirestore.instance.collection("messages").doc(id).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot == null) {
+          return Text(" ");
+        }
+        if (snapshot.hasError) {
+          return Text(" ");
+        }
+        if (!snapshot.hasData) {
+          return Text(" ");
+        }
+        var value = snapshot.data;
+        String content = value["lastContent"];
+
+        if (snapshot.hasData) {
+         return Text(
+                        content,
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      );
+        } else {
+          Text(" ");
+        }
+      },
+    );
+  }
+
+  // Future<void> setMsgSeen() async {
+  //   await FirebaseFirestore.instance
+  //       .collection('messages')
+  //       .doc(chatID)
+  //       .update({
+  //         'lastmsgsent': false,
+  //       })
+  //       .then((value) => print("last msg seen false"))
+  //       .catchError((err) => print(err));
+  // }
 
   Widget buildBody01(BuildContext context, String abc) {
     return StreamBuilder(
@@ -75,14 +165,21 @@ class _SetChatUserState extends State<SetChatUser> {
 
   Widget listItemBuild01(BuildContext context, DocumentSnapshot data) {
     //final comRegBD = ComRegDB.fromSnapshot(data);
+    print(data.id + _auth.currentUser.uid);
+    user.userCustomData['role'] == 'midwife'
+        ? chatID = _auth.currentUser.uid + data.id
+        : chatID = data.id + _auth.currentUser.uid;
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => ChatScreen(
-                  userID: data.id,
-                )),
-      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => ChatScreen(
+                    userID: data.id,
+                  )),
+        );
+        print(chatID + "This is setuser");
+      },
       child: Container(
         margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 10.0),
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
@@ -102,6 +199,14 @@ class _SetChatUserState extends State<SetChatUser> {
                 CircleAvatar(
                   radius: 35.0,
                   //backgroundImage: AssetImage(chat.sender.imageUrl),
+                  child: Text(
+                      data['name'],
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                 ),
                 SizedBox(width: 10.0),
                 Column(
@@ -116,18 +221,10 @@ class _SetChatUserState extends State<SetChatUser> {
                       ),
                     ),
                     SizedBox(height: 5.0),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      child: Text(
-                        data.id,
-                        style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width * 0.45,
+                    //   child: getLastContent(context, data.id)
+                    // ),
                   ],
                 ),
               ],
@@ -138,30 +235,15 @@ class _SetChatUserState extends State<SetChatUser> {
                 //   "Sender Name",
                 //   style: TextStyle(
                 //     color: Colors.grey,
-                //     fontSize: 15.0,
+                //     fontSize: 10.0,
                 //     fontWeight: FontWeight.bold,
                 //   ),
                 // ),
-                SizedBox(height: 5.0),
-                // chat.unread
-                //     ? Container(
-                //   width: 40.0,
-                //   height: 20.0,
-                //   decoration: BoxDecoration(
-                //     color: Theme.of(context).primaryColor,
-                //     borderRadius: BorderRadius.circular(30.0),
-                //   ),
-                //   alignment: Alignment.center,
-                //   child: Text(
-                //     'NEW',
-                //     style: TextStyle(
-                //       color: Colors.white,
-                //       fontSize: 12.0,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // )
-                //     : Text(''),
+                Container(
+                  width: 40,
+                  height: 40,
+                  child: getUnreadCount(context, data.id),
+                )
               ],
             ),
           ],
