@@ -1,18 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/models/Notification.model.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
 
 enum HOMEVISITSTATE { active, done, cancle, rescheduled }
 enum HOMEVISITCONFM { accept, deny }
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-final dateTimeNow = DateTime.now();
-class HomeVisitService {
-  Future<void> addHomeVisit(
-      String desc, DateTime dateTime, TimeOfDay time, String uid, String midwifeID) async {
-    CollectionReference homeVisit = _firestore.collection('HomeVisits');
-    DocumentReference userDocRef = _firestore.collection('users').doc(uid);
 
-    String dateTimeSlug = getDateSlug(dateTime,time);
+class HomeVisitService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final dateTimeNow = DateTime.now();
+  final NotificationService _notificationService = NotificationService();
+
+  Future<void> addHomeVisit(String desc, DateTime dateTime, TimeOfDay time,
+      DocumentSnapshot doc, String midwifeID) async {
+    CollectionReference homeVisit = _firestore.collection('HomeVisits');
+    DocumentReference userDocRef = _firestore.collection('users').doc(doc.id);
+
+    String dateTimeSlug = getDateSlug(dateTime, time);
     // CollectionReference midwifeVisit = _firestore
     //     .collection('Bookings')
     //     .doc(midwifeID)
@@ -33,20 +38,26 @@ class HomeVisitService {
     await homeVisit
         .add({
           'description': desc,
-          'remarks':"",
+          'remarks': "",
           'dateTime': dateTimeSlug,
-          'scheduleData':dateTimeNow.format(DateTimeFormats.american).toString(),
-          'day':dateTime.day,
-          'month':dateTime.month,
-          'year':dateTime.year,
+          'scheduleData':
+              dateTimeNow.format(DateTimeFormats.american).toString(),
+          'day': dateTime.day,
+          'month': dateTime.month,
+          'year': dateTime.year,
           'status': "active",
           'confirmation': 'pending',
           'midwifeID': midwifeID,
-          'userID':uid,
+          'userID': doc.id,
           'userDocRef': userDocRef
         })
         .then((value) => print("home visit added $value"))
         .catchError((err) => print(err));
+        
+    NotificationM notification =
+        NotificationM("New Home visit", desc, dateTimeSlug, doc.id, new DateTime.now(),"home","New Home visit");
+    await _notificationService.sendAndRetrieveMessage(
+        notification.getMap(), doc['token']);
   }
 
   Future<void> chageStatus(HOMEVISITSTATE state, String uid, String docID,
@@ -93,11 +104,10 @@ class HomeVisitService {
         .catchError((err) => print(err));
   }
 
-  Future<void> changeConfirmation(HOMEVISITCONFM confm, 
-      String docID, String midwifeID) async {
-    DocumentReference userDocRef = _firestore
-        .collection('HomeVisits')
-        .doc(docID);
+  Future<void> changeConfirmation(
+      HOMEVISITCONFM confm, String docID, String midwifeID) async {
+    DocumentReference userDocRef =
+        _firestore.collection('HomeVisits').doc(docID);
 
     //midwife doc
     // DocumentReference midwifeDocRef = _firestore

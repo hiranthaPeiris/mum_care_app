@@ -54,18 +54,26 @@ class _NotificationState extends State<NotificationScreen> {
                   },
                 );
               } else if (asyncSnapshot.hasError) {
-                widget = Column(
-                  children: <Widget>[
-                    Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.green,
-                      size: 60,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Text('Result: ${asyncSnapshot.data}'),
-                    )
-                  ],
+                widget = Center(
+                  heightFactor: 2.0,
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.green,
+                        size: 60,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text(
+                            'Result: ${asyncSnapshot.hasError.toString()}'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text('Error on getting notifications'),
+                      )
+                    ],
+                  ),
                 );
               } else {
                 widget = Loading();
@@ -76,10 +84,142 @@ class _NotificationState extends State<NotificationScreen> {
         ));
   }
 
-  void _handleTapped(NotificationM nofication) {
-    setState(() {
-      _selectedNotific = nofication;
-    });
+  void _handleTapped(NotificationM notification) {
+    // setState(() {
+    //   _selectedNotific = nofication;
+    // });
+    String type = notification.type;
+    switch (type) {
+      case "home":
+        Navigator.pushNamed(context, '/viewupcominghomevisit');
+        break;
+      case "clinic":
+        Navigator.pushNamed(context, '/UpcomingClinics');
+        break;
+      case "reg":
+        Navigator.pushNamed(context, '/profile');
+        break;
+      case "notice":
+        openBottomSheet(context, notification);
+        break;
+      case "MidLeave":
+        openBottomSheet(context, notification);
+        break;
+      default:
+        Navigator.pushNamed(context, '/error');
+    }
+  }
+
+  void openBottomSheet(BuildContext cont, NotificationM notification) {
+    showModalBottomSheet(
+        context: cont,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc) {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              height: 500.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Container(),
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      "Special Notice",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.blue[700],
+                                    ),
+                                    Icon(
+                                      Icons.more_vert,
+                                      color: Colors.blue[700],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 30.0,
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Expanded(
+                        child: Column(
+                      children: [
+                        Text("${notification.body}",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0)),
+                        Text("Description: ${notification.body}",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0)),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text("Received on: ${notification.dateTime.toString()}",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0)),
+                      ],
+                    )),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      "Thank you,",
+                      style: TextStyle(color: Colors.black, fontSize: 18.0),
+                    ),
+                    Container(
+                      child: FlatButton(
+                        child: Text(
+                          "Okay",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 
@@ -94,6 +234,7 @@ class NotificationListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Notifications"),
         backgroundColor: kBackground,
       ),
       body: ListView(
@@ -102,9 +243,10 @@ class NotificationListScreen extends StatelessWidget {
             ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.deepPurpleAccent,
+                  child: Icon(Icons.medical_services),
                 ),
-                title: Text(notifc.header),
-                subtitle: Text(notifc.content,
+                title: Text(notifc.title),
+                subtitle: Text(notifc.topicDate,
                     style: TextStyle(color: Colors.black26)),
                 onTap: () => onTapped(notifc))
         ],
@@ -145,13 +287,26 @@ class NotificationDetailsScreen extends StatelessWidget {
       appBar: AppBar(),
       body: Column(
         children: [
-          if (notification != null)
-            Text(notification.header,
-                style: Theme.of(context).textTheme.headline5),
-          Text(
-            notification.content,
-            style: TextStyle(color: Colors.black26),
-          )
+          (notification != null)
+              ? {
+                  Text(notification.title,
+                      style: Theme.of(context).textTheme.headline5),
+                  Text(
+                    notification.body,
+                    style: TextStyle(color: Colors.black26),
+                  ),
+                  Text(
+                    notification.topicDate,
+                    style: TextStyle(color: Colors.black26),
+                  ),
+                  Text(
+                    notification.topicRef,
+                    style: TextStyle(color: Colors.black26),
+                  )
+                }
+              : SizedBox(
+                  height: 10.0,
+                )
         ],
       ),
     );

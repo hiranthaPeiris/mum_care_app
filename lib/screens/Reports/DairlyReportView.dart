@@ -177,9 +177,9 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                                   child: StreamBuilder<QuerySnapshot>(
                                     stream: widget._firestore
                                         .collection('ComDatabase')
-                                        .where('_phmDropDownValue',
-                                            isEqualTo: getUser
-                                                .userCustomData['area01'])
+                                        // .where('_phmDropDownValue',
+                                        //     isEqualTo: getUser
+                                        //         .userCustomData['area01'])
                                         .where("_regDate",
                                             isEqualTo: widget.getDate.year
                                                     .toString() +

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/screens/chat/chatscreen.dart';
+import 'package:mun_care_app/services/StorageService.dart';
 
 class SetChatUser extends StatefulWidget {
   @override
@@ -32,6 +33,9 @@ class _SetChatUserState extends State<SetChatUser> {
   UserM user = new UserM.get();
   bool pending = true;
   String chatID;
+  final StorageService _storageService = StorageService();
+  String _profileImage =
+      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
 
   getData01(String area) {
     return FirebaseFirestore.instance
@@ -111,15 +115,15 @@ class _SetChatUserState extends State<SetChatUser> {
         String content = value["lastContent"];
 
         if (snapshot.hasData) {
-         return Text(
-                        content,
-                        style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      );
+          return Text(
+            content,
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
+            ),
+            overflow: TextOverflow.ellipsis,
+          );
         } else {
           Text(" ");
         }
@@ -127,16 +131,21 @@ class _SetChatUserState extends State<SetChatUser> {
     );
   }
 
-  // Future<void> setMsgSeen() async {
-  //   await FirebaseFirestore.instance
-  //       .collection('messages')
-  //       .doc(chatID)
-  //       .update({
-  //         'lastmsgsent': false,
-  //       })
-  //       .then((value) => print("last msg seen false"))
-  //       .catchError((err) => print(err));
-  // }
+  Widget getProfileImage(String id) {
+    _storageService.downloadProfileImage("profile",id).then((url) {
+      if (url != null) {
+        setState(() {
+          _profileImage = url;
+          //pending = false;
+          print("image came");
+        });
+      }
+    });
+    return CircleAvatar(
+      radius: 35.0,
+      backgroundImage: NetworkImage(_profileImage),
+    );
+  }
 
   Widget buildBody01(BuildContext context, String abc) {
     return StreamBuilder(
@@ -196,18 +205,7 @@ class _SetChatUserState extends State<SetChatUser> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 35.0,
-                  //backgroundImage: AssetImage(chat.sender.imageUrl),
-                  child: Text(
-                      data['name'],
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                ),
+                getProfileImage(data.id),
                 SizedBox(width: 10.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

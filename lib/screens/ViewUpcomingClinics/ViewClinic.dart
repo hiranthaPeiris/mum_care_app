@@ -23,7 +23,7 @@ class _ViewClinicState extends State<ViewClinic> {
   bool pending = true;
   String remarks = "";
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  
+
   @override
   void initState() {
     super.initState();
@@ -183,6 +183,7 @@ class _ViewClinicState extends State<ViewClinic> {
                                 stream: widget._firestore
                                     .collection('users')
                                     .where('midwifeID', isEqualTo: midID)
+                                    .where("competencyFam", isEqualTo: true)
                                     .snapshots(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -326,7 +327,7 @@ class _ViewClinicState extends State<ViewClinic> {
 
   Widget _buildListTile(DocumentSnapshot documentSnapshot,
       List<DocumentReference> usersClinicRefList) {
-    //print(documentSnapshot.id);
+    print(documentSnapshot.id);
     //use Regex to match
     DocumentReference userClincRef;
 
@@ -360,6 +361,7 @@ class _ViewClinicState extends State<ViewClinic> {
             MaterialPageRoute(
                 builder: (context) => Profile(
                       documentSnapshot: documentSnapshot,
+                      review: false,
                     )));
       },
     );

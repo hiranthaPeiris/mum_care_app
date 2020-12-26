@@ -1,36 +1,27 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/helpers/interfaces/CustomPopMenu.dart';
+import 'package:mun_care_app/models/Notification.model.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
+import 'package:mun_care_app/services/StorageService.dart';
 import 'package:mun_care_app/services/UserDataService.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatefulWidget {
-  // final String userEmail;
-  // final String userName;
-  // final String userBio;
-  // final String status;
-  // final String nameOfMidwife;
   final bool review;
   final String reviewType;
   final DocumentSnapshot documentSnapshot;
-  const Profile(
-      {Key key,
-      // this.userEmail,
-      // this.userName,
-      // this.userBio,
-      // this.status,
-      // this.nameOfMidwife,
-      // this.area,
-      this.documentSnapshot,
-      this.review,
-      this.reviewType})
+  const Profile({Key key, this.documentSnapshot, this.review, this.reviewType})
       : super(key: key);
 
   @override
@@ -38,24 +29,62 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final UserDataSevice _userDataSevice = UserDataSevice();
+  final StorageService _storageService = StorageService();
+  final NotificationService _notificationService = NotificationService();
+  final picker = ImagePicker();
 
+  TextEditingController remarks = TextEditingController();
   UserM _user = new UserM.get();
   String uid;
   bool pending = true;
-  bool drawer = true;
+  bool drawer = true; //used for side drawer
   ComRegDB _compData;
   PreRegDB _pregData;
   Map<String, dynamic> userCustomData;
+  String _profileImage =
+      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
+  File _image;
+
+  /// App bar pop up menu items
+  List<String> choices = [
+    "Change Profile Picture",
+    "Update Profile",
+    "Settings"
+  ];
   //DocumentSnapshot compFamData;
   //DocumentSnapshot pregData;
+
+  //For url luncher
   Future<void> _launched;
+
+  Future getImage() async {
+    var image = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      pending = true;
+      if (image != null) {
+        _image = File(image.path);
+        _storageService.uploadProfileImage(_image, _user.uid, "profile");
+      }
+      pending = false;
+    });
+  }
+
+  void choiceAction(String choice) {
+    if (choice == "Change Profile Picture") {
+      getImage();
+    } else if (choice == "Update Profile") {
+      //getImage();
+      print('Subscribe');
+    } else if (choice == "Settings") {
+      print('SignOut');
+    }
+  }
+
   @override
   void initState() {
-    super.initState();
-    //print(userCustomData);
-
     if (widget.documentSnapshot != null) {
       userCustomData = widget.documentSnapshot.data();
       uid = widget.documentSnapshot.id;
@@ -68,13 +97,23 @@ class _ProfileState extends State<Profile> {
 
     //print(userCustomData['PregnanctFam']);
     //print(userCustomData['competencyFam']);
+    _storageService.downloadProfileImage("profile", uid).then((url) {
+      if (url != null) {
+        setState(() {
+          _profileImage = url;
+          //pending = false;
+          print("image came");
+        });
+      }
+    });
 
-    if (userCustomData['competencyFam'] && userCustomData['PregnanctFam']) {
+    if ((userCustomData['compApp'] && userCustomData['pregApp']) ||
+        (userCustomData['PregnanctFam'] && userCustomData['competencyFam'])) {
       _userDataSevice.getCompData(uid).then((doc) {
         setState(() {
           _compData = ComRegDB.fromSnapshot(doc);
           //compFamData = doc;
-          print(doc);
+          //print(doc.data());
         });
       });
 
@@ -82,17 +121,17 @@ class _ProfileState extends State<Profile> {
         setState(() {
           _pregData = PreRegDB.fromSnapshot(doc);
           //pregData = doc;
-          //print(doc);
+          //print(_pregData.m);
           pending = false;
         });
       });
-    } else if (userCustomData['competencyFam']) {
+    } else if (userCustomData['compApp'] || userCustomData['competencyFam']) {
       _userDataSevice.getCompData(uid).then((doc) {
         setState(() {
           //compFamData = doc;
+           pending = false;
           _compData = ComRegDB.fromSnapshot(doc);
-          print(doc.data());
-          pending = false;
+          //print(doc.data());
         });
       });
     } else {
@@ -100,6 +139,7 @@ class _ProfileState extends State<Profile> {
         pending = false;
       });
     }
+    super.initState();
   }
 
   @override
@@ -107,8 +147,17 @@ class _ProfileState extends State<Profile> {
     String name = userCustomData['name'];
     String tel = userCustomData['tel'];
     String email = userCustomData['email'];
-    bool comp = userCustomData['competencyFam'];
-    bool preg = userCustomData['PregnanctFam'];
+    bool comp;
+    bool preg;
+
+    if (widget.review) {
+      comp = userCustomData['compApp'];
+      preg = userCustomData['pregApp'];
+    } else {
+      comp = userCustomData['competencyFam'];
+      preg = userCustomData['PregnanctFam'];
+    }
+
     //print( _compData.regDate);
     return pending
         ? Loading()
@@ -116,20 +165,28 @@ class _ProfileState extends State<Profile> {
             length: 3,
             child: SafeArea(
               child: Scaffold(
-                  bottomNavigationBar: (drawer) ? Bottom_nav() : null,
+                  key: _scaffoldKey,
+                  bottomNavigationBar: (drawer)
+                      ? Bottom_nav(
+                          scaffoldKey: _scaffoldKey,
+                        )
+                      : null,
                   appBar: AppBar(
                     title: Text("Profile"),
                     backgroundColor: kBackground,
                     actions: <Widget>[
-                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
-                      IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+                      PopupMenuButton(
+                        onSelected: choiceAction,
+                        itemBuilder: (BuildContext context) {
+                          return choices.map((String choice) {
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                      )
                     ],
-                    /*bottom: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.directions_car)),
-                Tab(icon: Icon(Icons.directions_transit)),
-                Tab(icon: Icon(Icons.directions_bike)),
-              ],*/
                   ),
                   drawer: Drawer(
                     child: ListView(
@@ -145,7 +202,7 @@ class _ProfileState extends State<Profile> {
                             borderRadius: BorderRadius.circular(80),
                             child: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+                                _profileImage,
                               ),
                             ),
                             //child: ,
@@ -300,24 +357,69 @@ class _ProfileState extends State<Profile> {
                                                           fontSize: 18.0),
                                                     ),
                                                   ),
-                                                  _buildTile("Full Name",
-                                                      "Name in full"),
-                                                  _buildTile("Name of Husband",
-                                                      "Husbund name"),
-                                                  _buildTile("Address",
-                                                      "address, sri lanka"),
                                                   _buildTile(
-                                                      "NIC", "986578123V"),
+                                                      "MOH Area",
+                                                      _pregData
+                                                          .mohDropDownValue),
+                                                  _buildTile(
+                                                      "PHM Area",
+                                                      _pregData
+                                                          .phmDropDownValue),
+                                                  _buildTile(
+                                                      "Grama Niladhari Division",
+                                                      _pregData.gnDivision),
+                                                  _buildTile("Field Clinic",
+                                                      _pregData.fcName),
                                                   _buildTile("Date of Birth",
                                                       "1996-02-30"),
-                                                  _buildTile("Job", "None"),
-                                                  _buildTile("PHM Area",
-                                                      "address, sri lanka"),
-                                                  _buildTile("AHM Area",
+                                                  _buildTile(
+                                                      "Hospital in Clinic",
+                                                      _pregData.hcName),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                        "Consultant Obstetrician"),
+                                                  ),
+                                                  _buildTile("Pregnancy Count",
+                                                      _pregData.womb),
+                                                  _buildTile("Pregnancy Count",
                                                       "address, sri lanka"),
                                                   _buildTile(
                                                       "Date of Registration",
-                                                      "address, sri lanka")
+                                                      "address, sri lanka"),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                        "Present Obstetric History"),
+                                                  ),
+                                                  _buildTile(
+                                                      "Present vaginal bleeding",
+                                                      _pregData.pvb),
+                                                  _buildTile("Blood Pressure",
+                                                      _pregData.bloodPresure),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Text(
+                                                        "Medical/Surgical History"),
+                                                  ),
+                                                  _buildTile(
+                                                      "Maleria",
+                                                      _pregData.maleria
+                                                          .toString()),
+                                                  _buildTile(
+                                                      "Diabetic",
+                                                      _pregData.diabetic
+                                                          .toString()),
+                                                  _buildTile(
+                                                      "Heart Disorders",
+                                                      _pregData.heartDisorder
+                                                          .toString()),
                                                 ],
                                               ),
                                             )
@@ -370,17 +472,18 @@ class _ProfileState extends State<Profile> {
                                                       Alignment.bottomLeft,
                                                   child: ElevatedButton(
                                                     onPressed: () {
-                                                      dynamic rst =
-                                                          updateReviewState(widget
-                                                              .documentSnapshot
-                                                              .id);
+                                                      openBottomSheet(context);
+                                                      // dynamic rst =
+                                                      //     updateReviewState(widget
+                                                      //         .documentSnapshot
+                                                      //         .id);
 
-                                                      if (rst != null) {
-                                                        _buildSnackBar(context);
-                                                      } else {
-                                                        print(
-                                                            "profile update error");
-                                                      }
+                                                      // if (rst != null) {
+                                                      //   _buildSnackBar(context);
+                                                      // } else {
+                                                      //   print(
+                                                      //       "profile update error");
+                                                      // }
                                                       //Navigator.pop(context);
                                                     },
                                                     child: Text('Accept'),
@@ -420,6 +523,219 @@ class _ProfileState extends State<Profile> {
           );
   }
 
+  void openBottomSheet(BuildContext cont) {
+    List<bool> _selections = List.generate(3, (_) => false);
+    print(_selections.indexWhere((element) => true));
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModelState) {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 400.0,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Container(),
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "Review",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0),
+                                        ),
+                                        Spacer(),
+                                        Icon(
+                                          Icons.delete_outline,
+                                          color: Colors.blue[700],
+                                        ),
+                                        Icon(
+                                          Icons.more_vert,
+                                          color: Colors.blue[700],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                "Mother Condition",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Row(
+                                children: [
+                                  ToggleButtons(
+                                    selectedColor: kBackground,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Row(
+                                          children: [
+                                            Text("Normal"),
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Icon(Icons.adjust_outlined,
+                                                color: Colors.green)
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Row(
+                                          children: [
+                                            Text("Need Attention"),
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Icon(Icons.adjust_outlined,
+                                                color: Colors.orange),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Row(
+                                          children: [
+                                            Text("Danger"),
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Icon(Icons.adjust_outlined,
+                                                color: Colors.red),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                    onPressed: (int index) {
+                                      setModelState(() {
+                                        for (int buttonIndex = 0;
+                                            buttonIndex < _selections.length;
+                                            buttonIndex++) {
+                                          if (buttonIndex == index) {
+                                            _selections[buttonIndex] = true;
+                                          } else {
+                                            _selections[buttonIndex] = false;
+                                          }
+                                        }
+                                      });
+                                    },
+                                    isSelected: _selections,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Text("Special Remarks",
+                                  style: TextStyle(fontSize: 16)),
+                              Padding(
+                                padding: EdgeInsets.all(2.0),
+                                child: TextFormField(
+                                  controller: remarks,
+                                  decoration: InputDecoration(
+                                    labelText: "Remarks",
+                                    hintText: "remark on mother",
+                                  ),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Please Enter a remark";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50.0,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Container(
+                                child: Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: ElevatedButton(
+                                    child: Text('Close'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                child: Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: ElevatedButton(
+                                    child: Text('Accept'),
+                                    onPressed: () {
+                                      String condition = getCondition(
+                                          _selections.indexWhere(
+                                              (element) => element == true));
+                                      print(condition);
+
+                                      dynamic rst = updateReviewState(
+                                          widget.documentSnapshot.id,
+                                          condition);
+
+                                      if (rst != null) {
+                                        _buildSnackBar(cont);
+                                      } else {
+                                        print("profile update error");
+                                      }
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
   Future<void> _makePhoneCall(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -428,7 +744,23 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Future<void> updateReviewState(String uID) async {
+  String getCondition(int index) {
+    switch (index) {
+      case 0:
+        return "Normal";
+        break;
+      case 1:
+        return "Need Attention";
+        break;
+      case 2:
+        return "Danger";
+        break;
+      default:
+        return "okay";
+    }
+  }
+
+  Future<void> updateReviewState(String uID, String condition) async {
     //competencyFam
     String type, apply;
     if (widget.reviewType == "comp") {
@@ -438,44 +770,23 @@ class _ProfileState extends State<Profile> {
       type = "PregnanctFam";
       apply = "pregApp";
     }
-    return await _firestore
+    await _firestore
         .collection('users')
         .doc(uID)
-        .update({type: true, apply: false})
+        .update({type: true, apply: false, 'condition': condition})
         .then((value) => print("User status Updated"))
         .catchError((error) => print("Failed to update user: $error"));
-  }
 
-  Future<DocumentSnapshot> getCompData(String uID) async {
-    return await _firestore
-        .collection('ComDatabase')
-        .doc(uID)
-        .get()
-        .then(((DocumentSnapshot documentSnapshot) async {
-      if (documentSnapshot.exists) {
-        //print('Document data: ${documentSnapshot.data()}');
-        return documentSnapshot;
-      } else {
-        print('Document does not exist on the database');
-        return null;
-      }
-    }));
-  }
-
-  Future<DocumentSnapshot> getPregData(String uID) async {
-    return await _firestore
-        .collection('PreDatabase')
-        .doc(uID)
-        .get()
-        .then(((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        //print('Document data: ${documentSnapshot.data()}');
-        return documentSnapshot;
-      } else {
-        print('Document does not exist on the database');
-        return null;
-      }
-    }));
+    NotificationM notification = NotificationM(
+        "Application Status",
+        "Your $type application has accepted ",
+        new DateTime.now().toString(),
+        widget.documentSnapshot.id,
+        new DateTime.now(),
+        "reg",
+        "Registration confirmation");
+    await _notificationService.sendAndRetrieveMessage(
+        notification.getMap(), userCustomData['token']);
   }
 
   _buildSnackBar(BuildContext context) {
@@ -504,7 +815,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             CircleAvatar(
               backgroundImage: NetworkImage(
-                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+                _profileImage,
               ),
               radius: 40.0,
             ),

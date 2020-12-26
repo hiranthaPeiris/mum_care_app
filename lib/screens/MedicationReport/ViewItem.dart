@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/MediModel.dart';
+import 'package:mun_care_app/services/StorageService.dart';
 
 class ViewItem extends StatefulWidget {
   final QueryDocumentSnapshot documentSnapshot;
@@ -14,14 +15,30 @@ class ViewItem extends StatefulWidget {
 
 class _ViewItemState extends State<ViewItem> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final StorageService _storageService = StorageService();
   String remarks;
   bool pending = false;
+  String imageUri= "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
 
+@override
+  void initState() {
+    print(widget.documentSnapshot.id);
+    _storageService.downloadProfileImage("MedicalReport",widget.documentSnapshot.id).then((url) {
+        if (url != null) {
+          setState(() {
+            imageUri = url;
+            pending = false;
+            print("image came");
+          });
+        }
+      });
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     MediData mediData = MediData.fromSnapshot(widget.documentSnapshot);
-
+    
     return pending
         ? Loading()
         : Scaffold(
@@ -65,119 +82,118 @@ class _ViewItemState extends State<ViewItem> {
                             topLeft: Radius.circular(20.0),
                             topRight: Radius.circular(20.0),
                           )),
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      height: MediaQuery.of(context).size.height * 0.7,
                       width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                10.0, 15.0, 0.0, 10.0),
-                            child: Text(
-                              "Date of Medication: ${mediData.date}",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 16.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
-                            child: Text(
-                              "NIC: ${mediData.nic}",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 16.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  10.0, 15.0, 0.0, 10.0),
+                              child: Text(
+                                "Date of Medication: ${mediData.date}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                              ),
+                            ),                            
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  10.0, 0.0, 0.0, 10.0),
+                              child: Text(
+                                "Descrition: ${mediData.description}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
-                            child: Text(
-                              "Descrition: ${mediData.description}",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 16.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  10.0, 0.0, 0.0, 10.0),
+                              child: Text(
+                                "vaccine: ${mediData.vaccine}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
-                            child: Text(
-                              "vaccine: ${mediData.vaccine}",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 16.0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  10.0, 0.0, 0.0, 0.0),
+                              child: Text(
+                                "Mother Remarks: ${mediData.mumRemarks}",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16.0),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
-                            child: Text(
-                              "Mother Remarks: ${mediData.mumRemarks}",
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 16.0),
+                            InteractiveViewer(
+                              child: Container(height: 300,width: 400,
+                                  child: Image.network(
+                                      imageUri)),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                setState(() {
-                                  remarks = value;
-                                });
-                              },
-                              decoration: InputDecoration(labelText: 'Remarks'),
+                            SizedBox(
+                              height: 10.0,
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 20.0),
-                            child: Row(
-                              children: <Widget>[
-                                FlatButton(
-                                  shape: StadiumBorder(),
-                                  child: Text(
-                                    "Close",
-                                    style: TextStyle(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.0),
-                                  ),
-                                  onPressed: () {
-                                    //Put your code here which you want to execute on No button click.
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    remarks = value;
+                                  });
+                                },
+                                decoration:
+                                    InputDecoration(labelText: 'Remarks'),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 20.0),
+                              child: Row(
+                                children: <Widget>[
+                                  FlatButton(
+                                    shape: StadiumBorder(),
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),
+                                    ),
+                                    onPressed: () {
+                                      //Put your code here which you want to execute on No button click.
 
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                RaisedButton(
-                                  shape: StadiumBorder(),
-                                  color: kBackground,
-                                  child: Text(
-                                    "Submit",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.0),
+                                      Navigator.of(context).pop();
+                                    },
                                   ),
-                                  onPressed: () {
-                                    dynamic rst = mediUpdate(
-                                        widget.documentSnapshot, remarks);
-                                    if (rst != null) {
-                                      _displaySnackBar(context);
-                                    }else{
-                                      print("Error");
-                                    }
-                                  },
-                                ),
-                              ],
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  RaisedButton(
+                                    shape: StadiumBorder(),
+                                    color: kBackground,
+                                    child: Text(
+                                      "Accept",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),
+                                    ),
+                                    onPressed: () {
+                                      dynamic rst = mediUpdate(
+                                          widget.documentSnapshot, remarks);
+                                      if (rst != null) {
+                                        _displaySnackBar(context);
+                                      } else {
+                                        print("Error");
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

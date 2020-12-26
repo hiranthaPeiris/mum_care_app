@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
+import 'package:mun_care_app/helpers/enums.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/widgets/Bottom_nav.dart';
@@ -26,6 +27,8 @@ class _DashboardState extends State<Dashboard> {
   UserM _user;
   String role = "";
   String name = "null";
+  bool compApp = false;
+  bool pregApp = false;
   bool compFam = false;
   bool pregMum = false;
   DateTime now;
@@ -34,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     //_user = Provider.of<UserM>(context);
-    //print(compFam);
+    //print(compApp);
   }
 
   @override
@@ -48,6 +51,8 @@ class _DashboardState extends State<Dashboard> {
         UserM.setCustomData(customData: customData);
         role = customData['role'];
         name = customData['name'];
+        compApp = customData['compApp'];
+        pregApp = customData['pregApp'];
         compFam = customData['competencyFam'];
         pregMum = customData['PregnanctFam'];
 
@@ -123,7 +128,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -244,8 +250,16 @@ class _DashboardState extends State<Dashboard> {
               }),
         ]),
       );
+    } else if (role == 'sister') {
+      return SliverList(
+        delegate: SliverChildListDelegate([
+          SizedBox(
+            height: 5.0,
+          )
+        ]),
+      );
     } else {
-      if (!pregMum && !compFam) {
+      if (!compFam && !compApp) {
         return SliverList(
           delegate: SliverChildListDelegate([
             Menu_liner_card(
@@ -254,17 +268,13 @@ class _DashboardState extends State<Dashboard> {
                 svgSrc: "assets/icons/Hamburger.svg",
                 press: () {
                   Navigator.pushNamed(context, '/comReg');
+
                 }),
-            Menu_liner_card(
-                heading: "Pregnancy Registration",
-                content: "Complete the pregnancy registration",
-                svgSrc: "assets/icons/Hamburger.svg",
-                press: () {
-                  Navigator.pushNamed(context, '/motherAssign');
-                }),
+                    
+
           ]),
         );
-      } else if (compFam) {
+      } else if (!pregApp && !pregMum) {
         return SliverList(
           delegate: SliverChildListDelegate([
             Menu_liner_card(
@@ -273,6 +283,7 @@ class _DashboardState extends State<Dashboard> {
                 svgSrc: "assets/icons/Hamburger.svg",
                 press: () {
                   Navigator.pushNamed(context, '/motherAssign');
+
                 }),
           ]),
         );
@@ -315,27 +326,19 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           Menu_card(
-            title: "View reports on private medications",
-            heading: "View Mother Medications",
+            title: "View Medications & Leaving Reports",
+            heading: "Medications & Area Leaving",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/ViewMedicalReport');
+              Navigator.pushNamed(context, '/MediLeaveWap');
             },
           ),
           Menu_card(
-            title: "View reports on leaving residential area",
-            heading: "View Leaving Report",
-            svgSrc: "assets/icons/yoga.svg",
-            press: () {
-              Navigator.pushNamed(context, '/ViewleavingReport');
-            },
-          ),
-          Menu_card(
-            title: "Apply leaving for sister",
+            title: "Apply day leave",
             heading: "Apply Leaving",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              //Navigator.pushNamed(context, '/');
+              Navigator.pushNamed(context, '/midLeave');
             },
           ),
           Menu_card(
@@ -346,12 +349,13 @@ class _DashboardState extends State<Dashboard> {
               Navigator.pushNamed(context, '/searchReport');
             },
           ),
+         
           Menu_card(
-            title: "View reports on leaving residential area",
-            heading: "Geo Location",
+            title: "Send Special and Emergancy Notices",
+            heading: "Special Notice",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/geoLocate');
+              Navigator.pushNamed(context, '/specialNotice');
             },
           ),
         ]),
@@ -418,27 +422,29 @@ class _DashboardState extends State<Dashboard> {
       return SliverGrid(
         delegate: SliverChildListDelegate([
           Menu_card(
-            title: "See midwife leave requests",
-            heading: "Midwife Leaving",
+            title: "Manage activites of midwives",
+            heading: "Manage Midwives",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/midwifeleaveReport');
+
+              Navigator.pushNamed(context, '/midManage');
+
             },
           ),
           Menu_card(
-            title: "Report leaving residential area",
-            heading: "Report Leaving",
+            title: "View leaving residential area reports",
+            heading: "View Residential Leaves",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/');
+              Navigator.pushNamed(context, '/midResLeaves');
             },
           ),
           Menu_card(
-            title: "View reports on leaving residential area",
-            heading: "Geo Location",
+            title: "Send Special and Emergancy Notices",
+            heading: "Special Notice",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/geoLocate');
+              Navigator.pushNamed(context, '/specialNotice');
             },
           ),
         ]),

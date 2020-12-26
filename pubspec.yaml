@@ -48,6 +48,10 @@ dependencies:
   firebase_storage: "^5.2.0"
   image_picker: ^0.6.7+14
   month_picker_dialog: ^0.3.3
+  path: ^1.7.0
+  path_provider: ^1.6.24
+  simple_animations: ^2.4.2
+  shared_preferences: ^0.5.12+4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,6 +72,7 @@ flutter:
     - assets/icons/
     - assets/images/pro2.jpg
     - assets/images/pro3.jpg
+    - assets/images/profile.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -39,7 +39,7 @@ class _MotherListState extends State<MotherList> {
                 icon: Icon(Icons.done),
                 child: Text("Accepted"),
               ),
-              Tab(icon: Icon(Icons.directions_bike)),
+              Tab(icon: Icon(Icons.cancel),child: Text("Rejected"),),
             ],
           ),
           title: Text('Review Competency Family'),
@@ -75,11 +75,13 @@ class _MotherListState extends State<MotherList> {
                         ? collection
                             .where('midwifeID', isEqualTo: _user.user.uid)
                             .where('compApp', isEqualTo: true)
+                            .where('competencyFam', isEqualTo: false)
                             .snapshots()
                         : collection
                             .where('nameSearch', arrayContains: searchPara)
                             .where('midwifeID', isEqualTo: _user.uid)
                             .where('compApp', isEqualTo: true)
+                            .where('competencyFam', isEqualTo: false)
                             .snapshots(includeMetadataChanges: true),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -96,7 +98,7 @@ class _MotherListState extends State<MotherList> {
                           children: snapshot.data.docs
                               .map((DocumentSnapshot document) {
                         //refe from below
-                        return listItem(document);
+                        return listItem(document, "review");
                       }).toList());
                     },
                   ),
@@ -153,14 +155,70 @@ class _MotherListState extends State<MotherList> {
                           children: snapshot.data.docs
                               .map((DocumentSnapshot document) {
                         //refe from below
-                        return listItem(document);
+                        return listItem(document, "accepted");
                       }).toList());
                     },
                   ),
                 )
               ],
             )),
-            Icon(Icons.directions_bike),
+            Container(
+                child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(29.5),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      icon: SvgPicture.asset("assets/icons/search.svg"),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        searchPara = val;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: (searchPara == null || searchPara == '')
+                        ? collection
+                            .where('midwifeID', isEqualTo: _user.user.uid)
+                            .where('competencyFam', isEqualTo: true)
+                            .snapshots()
+                        : collection
+                            .where('nameSearch', arrayContains: searchPara)
+                            .where('midwifeID', isEqualTo: _user.uid).where('compApp', isEqualTo: false)
+                            .where('competencyFam', isEqualTo: false)
+                            .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Loading");
+                      }
+                      if (snapshot.connectionState == ConnectionState.none) {
+                        return Text("No data present");
+                      }
+                      return new ListView(
+                          children: snapshot.data.docs
+                              .map((DocumentSnapshot document) {
+                        //refe from below
+                        return listItem(document, "rejected");
+                      }).toList());
+                    },
+                  ),
+                )
+              ],
+            ))
           ],
         ),
         // body: getState(context),
@@ -168,7 +226,11 @@ class _MotherListState extends State<MotherList> {
     );
   }
 
-  Widget listItem(DocumentSnapshot document) {
+  Widget listItem(DocumentSnapshot document, String type) {
+    bool key = true;
+    if (type.contains("accepted")) {
+      key = false;
+    }//impel for rejected
     return new ListTile(
       leading: Icon(Icons.person_rounded),
       title: new Text(document['name']),
@@ -182,7 +244,9 @@ class _MotherListState extends State<MotherList> {
             context,
             new MaterialPageRoute(
                 builder: (context) => Profile(
-                      documentSnapshot: document,review: true,reviewType: "comp",
+                      documentSnapshot: document,
+                      review: key,
+                      reviewType: "comp",
                     )));
       },
     );

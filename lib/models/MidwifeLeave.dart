@@ -10,6 +10,8 @@ class LeaveFormDB{
   DateTime leaveOffDate;
   String reason;
   String applicantAddress;
+  String midwifeID;
+  DocumentReference midwifeUserRef;
   bool accept;
   bool reject;
 
@@ -27,6 +29,8 @@ class LeaveFormDB{
       this.leaveOffDate,
       this.reason,
       this.applicantAddress,
+      this.midwifeID,
+      this.midwifeUserRef,
       this.accept,
       this.reject
     }
@@ -39,7 +43,8 @@ class LeaveFormDB{
     appoimentDate = map["_appoimentDate"];
     numOfDays = map["_numOfDays"];
     leaveOnDate = map["_leaveOnDate"];
-
+    midwifeID = map["_midwifeID"];
+    midwifeUserRef = map["_midwifeUserRef"];
     leaveOffDate = map["_leaveOffDate"];
     reason = map["_reason"];
     applicantAddress = map["_applicantAddress"];
@@ -61,6 +66,8 @@ class LeaveFormDB{
       '_leaveOffDate': leaveOffDate,
       '_reason': reason,
       '_applicantAddress': applicantAddress,
+      '_midwifeID':midwifeID,
+      '_midwifeUserRef':midwifeUserRef,
       '_accept': accept,
       '_reject': reject,
 

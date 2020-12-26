@@ -13,7 +13,7 @@ class PregReview extends StatefulWidget {
 }
 
 class _PregReviewState extends State<PregReview> {
-    CollectionReference collection =
+  CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
   UserM _user;
   String searchPara = "";
@@ -36,7 +36,10 @@ class _PregReviewState extends State<PregReview> {
                 icon: Icon(Icons.done),
                 child: Text("Accepted"),
               ),
-              Tab(icon: Icon(Icons.directions_bike)),
+              Tab(
+                icon: Icon(Icons.cancel),
+                child: Text("Rejected"),
+              ),
             ],
           ),
           title: Text('Review Pregnancy Family'),
@@ -157,7 +160,63 @@ class _PregReviewState extends State<PregReview> {
                 )
               ],
             )),
-            Icon(Icons.directions_bike),
+            Container(
+                child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(29.5),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      icon: SvgPicture.asset("assets/icons/search.svg"),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        searchPara = val;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: (searchPara == null || searchPara == '')
+                        ? collection
+                            .where('midwifeID', isEqualTo: _user.user.uid)
+                            .where('PregnanctFam', isEqualTo: true)
+                            .snapshots()
+                        : collection
+                            .where('nameSearch', arrayContains: searchPara)
+                            .where('midwifeID', isEqualTo: _user.uid)
+                            .where('PregnanctFam', isEqualTo: true)
+                            .snapshots(includeMetadataChanges: true),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Loading");
+                      }
+                      if (snapshot.connectionState == ConnectionState.none) {
+                        return Text("No data present");
+                      }
+                      return new ListView(
+                          children: snapshot.data.docs
+                              .map((DocumentSnapshot document) {
+                        //refe from below
+                        return listItem(document);
+                      }).toList());
+                    },
+                  ),
+                )
+              ],
+            )),
           ],
         ),
         // body: getState(context),
@@ -165,7 +224,7 @@ class _PregReviewState extends State<PregReview> {
     );
   }
 
-    Widget listItem(DocumentSnapshot document) {
+  Widget listItem(DocumentSnapshot document) {
     return new ListTile(
       leading: Icon(Icons.person_rounded),
       title: new Text(document['name']),
@@ -179,10 +238,11 @@ class _PregReviewState extends State<PregReview> {
             context,
             new MaterialPageRoute(
                 builder: (context) => Profile(
-                      documentSnapshot: document,review: true,reviewType: "preg",
+                      documentSnapshot: document,
+                      review: true,
+                      reviewType: "preg",
                     )));
       },
     );
   }
-
 }
