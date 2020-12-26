@@ -50,7 +50,7 @@ class _WelcomeState extends State<Welcome> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _seen = (prefs.getBool('seen') ?? false);
 
-    if (_seen) {   
+    if (_seen) {
       setState(() {
         Navigator.pushNamed(context, '/');
         //pending = false;
@@ -213,7 +213,7 @@ class InitPageTwo extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Text(
-                  "grantha is a collective effort of a bunch of literature enthusiasts to preserve and promote library appreciation.",
+                  "Mum&Care is fully fledged mothers and midwives communication application to ease-out the difficulties face in the period of pregnancy and family",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 16.0),
                 ),
@@ -241,7 +241,7 @@ class InitPageThree extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Text(
-                  "Get access to hundreds of audiobook collections from gartha library",
+                  "Provide more convenent way of communication for the betterment of Sri Lankan Health Care",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 16.0),
                 ),
@@ -269,7 +269,7 @@ class InitPageFour extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Text(
-                  "Get access to hundreds of audiobook collections from gartha library",
+                  "Get access multiple uniqe services of Mum&Care",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 16.0),
                 ),

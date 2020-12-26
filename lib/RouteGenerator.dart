@@ -20,11 +20,15 @@ import 'package:mun_care_app/screens/Reports/MonthlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
 import 'package:mun_care_app/screens/Reviews/PregReview.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
+import 'package:mun_care_app/screens/Sister/AddMidwife.dart';
+import 'package:mun_care_app/screens/Sister/Duty/MidDutyView.dart';
+import 'package:mun_care_app/screens/Sister/MidManage.dart';
 import 'package:mun_care_app/screens/Sister/MidleaveView.dart';
+import 'package:mun_care_app/screens/Sister/ViewAreaLeave.dart';
 import 'package:mun_care_app/screens/SpecialNotice/SendNotice.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
 import 'package:mun_care_app/screens/Welcome/Welcome.dart';
-import 'package:mun_care_app/screens/chat/homechat.dart';
+// import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/Reviews/MotherList.dart';
@@ -51,9 +55,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Dashboard());
       case '/signup':
         return MaterialPageRoute(builder: (_) => Signup());
-        case '/diary':
+      case '/diary':
         return MaterialPageRoute(builder: (_) => Diary());
-      //  
+      //
       //Registration
       case '/comReg':
         return MaterialPageRoute(builder: (_) => ComFamReg());
@@ -67,12 +71,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MotherList());
       case '/motherPregReview':
         return MaterialPageRoute(builder: (_) => PregReview());
-      // 
+      //
       //Special Notices-----------///////////////////////////////////////////////////////
       case '/specialNotice':
         return MaterialPageRoute(builder: (_) => SendNotice());
       //
-      //Notifications------------/////////////////////////////////////////////////////////  
+      //Notifications------------/////////////////////////////////////////////////////////
       case '/notification':
         return MaterialPageRoute(builder: (_) => NotificationScreen());
       case '/sechHomeVisits':
@@ -86,18 +90,18 @@ class RouteGenerator {
                   key: Key('clinic'),
                   viewSwitch: args['switchView'],
                 ));
-      //          
+      //
       case '/geoLocate':
         return MaterialPageRoute(builder: (_) => GeoLocation());
-      case '/chat':
-        return MaterialPageRoute(builder: (_) => HomeChat());
+      // case '/chat':
+      //   return MaterialPageRoute(builder: (_) => HomeChat());
       case '/motherList':
         return MaterialPageRoute(builder: (_) => MotherList());
 
-      //  
-      //Medication and Area Leaving Report & Views//////////////////////////////////////  
-       case '/MediLeaveWap':
-        return MaterialPageRoute(builder: (_) => MediLeaveWapper()); 
+      //
+      //Medication and Area Leaving Report & Views//////////////////////////////////////
+      case '/MediLeaveWap':
+        return MaterialPageRoute(builder: (_) => MediLeaveWapper());
       case '/leavingReport':
         return MaterialPageRoute(builder: (_) => LeavingReport());
       case '/MedicalReport':
@@ -119,7 +123,7 @@ class RouteGenerator {
             builder: (_) => Profile(
                   review: false,
                 ));
-      //        
+      //
       //Reports (Daily | Monthly)///////////////////////////////////////////////////////////
       case '/searchReport':
         return MaterialPageRoute(builder: (_) => ReportSearch());
@@ -133,7 +137,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => LeaveForm());
       case '/midLeaveView':
         return MaterialPageRoute(builder: (_) => LeaveReportView());
-
+      case '/addMid':
+        return MaterialPageRoute(builder: (_) => AddMidwife());
+      case '/midManage':
+        return MaterialPageRoute(builder: (_) => MidManage());
+      case '/midDuty':
+        return MaterialPageRoute(builder: (_) => MidDutyView());
+      case '/midResLeaves':
+        return MaterialPageRoute(builder: (_) => ViewAreaLeave());
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));

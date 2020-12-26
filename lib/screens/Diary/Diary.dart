@@ -40,27 +40,43 @@ class _DiaryState extends State<Diary> {
   int workMins = 0;
   List<DailyNoteModel> diaryNotes = new List<DailyNoteModel>();
   TimeOfDay _time;
-  double _progress = 0;
-  bool pending = true;
-  bool _jobState = false;
+  double _progress = 0; // Work log time progress
+  bool pending = true; // Loading screen
+  bool _jobState = false; // Is Today work log started or not
+  bool _dayJobState = false; // Is Job done or not for today
 
   Future<dynamic> setJobTime() async {
+    final SharedPreferences prefs = await _prefs;
     String nowDate = getDateSlug();
-    var startTime = await _diaryServices.getStartTime(nowDate, _user.uid);
-    if (startTime != null) {
+    Map<String, dynamic> dataMap =
+        await _diaryServices.getStartTime(nowDate, _user.uid);
+
+    if (dataMap != null) {
+      var startTime = dataMap['startDate'];
       print(startTime);
       //Work job time difference
       Duration difference = now.difference(startTime);
       workHours = difference.inHours;
-      workMins = difference.inMinutes % workHours;
-      _progress = workHours * 0.125;
-      print(_progress);
+
+      (workHours != 0)
+          ? workMins = difference.inMinutes % (60 * workHours)
+          : workMins = difference.inMinutes;
+      //workMins = difference.inMinutes % workHours;
+
+      var prog = workHours * 0.125;
+      (prog <= 1) ? _progress = prog : _progress = 1;
+      //_progress cant be more than 1
+      _dayJobState = dataMap['dayJobStatus'];
+    } else {
+      //no records means day job has not started, then need to start the day jobState
+      prefs.setBool('jobState', false);
     }
   }
 
   Future setJobState() async {
     final SharedPreferences prefs = await _prefs;
     _jobState = (prefs.getBool('jobState') ?? false);
+    print("At init :${prefs.getBool('jobState')}");
   }
 
   @override
@@ -74,7 +90,6 @@ class _DiaryState extends State<Diary> {
     });
   }
 
-  @override
   Widget taskDropDownMenu() {
     return DropdownButton<String>(
       value: taskDropdownValue,
@@ -109,10 +124,7 @@ class _DiaryState extends State<Diary> {
     return pending
         ? Loading()
         : Scaffold(
-            backgroundColor: kBackground,
-            /*appBar: AppBar(
-        title: Text('Daily Diary'),
-      ),*/
+            backgroundColor: kBackground,        
             bottomNavigationBar: BottomAppBar(
               shape: const CircularNotchedRectangle(),
               child: Container(
@@ -131,9 +143,53 @@ class _DiaryState extends State<Diary> {
                 FloatingActionButtonLocation.centerDocked,
             // drawer: Drawer(
             body: Builder(
-              builder: (context) => SafeArea(
+              builder: (context) => Container(
                 child: Column(
                   children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0),
+                          )),
+                      width: MediaQuery.of(context).size.width,
+                      height: 110.0,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30.0, right: 30.0, top: 50.0),
+                            child: Row(
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "Duty",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: Icon(Icons.add),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 2.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10,),
                     Container(
                       height: 100,
                       width: 100,
@@ -165,20 +221,23 @@ class _DiaryState extends State<Diary> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return StatefulBuilder(
-                                builder: (BuildContext sfcontext,
-                                    StateSetter setModelState) {
-                                  return getTimeBox(setModelState, context);
-                                },
-                              );
-                            });
+                        (_dayJobState)
+                            ? _displaySnackBar(
+                                context, "Already Fininshed the work job")
+                            : showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(
+                                    builder: (BuildContext sfcontext,
+                                        StateSetter setModelState) {
+                                      return getTimeBox(setModelState, context);
+                                    },
+                                  );
+                                });
                       },
                       child: _jobState
-                          ? Text('Start Work Log')
-                          : Text('End Work Log'),
+                          ? Text('End Work Log')
+                          : Text('Start Work Log'),
                     ),
                     Expanded(
                       flex: 2,
@@ -251,7 +310,7 @@ class _DiaryState extends State<Diary> {
             ));
   }
 
-  Widget getTimeBox(StateSetter setModelState,BuildContext blcontext) {
+  Widget getTimeBox(StateSetter setModelState, BuildContext blcontext) {
     return AlertDialog(
       scrollable: true,
       title: (_jobState) ? Text('End Work Log') : Text('Add Work Log'),
@@ -323,22 +382,32 @@ class _DiaryState extends State<Diary> {
               "Save",
               style: TextStyle(color: Colors.white),
             ),
-            onPressed: ()async {
+            onPressed: () async {
+              final SharedPreferences prefs = await _prefs;
               String dateSlug = getDateSlug();
               print(logTime.toLocal());
               dynamic rst;
+              //_jobState = True ==> job started
+              //_jobState = False ==> job ended
               if (_jobState) {
                 rst =
                     _diaryServices.updateWorkJob(logTime, dateSlug, _user.uid);
+                print(rst);
+                if (rst != null) {
+                  await prefs.setBool('jobState', false);
+                  print("AT save: ${prefs.getBool('jobState')}");
+                  //_displaySnackBar(blcontext);
+                }
               } else {
                 rst = _diaryServices.saveWorkJob(logTime, dateSlug, _user.uid);
+                print(rst);
+                if (rst != null) {
+                  await prefs.setBool('jobState', true);
+                  print("AT save: ${prefs.getBool('jobState')}");
+                  //_displaySnackBar(blcontext);
+                }
               }
 
-              if (rst == null) {
-                final SharedPreferences prefs = await _prefs;
-                prefs.setBool('jobState', true);
-                _displaySnackBar(blcontext);
-              }
               Navigator.of(context).pop();
             })
       ],
@@ -349,24 +418,27 @@ class _DiaryState extends State<Diary> {
     return "${now.year}-${now.month}-${now.day}";
   }
 
-  Widget getAlertBox(BuildContext context) {
-    TextEditingController titleController2;
-    String title;
-    String subTitle;
-    String task;
-    String desc;
-    String remarks;
+  Widget getAlertBox(BuildContext context, {DocumentSnapshot docSnap}) {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController taskController = TextEditingController();
+    TextEditingController descController = TextEditingController();
+    TextEditingController remarksController = TextEditingController();
+
+    if (docSnap!=null) {
+      titleController.text = docSnap['title'];
+      descController.text = docSnap['desc'];
+      remarksController.text = docSnap['remarks'];
+      taskController.text = docSnap['title'];
+    }
     return AlertDialog(
       scrollable: true,
-      title: Text('About the Tasks'),
+      title:
+          (docSnap!=null) ? Text('Update the Tasks') : Text('About the Tasks'),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
             TextField(
-              onChanged: (val) {
-                title = val;
-              },
               controller: titleController,
               decoration: InputDecoration(
                 labelText: 'Title',
@@ -374,10 +446,7 @@ class _DiaryState extends State<Diary> {
               ),
             ),
             TextField(
-              onChanged: (val) {
-                task = val;
-              },
-              controller: titleController2,
+              controller: taskController,
               decoration: InputDecoration(
                 labelText: 'Task Name',
                 icon: Icon(Icons.work_outline),
@@ -385,9 +454,6 @@ class _DiaryState extends State<Diary> {
             ),
             TextField(
               controller: descController,
-              onChanged: (val) {
-                desc = val;
-              },
               decoration: InputDecoration(
                 labelText: 'Description',
                 icon: Icon(Icons.description),
@@ -437,9 +503,6 @@ class _DiaryState extends State<Diary> {
               ),
             ),
             TextField(
-              onChanged: (val) {
-                remarks = val;
-              },
               controller: remarksController,
               decoration: InputDecoration(
                 labelText: 'Remarks',
@@ -459,14 +522,17 @@ class _DiaryState extends State<Diary> {
             onPressed: () async {
               print("cli");
               DailyNoteModel note = new DailyNoteModel(
-                  title: title,
-                  subTitle: task,
-                  description: desc,
+                  title: titleController.text,
+                  description: descController.text,
                   subject: taskDropdownValue,
-                  remarks: remarks,
+                  remarks: remarksController.text,
                   createdAt: FieldValue.serverTimestamp());
+              var rst;
+              (docSnap==null)
+                  ? rst = await _diaryServices.saveDailyNote(note, _user.uid)
+                  : rst = await _diaryServices.updateDailyNote(
+                      note, _user.uid, docSnap.id);
 
-              var rst = await _diaryServices.saveDailyNote(note, _user.uid);
               print(rst);
               Navigator.of(context).pop();
             })
@@ -476,9 +542,9 @@ class _DiaryState extends State<Diary> {
 
   Widget getNoteCard(BuildContext context, DocumentSnapshot document) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(10),
       margin: EdgeInsets.all(10),
-      height: 100,
+      height: 80,
       decoration: new BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -497,7 +563,7 @@ class _DiaryState extends State<Diary> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                //return getAlertBox(index, context);
+                return getAlertBox(context, docSnap: document);
               });
         },
         child: ClipRRect(
@@ -514,7 +580,7 @@ class _DiaryState extends State<Diary> {
                     fontWeight: FontWeight.w800),
               ),
               SizedBox(height: 5),
-              Text(document['subTitle'],
+              Text(document['subject'],
                   style: TextStyle(color: Colors.white, fontSize: 12))
             ],
           ),
@@ -523,9 +589,9 @@ class _DiaryState extends State<Diary> {
     );
   }
 
-  _displaySnackBar(BuildContext context) {
+  _displaySnackBar(BuildContext context, String text) {
     final snackBar = SnackBar(
-      content: Text('Successfully Submitted'),
+      content: Text('$text'),
       action: SnackBarAction(
         label: 'Go Back',
         onPressed: () {
@@ -538,121 +604,3 @@ class _DiaryState extends State<Diary> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 }
-
-// GradientCard(
-//               gradient: Gradients.aliHussien,
-//               margin: EdgeInsets.all(5),
-//               shape: RoundedRectangleBorder(
-//                 // side: BorderSide(color: Colors.white70, width: 2),
-//                 borderRadius: BorderRadius.circular(20),
-//               ),
-//               //color: Color(45556222),
-//               child: Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: <Widget>[
-//                   SizedBox(
-//                     width: 10,
-//                   ),
-//                   const ListTile(
-//                     leading: Icon(Icons.work),
-//                     title: Text(
-//                       'Dairly Task',
-//                       style: TextStyle(color: Colors.blue, fontSize: 17),
-//                     ),
-//                     subtitle: Text('SUBTITLE'),
-//                   ),
-//                   Container(
-//                     padding: EdgeInsets.all(6),
-//                     child: TextFormField(
-//                       scrollPadding: EdgeInsets.all(5),
-//                       initialValue: "today home visit ",
-//                       style: TextStyle(color: Colors.white, fontSize: 16),
-//                       //  textAlign: TextAlign.center,
-//                       //controller: titleController.toString(),
-//                       decoration: InputDecoration(
-//                         labelText: "title",
-//                         labelStyle: TextStyle(
-//                           color: Colors.blue,
-//                           // fontStyle: FontStyle.italic,
-//                           fontSize: 16,
-
-//                           //color: Colors.white,
-//                         ),
-//                         hintText: "Enter title",
-//                       ),
-//                       //  onChanged: ,
-//                     ),
-//                   ),
-//                   Container(
-//                     padding: EdgeInsets.all(6),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.start,
-//                       children: <Widget>[
-//                         /* Text(
-//                         "Time",
-//                         style: TextStyle(fontSize: 15.0),
-//                         textAlign: TextAlign.left,
-//                       ),*/
-//                         Text(
-//                           "Date ${now.year}/${now.month}/${now.day}",
-//                           style: TextStyle(fontSize: 16, color: Colors.white),
-//                           textAlign: TextAlign.center,
-//                         ),
-//                         SizedBox(
-//                           width: 30,
-//                         ),
-//                         Text("Time ${now.hour}:${now.minute}",
-//                             style: TextStyle(fontSize: 16, color: Colors.white),
-//                             textAlign: TextAlign.center),
-//                         /* RaisedButton.icon(
-//                         onPressed: () {
-//                           showTimePicker(
-//                             context: context,
-//                             initialTime: new TimeOfDay.now(),
-//                           ).then((time) {
-//                             setState(() {
-//                               time = time;
-//                             });
-//                           });
-//                         },
-//                         shape: RoundedRectangleBorder(
-//                             borderRadius:
-//                                 BorderRadius.all(Radius.circular(10.0))),
-//                         label: Text(
-//                           '',
-//                           style: TextStyle(color: Colors.white),
-//                         ),
-//                         icon: Icon(
-//                           Icons.alarm,
-//                           color: Colors.white,
-//                         ),
-//                         textColor: Colors.white,
-//                         splashColor: Colors.red,
-//                         color: Colors.blue,
-//                       ),*/
-//                       ],
-//                     ),
-//                   ),
-//                   ButtonBar(
-//                     children: <Widget>[
-//                       FlatButton(
-//                         child: const Text('About Task',
-//                             style: TextStyle(fontSize: 18)),
-//                         onPressed: () {
-//                           showDialog(
-//                               context: context,
-//                               builder: (BuildContext context) {
-//                                 return getAlertBox();
-//                               });
-//                         },
-//                       ),
-//                       /* FlatButton(
-//                         child:
-//                             const Text('BTN2', style: TextStyle(fontSize: 18)),
-//                         onPressed: () {/* ... */},
-//                       ),*/
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),

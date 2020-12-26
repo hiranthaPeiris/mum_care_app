@@ -9,7 +9,6 @@ import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:mun_care_app/services/NavigationService.dart';
 import 'package:mun_care_app/services/NotificationService.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'Locator.dart';
 import 'helpers/Constants.dart';
 
@@ -37,7 +36,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     startUp();
-
     super.initState();
   }
 

@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_time_picker/date_time_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:mun_care_app/models/DailyNoteModel.dart';
 import 'package:mun_care_app/services/NotificationService.dart';
 
@@ -21,6 +19,20 @@ class DiaryServices {
     }).catchError((err) => print(err));
   }
 
+  Future<dynamic> updateDailyNote(
+      DailyNoteModel dailyNote, String midwifeID, String docID) async {
+    await _firestore
+        .collection("diaryNotes")
+        .doc(midwifeID)
+        .collection("notes")
+        .doc(docID)
+        .update(dailyNote.toJson())
+        .then((value) {
+      print("Note updated");
+      return value;
+    }).catchError((err) => print(err));
+  }
+
   Future<dynamic> saveWorkJob(
       DateTime dateTime, String dateSlug, String midwifeID) async {
     await _firestore
@@ -28,8 +40,13 @@ class DiaryServices {
         .doc(midwifeID)
         .collection("jobs")
         .doc(dateSlug)
-        .set({"startTime": dateTime, "endTime": "", "duration": ""}).then(
-            (value) {
+        .set({
+      "startTime": dateTime,
+      "endTime": "",
+      "durationHrs": "",
+      "durationMins": "",
+      "status": false
+    }).then((value) {
       return value;
     }).catchError((err) {
       print(err);
@@ -44,19 +61,25 @@ class DiaryServices {
     //var dDay = new DateTime.utc(1944, DateTime.june, 6);
 
     //Work job time difference
-    Duration difference = jobStartTime.difference(dateTime);
+    Duration difference = dateTime.difference(jobStartTime['startDate']);
 
     return await _firestore
         .collection("workJobs")
         .doc(midwifeID)
         .collection("jobs")
         .doc(dateSlug)
-        .update({"endTime": dateTime, "duration": difference.inHours}).then((value) {
+        .update({
+      "endTime": dateTime,
+      "durationHrs": difference.inHours,
+      "durationMins": difference.inMinutes,
+      "status": true
+    }).then((value) {
       return value;
     }).catchError((err) => print(err));
   }
 
-  Future<DateTime> getStartTime(String dateSlug, String midwifeID) async {
+  Future<Map<String, dynamic>> getStartTime(
+      String dateSlug, String midwifeID) async {
     return await _firestore
         .collection("workJobs")
         .doc(midwifeID)
@@ -66,8 +89,29 @@ class DiaryServices {
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         Timestamp startTime = documentSnapshot.data()['startTime'];
-        return new DateTime.fromMillisecondsSinceEpoch(
-            startTime.millisecondsSinceEpoch);
+        bool dayJobStatus = documentSnapshot.data()['status'];
+        Map<String, dynamic> dataMap = {
+          "startDate": new DateTime.fromMillisecondsSinceEpoch(
+              startTime.millisecondsSinceEpoch),
+          "dayJobStatus": dayJobStatus
+        };
+        return dataMap;
+      }
+      return null;
+    }).catchError((err) => print(err));
+  }
+
+   Future<DocumentSnapshot> getJob(
+      String dateSlug, String midwifeID) async {
+    return await _firestore
+        .collection("workJobs")
+        .doc(midwifeID)
+        .collection("jobs")
+        .doc(dateSlug)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {   
+        return documentSnapshot;
       }
       return null;
     }).catchError((err) => print(err));

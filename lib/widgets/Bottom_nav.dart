@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart';
 import 'package:mun_care_app/helpers/Constants.dart';
-import 'package:mun_care_app/models/Notification.model.dart';
+import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NotificationService.dart';
+import 'package:provider/provider.dart';
 
 class Bottom_nav extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  final NotificationService _notification = NotificationService();
-  Bottom_nav({Key key, this.scaffoldKey}) : super(key: key);
 
+  Bottom_nav({Key key, this.scaffoldKey}) : super(key: key);
+  UserM _user;
   void _openDrawer() {
     scaffoldKey.currentState.openEndDrawer();
   }
 
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<UserM>(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
       height: 80,
@@ -27,7 +28,9 @@ class Bottom_nav extends StatelessWidget {
             title: "Today",
             svgScr: "assets/icons/calendar.svg",
             press: () async {
-              Navigator.pushNamed(context, '/diary');
+              (_user.userCustomData['role'] == 'user')
+                  ? Navigator.pushNamed(context, '/')
+                  : Navigator.pushNamed(context, '/diary');
             },
           ),
           BottomNavItem(

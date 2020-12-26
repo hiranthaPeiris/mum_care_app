@@ -56,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
         compFam = customData['competencyFam'];
         pregMum = customData['PregnanctFam'];
 
-        print(_user.userCustomData);
+        //print(_user.userCustomData);
         pending = false;
       });
     }).catchError((err) => print(err));
@@ -329,14 +329,6 @@ class _DashboardState extends State<Dashboard> {
               Navigator.pushNamed(context, '/MediLeaveWap');
             },
           ),
-          // Menu_card(
-          //   title: "View reports on leaving residential area",
-          //   heading: "View Leaving Report",
-          //   svgSrc: "assets/icons/yoga.svg",
-          //   press: () {
-          //     Navigator.pushNamed(context, '/ViewleavingReport');
-          //   },
-          // ),
           Menu_card(
             title: "Apply day leave",
             heading: "Apply Leaving",
@@ -426,27 +418,19 @@ class _DashboardState extends State<Dashboard> {
       return SliverGrid(
         delegate: SliverChildListDelegate([
           Menu_card(
-            title: "View midwife leave requests",
-            heading: "Midwife Leaving",
+            title: "Manage activites of midwives",
+            heading: "Manage Midwives",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/midLeaveView');
+              Navigator.pushNamed(context, '/midManage');
             },
           ),
           Menu_card(
-            title: "Report leaving residential area",
-            heading: "Report Leaving",
+            title: "View leaving residential area reports",
+            heading: "View Residential Leaves",
             svgSrc: "assets/icons/yoga.svg",
             press: () {
-              Navigator.pushNamed(context, '/');
-            },
-          ),
-          Menu_card(
-            title: "View reports on leaving residential area",
-            heading: "Geo Location",
-            svgSrc: "assets/icons/yoga.svg",
-            press: () {
-              Navigator.pushNamed(context, '/geoLocate');
+              Navigator.pushNamed(context, '/midResLeaves');
             },
           ),
           Menu_card(

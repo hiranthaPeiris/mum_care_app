@@ -111,11 +111,11 @@ class AuthService {
   }
 
   //register
-  Future Register(String email, String password, String name) async {
+  Future register(String email, String password, String name,String role,String mobNumber) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      await setUserRole(userCredential.user.uid, name);
+      await setUserRole(userCredential.user.uid, name,role,userCredential.user.email,mobNumber);
       await setUserMessageToken();
       _notification.subscribeTopic("general");
       
@@ -126,15 +126,30 @@ class AuthService {
       return null;
     }
   }
-
+//register as midwife
+Future<User> registerAsMidwife(String email, String password, String name,String role,String mobNumber) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      await setUserRole(userCredential.user.uid, name,role,userCredential.user.email,mobNumber);
+      await setUserMessageToken();
+      _notification.subscribeTopic("general");
+      
+      print(userCredential.user.uid);
+      return userCredential.user;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 //set user role
-  Future<void> setUserRole(String uid, String name) async {
+  Future<void> setUserRole(String uid, String name,String role,String email,String mobileNum) async {
     await _firestore
         .collection('users')
         .doc(uid)
         .set({
           'name': name,
-          'role': 'user',
+          'role': role,
           'area01': 'notSelect',
           'competencyFam': false,
           'PregnanctFam': false,
@@ -142,8 +157,8 @@ class AuthService {
           'pregApp': false,
           'midwifeID': 'null',
           'onDuty': false,
-          'tel': "",
-          'email': "",
+          'tel': mobileNum,
+          'email':email,
           'token': "",
           'condition':"normal",
           'timeStamp': FieldValue.serverTimestamp(),
