@@ -5,6 +5,7 @@ import 'package:mun_care_app/Wapper.dart';
 import 'package:mun_care_app/screens/Clinic/ClinicHomeWapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
+import 'package:mun_care_app/screens/Diary/screen.dart';
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/LeavingAreaReport/LeavingReport.dart';
 import 'package:mun_care_app/screens/MedicationReport/MedicationReport.dart';
@@ -14,7 +15,8 @@ import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Reports/DairlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/MonthlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
-import 'package:mun_care_app/screens/Diary/dairlyDiary.dart';
+import 'package:mun_care_app/screens/Diary/dairlyDiary1.dart';
+import 'package:mun_care_app/screens/Diary/screen.dart';
 import 'package:mun_care_app/screens/Reviews/PregReview.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
@@ -105,6 +107,8 @@ class RouteGenerator {
       //DairlyDiary
       case '/diary':
         return MaterialPageRoute(builder: (_) => DairlyDiary());
+      case '/diary1':
+        return MaterialPageRoute(builder: (_) => ScreenDiary());
 
       case '/error':
         return MaterialPageRoute(
