@@ -970,22 +970,18 @@ class _PreFamRegState extends State<PreFamReg> {
     }
 
     bool validate() {
-      if (myController12.text.isEmpty &&
-          myController13.text.isEmpty &&
-          myController14.text.isEmpty &&
-          myController15.text.isEmpty &&
-          myController16.text.isEmpty &&
-          myController17.text.isEmpty &&
-          myController18.text.isEmpty &&
-          myController19.text.isEmpty &&
-          myController20.text.isEmpty &&
-          myController21.text.isEmpty &&
+      if (myController12.text.isEmpty ||
+          myController13.text.isEmpty ||
+          myController14.text.isEmpty ||
+          myController15.text.isEmpty ||
+          myController21.text.isEmpty ||
           myController22.text.isEmpty) {
         print("This cant't be empty");
         return false;
+      } else {
+        print("not empty");
+        return true;
       }
-      print("not empty");
-      return true;
     }
 
     return new Scaffold(
