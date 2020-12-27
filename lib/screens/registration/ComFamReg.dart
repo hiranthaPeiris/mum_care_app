@@ -2061,23 +2061,26 @@ class _ComFamRegState extends State<ComFamReg> {
       ));
     }
 
-    bool validate() {
-      if (myController1.text.isEmpty &&
-          myController2.text.isEmpty &&
-          myController3.text.isEmpty &&
-          myController4.text.isEmpty &&
-          myController5.text.isEmpty &&
-          myController6.text.isEmpty &&
-          myController7.text.isEmpty &&
-          myController8.text.isEmpty &&
-          myController9.text.isEmpty &&
-          myController10.text.isEmpty &&
+     bool validate() {
+      if (myController1.text.isEmpty ||
+          myController2.text.isEmpty ||
+          myController3.text.isEmpty ||
+          myController4.text.isEmpty ||
+          myController5.text.isEmpty ||
+          myController6.text.isEmpty ||
+          myController7.text.isEmpty ||
+          myController8.text.isEmpty ||
+          myController9.text.isEmpty ||
+          myController10.text.isEmpty ||
           myController11.text.isEmpty) {
         print("This cant't be empty");
         return false;
       }
-      print("not empty");
+      else{
+        print("not empty");
       return true;
+      }
+      
     }
 
     return new Scaffold(
