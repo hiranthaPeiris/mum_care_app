@@ -1,14 +1,24 @@
+import 'dart:io';
 import 'dart:math';
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mun_care_app/helpers/Constants.dart';
+import 'package:mun_care_app/helpers/enums.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:custom_switch/custom_switch.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
+import 'package:mun_care_app/services/StorageService.dart';
+import 'package:mun_care_app/services/UserDataService.dart';
+import 'package:path/path.dart' as path;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:provider/provider.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class ComFamReg extends StatefulWidget {
   @override
@@ -29,13 +39,19 @@ class ShapePainter extends CustomPainter {
 }
 
 class _ComFamRegState extends State<ComFamReg> {
+  StorageService _storageService = StorageService();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final UserDataSevice _dataSevice = UserDataSevice();
+  final NotificationService _notificationService = NotificationService();
   int currentStep = 0;
   bool complete = false;
   bool isActive = false;
 
+  UserM _user;
   //StepState stepState=StepState.editing;
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
+  String provinceDropValue = 'Select Province';
   String eduDropdownValue = 'Education Level';
   String womenBloodDropdownValue = 'A+';
   String menBloodDropdownValue = 'A+';
@@ -68,36 +84,36 @@ class _ComFamRegState extends State<ComFamReg> {
     myController11.dispose();
   }
 
-  bool d1_Men = false;
-  bool d1_Women = false;
-  bool d2_Men = false;
-  bool d2_Women = false;
-  bool d3_Men = false;
-  bool d3_Women = false;
-  bool d4_Men = false;
-  bool d4_Women = false;
-  bool d5_Men = false;
-  bool d5_Women = false;
-  bool d6_Men = false;
-  bool d6_Women = false;
-  bool d7_Men = false;
-  bool d7_Women = false;
-  bool d8_Men = false;
-  bool d8_Women = false;
-  bool d9_Men = false;
-  bool d9_Women = false;
-  bool d10_Men = false;
-  bool d10_Women = false;
-  bool d11_Men = false;
-  bool d11_Women = false;
-  bool d12_Men = false;
-  bool d12_Women = false;
-  bool d13_Men = false;
-  bool d13_Women = false;
-  bool d14_Men = false;
-  bool d14_Women = false;
-  bool d15_Men = false;
-  bool d15_Women = false;
+  bool d1_Yes = false;
+  bool d1_No = false;
+  bool d2_Yes = false;
+  bool d2_No = false;
+  bool d3_Yes = false;
+  bool d3_No = false;
+  bool d4_Yes = false;
+  bool d4_No = false;
+  bool d5_Yes = false;
+  bool d5_No = false;
+  bool d6_Yes = false;
+  bool d6_No = false;
+  bool d7_Yes = false;
+  bool d7_No = false;
+  bool d8_Yes = false;
+  bool d8_No = false;
+  bool d9_Yes = false;
+  bool d9_No = false;
+  bool d10_Yes = false;
+  bool d10_No = false;
+  bool d11_Yes = false;
+  bool d11_No = false;
+  bool d12_Yes = false;
+  bool d12_No = false;
+  bool d13_Yes = false;
+  bool d13_No = false;
+  bool d14_Yes = false;
+  bool d14_No = false;
+  bool d15_Yes = false;
+  bool d15_No = false;
 
   String rubellaDropdownValue = 'Yes';
   String formicDropdownValue = 'Yes';
@@ -120,11 +136,29 @@ class _ComFamRegState extends State<ComFamReg> {
     'Ahangama',
     'Thalgaswala'
   ];
+
+  List<String> province = [
+    'Select Province',
+    'Western',
+    'Southern',
+    'Northern',
+    'Eastern',
+    'Central',
+    'North Central',
+    'Dodanduwa',
+    'Sabaragamuwa',
+  ];
   double latitudeData;
   double longitiduData;
 
+  File _image;
+  final picker = ImagePicker();
+  FirebaseStorage storage = FirebaseStorage.instance;
+
   @override
   Widget build(BuildContext context) {
+    _user = Provider.of<UserM>(context);
+
     Widget showTextField(
         String hintText, String inputName, TextEditingController controller) {
       return TextFormField(
@@ -152,11 +186,11 @@ class _ComFamRegState extends State<ComFamReg> {
     Widget mohDropDownMenu() {
       return DropdownButton<String>(
         value: mohDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        style: TextStyle(color: kActiveIconColor, fontWeight: FontWeight.w700),
         items: arr.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -177,14 +211,36 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
+    Widget provinceDownMenu() {
+      return DropdownButton<String>(
+        value: provinceDropValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 16,
+        isExpanded: true,
+        style: TextStyle(color: kActiveIconColor, fontWeight: FontWeight.w700),
+        onChanged: (String newValue) {
+          setState(() {
+            provinceDropValue = newValue;
+          });
+        },
+        items: province.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      );
+    }
+
     Widget phmDropDownMenu() {
       return DropdownButton<String>(
         value: phmDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        style: TextStyle(color: kActiveIconColor, fontWeight: FontWeight.w700),
         items: <String>[
           'Select Area',
           '01',
@@ -221,19 +277,19 @@ class _ComFamRegState extends State<ComFamReg> {
     Widget eduDropDownMenu() {
       return DropdownButton<String>(
         value: eduDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
         items: <String>[
           'Education Level',
-          '1990',
-          '1991',
-          '1992',
-          '1993',
-          '1994',
-          '1995'
+          'Secondary School',
+          'Ordinary Level',
+          'Advance Level',
+          'Undergraduate',
+          'post graduate',
+          'none',
         ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -255,11 +311,10 @@ class _ComFamRegState extends State<ComFamReg> {
     }
 
 //////////////////////////////////step 04 widgets///////////////////////
-
     Widget rubellaDropDownMenu() {
       return DropdownButton<String>(
         value: rubellaDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
@@ -288,7 +343,7 @@ class _ComFamRegState extends State<ComFamReg> {
     Widget formicDropDownMenu() {
       return DropdownButton<String>(
         value: formicDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
@@ -317,7 +372,7 @@ class _ComFamRegState extends State<ComFamReg> {
     Widget conDropDownMenu() {
       return DropdownButton<String>(
         value: conDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
@@ -346,7 +401,7 @@ class _ComFamRegState extends State<ComFamReg> {
     Widget womenBloodDropDownMenu() {
       return DropdownButton<String>(
         value: womenBloodDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
@@ -375,7 +430,7 @@ class _ComFamRegState extends State<ComFamReg> {
     Widget menBloodDropDownMenu() {
       return DropdownButton<String>(
         value: menBloodDropdownValue,
-        icon: Icon(Icons.arrow_circle_down_rounded,size: 20,),
+        icon: Icon(Icons.arrow_downward),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
@@ -401,8 +456,6 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
-    
-
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
@@ -413,68 +466,66 @@ class _ComFamRegState extends State<ComFamReg> {
           date.day.toString();
       String monthConvert = date.year.toString() + "/" + date.month.toString();
       ComRegDB comRegDB = ComRegDB(
-        husbandName: myController1.text,
-        wifeName: myController2.text,
-        address: myController3.text,
-        nic: myController4.text,
-        mohDropDownValue: mohDropdownValue,
-        phmDropDownValue: phmDropdownValue,
-        menDOB: _menDOB.toString(),
+          husbandName: myController1.text,
+          wifeName: myController2.text,
+          address: myController3.text,
+          nic: myController4.text,
+          mohDropDownValue: mohDropdownValue,
+          phmDropDownValue: phmDropdownValue,
+          menDOB: _menDOB.toString(),
         womenDOB: _womenDOB.toString(),
-        contactNum: myController5.text,
-        email: myController6.text,
-        job: myController7.text,
-        eduDropDownValue: eduDropdownValue,
-        marrageDate: _dateMarrage.toString(),
-        md1: d1_Men,
-        md2: d2_Men,
-        md3: d3_Men,
-        md4: d4_Men,
-        md5: d5_Men,
-        md6: d6_Men,
-        md7: d7_Men,
-        md8: d8_Men,
-        md9: d9_Men,
-        md10: d10_Men,
-        md11: d11_Men,
-        md12: d12_Men,
-        md13: d13_Men,
-        md14: d14_Men,
-        md15: d15_Men,
-        wd1: d1_Women,
-        wd2: d2_Women,
-        wd3: d3_Women,
-        wd4: d4_Women,
-        wd5: d5_Women,
-        wd6: d6_Women,
-        wd7: d7_Women,
-        wd8: d8_Women,
-        wd9: d9_Women,
-        wd10: d10_Women,
-        wd11: d11_Women,
-        wd12: d12_Women,
-        wd13: d13_Women,
-        wd14: d14_Women,
-        wd15: d15_Women,
-        rubellaDropDownValue: rubellaDropdownValue,
-        formicDropDownValue: formicDropdownValue,
-        conDropDownValue: conDropdownValue,
-        womenWeight: myController8.text,
-        menWeight: myController9.text,
-        womenHeight: myController10.text,
-        menHeight: myController11.text,
-        womenBloodDropDownValue: womenBloodDropdownValue,
-        menBloodDropDownValue: menBloodDropdownValue,
-        regDate: dateConvert,
-        regMonth: monthConvert,
-        latitudeData: latitudeData,
-        longitiduData: longitiduData,
-        delete: false
-      );
+          contactNum: myController5.text,
+          email: myController6.text,
+          job: myController7.text,
+          eduDropDownValue: eduDropdownValue,
+          marrageDate: _dateMarrage.toString(),
+          md1: d1_Yes,
+          md2: d2_Yes,
+          md3: d3_Yes,
+          md4: d4_Yes,
+          md5: d5_Yes,
+          md6: d6_Yes,
+          md7: d7_Yes,
+          md8: d8_Yes,
+          md9: d9_Yes,
+          md10: d10_Yes,
+          md11: d11_Yes,
+          md12: d12_Yes,
+          md13: d13_Yes,
+          md14: d14_Yes,
+          md15: d15_Yes,
+          wd1: d1_No,
+          wd2: d2_No,
+          wd3: d3_No,
+          wd4: d4_No,
+          wd5: d5_No,
+          wd6: d6_No,
+          wd7: d7_No,
+          wd8: d8_No,
+          wd9: d9_No,
+          wd10: d10_No,
+          wd11: d11_No,
+          wd12: d12_No,
+          wd13: d13_No,
+          wd14: d14_No,
+          wd15: d15_No,
+          rubellaDropDownValue: rubellaDropdownValue,
+          formicDropDownValue: formicDropdownValue,
+          conDropDownValue: conDropdownValue,
+          womenWeight: myController8.text,
+          menWeight: myController9.text,
+          womenHeight: myController10.text,
+          menHeight: myController11.text,
+          womenBloodDropDownValue: womenBloodDropdownValue,
+          menBloodDropDownValue: menBloodDropdownValue,
+          regDate: dateConvert,
+          regMonth: monthConvert,
+          latitudeData: latitudeData,
+          longitiduData: longitiduData,
+          delete: false);
 
       try {
-        FirebaseFirestore.instance
-            .runTransaction((Transaction transaction) async {
+        _firestore.runTransaction((Transaction transaction) async {
           await FirebaseFirestore.instance
               .collection("ComDatabase")
               .doc(_auth.currentUser.uid)
@@ -485,34 +536,25 @@ class _ComFamRegState extends State<ComFamReg> {
       }
     }
 
-    comRegComfirm() async {
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      ComSetState comSetState = ComSetState(allreadyComReg: allreadyComReg);
-      try {
-        FirebaseFirestore.instance
-            .runTransaction((Transaction transaction) async {
-          await FirebaseFirestore.instance
-              .collection("ComDatabase")
-              .doc(_auth.currentUser.uid)
-              .collection("State")
-              .doc(_auth.currentUser.uid)
-              .set(comSetState.toJson());
-        });
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-
     Future<void> setCompetencyTrue() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
-      await FirebaseFirestore.instance
+
+      String midID = await _dataSevice.getMyMidwife(mohDropdownValue);
+      await _firestore
           .collection('users')
           .doc(_auth.currentUser.uid)
-          .update({
-            'competencyFam': true,
-          })
-          .then((value) => print("Competency true"))
-          .catchError((err) => print(err));
+          .update({'compApp': true, 'midwifeID': midID}).then((value) {
+        print("Competency true");
+        _notificationService.subscribeTopic(midID);
+      }).catchError((err) => print(err));
+    }
+
+    Future getImage() async {
+      var image = await picker.getImage(source: ImageSource.gallery);
+      setState(() {
+        _image = File(image.path);
+        print(_image);
+      });
     }
 
     List<Step> steps = [
@@ -527,52 +569,44 @@ class _ComFamRegState extends State<ComFamReg> {
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.height * 0.001,
-                    MediaQuery.of(context).size.height * 0.01,
-                    MediaQuery.of(context).size.width * 0.4,
-                    MediaQuery.of(context).size.height * 0.03),
-                child: Container(
-                  child: Text(
-                    "Registration",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(500, 21, 166, 211),
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(25),
-                     ),
-                  
-                    child: Center(
-                      child: Text(
-                        "Competency Family",
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
               Container(
                 child: Column(
                   children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            radius: 60.0,
+                            backgroundColor: Color(0xff476cfb),
+                            child: ClipOval(
+                              child: SizedBox(
+                                height: 110.0,
+                                width: 110.0,
+                                child: (_image == null)
+                                    ? Image(
+                                        image: AssetImage(
+                                            "assets/images/profile.png"))
+                                    : Image.file(
+                                        _image,
+                                        fit: BoxFit.fill,
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: IconButton(
+                            icon: Icon(Icons.camera),
+                            onPressed: () {
+                              getImage();
+                            },
+                          ),
+                        )
+                      ],
+                    ),
                     Row(
                       children: <Widget>[
                         Expanded(flex: 10, child: Container()),
@@ -581,12 +615,13 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                height: 25,
+                                height: 20,
                                 child: Text(
-                                  "MOH Area  -",
+                                  "Province",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 20, color: Colors.red),
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             )),
@@ -595,9 +630,46 @@ class _ComFamRegState extends State<ComFamReg> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                                height: 25,
+                                height: 20,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(0),
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                                child: provinceDownMenu()),
+                          ),
+                        ),
+                        Expanded(flex: 5, child: Container()),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 10, child: Container()),
+                        Expanded(
+                            flex: 40,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 20,
+                                child: Text(
+                                  "MOH Area  -",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          flex: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: 20,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
                                     border: Border.all(
                                         color: Colors.black,
@@ -617,12 +689,13 @@ class _ComFamRegState extends State<ComFamReg> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                height: 25,
+                                height: 20,
                                 child: Text(
                                   "PHM Area  -",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 20, color: Colors.red),
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             )),
@@ -631,9 +704,9 @@ class _ComFamRegState extends State<ComFamReg> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                                height: 25,
+                                height: 20,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(0),
                                     color: Colors.grey[300],
                                     border: Border.all(
                                         color: Colors.black,
@@ -650,8 +723,8 @@ class _ComFamRegState extends State<ComFamReg> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.blueAccent[50],
-                    borderRadius: BorderRadius.circular(25),
+                  color: Colors.blueAccent[50],
+                  borderRadius: BorderRadius.circular(25),
                 ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
@@ -660,10 +733,10 @@ class _ComFamRegState extends State<ComFamReg> {
                       MediaQuery.of(context).size.width * 0.025,
                       MediaQuery.of(context).size.height * 0.005),
                   child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent[50],
-                    borderRadius: BorderRadius.circular(25),
-                  ),
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent[50],
+                      borderRadius: BorderRadius.circular(25),
+                    ),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -671,15 +744,16 @@ class _ComFamRegState extends State<ComFamReg> {
                           child: Row(
                             children: [
                               Icon(
-                                  Icons.location_pin,
-                                  color: Colors.red,
-                                ),
+                                Icons.location_pin,
+                                color: Colors.red,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
                               Text(
                                 "Share your Location",
-                                style: TextStyle(fontSize: 16, color: Colors.brown),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.brown),
                               ),
                             ],
                           ),
@@ -688,44 +762,31 @@ class _ComFamRegState extends State<ComFamReg> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              /*Text(_dateMarrage == null
-                                ? "Select Marriage Date"
-                                : _dateMarrage.year.toString() +
-                                    "/" +
-                                    _dateMarrage.month.toString() +
-                                    "/" +
-                                    _dateMarrage.day.toString()),
-                            */
-                            
                               SizedBox(
                                 width: 60,
                                 height: 30,
                                 child: RaisedButton(
-                                    color: Color.fromARGB(500, 21, 166, 211),
-                                    textColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        side: BorderSide(color: Colors.white)),
-                                    /*:Icon(
-                                  Icons.switch_right,
-                                  color: Colors.green,
-                                ),*/
-                                    onPressed: () async{
-                                      
-                                          final geoposition = await Geolocator.getCurrentPosition(
-                                              desiredAccuracy: LocationAccuracy.high);
-                                          setState(() {
-                                            latitudeData = geoposition.latitude;
-                                            longitiduData = geoposition.longitude;
-                                          });
-                                        
-                                    },
-                                    child: 
-                                      Icon((latitudeData==null) ?
-                                  Icons.refresh_rounded:
-                                  Icons.switch_right,
+                                  color: Color.fromARGB(500, 21, 166, 211),
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: BorderSide(color: Colors.white)),
+                                  onPressed: () async {
+                                    final geoposition =
+                                        await Geolocator.getCurrentPosition(
+                                            desiredAccuracy:
+                                                LocationAccuracy.high);
+                                    setState(() {
+                                      latitudeData = geoposition.latitude;
+                                      longitiduData = geoposition.longitude;
+                                    });
+                                  },
+                                  child: Icon(
+                                    (latitudeData == null)
+                                        ? Icons.refresh_rounded
+                                        : Icons.switch_right,
+                                  ),
                                 ),
-                                    ),
                               ),
                             ],
                           ),
@@ -739,7 +800,7 @@ class _ComFamRegState extends State<ComFamReg> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
+                      MediaQuery.of(context).size.height * 0.005,
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
                   child: showTextField(
@@ -970,7 +1031,7 @@ class _ComFamRegState extends State<ComFamReg> {
                           child: Container(
                               height: 25,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(0),
                                   color: Colors.grey[300],
                                   border: Border.all(
                                       color: Colors.black,
@@ -997,7 +1058,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     Expanded(
                       flex: 45,
                       child: Text(
-                        "Marriage Date :",
+                        "Marriage Date",
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -1006,12 +1067,12 @@ class _ComFamRegState extends State<ComFamReg> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(_dateMarrage == null
-                              ? "Select Marriage Date"
+                              ? " ---"
                               : _dateMarrage.year.toString() +
                                   "/" +
                                   _dateMarrage.month.toString() +
                                   "/" +
-                                  _dateMarrage.day.toString(),style: TextStyle(color: Colors.red),),
+                                  _dateMarrage.day.toString()),
                           SizedBox(
                             width: 20,
                           ),
@@ -1019,8 +1080,7 @@ class _ComFamRegState extends State<ComFamReg> {
                             width: 60,
                             height: 30,
                             child: RaisedButton(
-                                color: Colors.white,
-                                child: Center(child: Icon(Icons.calendar_today,color: Colors.blueAccent)),
+                                child: Icon(Icons.calendar_today),
                                 onPressed: () {
                                   showDatePicker(
                                           context: context,
@@ -1076,9 +1136,9 @@ class _ComFamRegState extends State<ComFamReg> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(
-                  0,
+                  MediaQuery.of(context).size.width * 0.05,
                   MediaQuery.of(context).size.height * 0.005,
-                  0,
+                  MediaQuery.of(context).size.width * 0.03,
                   MediaQuery.of(context).size.height * 0.005),
               child: Container(
                 child: Row(
@@ -1119,534 +1179,392 @@ class _ComFamRegState extends State<ComFamReg> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(
-                  0,
+                  MediaQuery.of(context).size.width * 0.05,
                   MediaQuery.of(context).size.height * 0.005,
-                  0,
+                  MediaQuery.of(context).size.width * 0.03,
                   MediaQuery.of(context).size.height * 0.005),
               child: Container(
                 child: Column(
                   children: <Widget>[
-                    Card(
-                         child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("01.Diabetes"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d1_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("01.Diabetes")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d1_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d1_Men = value;
+                                    d1_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d1_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d1_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d1_Women = value;
+                                    d1_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                      color: Colors.blueAccent,
-                                          child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("02.Hypertension"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.blueAccent,
-                                value: d2_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("02.Hypertension")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d2_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d2_Men = value;
+                                    d2_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d2_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d2_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d2_Women = value;
+                                    d2_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                                          child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("03.Cardiac Diseases"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d3_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("03.Cardiac Diseases")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d3_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d3_Men = value;
+                                    d3_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d3_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d3_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d3_Women = value;
+                                    d3_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        color: Colors.blueAccent,
-                        child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("04.Renal Diseases"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d4_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("04.Renal Diseases")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d4_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d4_Men = value;
+                                    d4_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d4_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d4_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d4_Women = value;
+                                    d4_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("05.Hepatic Diseases"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d5_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("05.Hepatic Diseases")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d5_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d5_Men = value;
+                                    d5_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d5_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d5_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d5_Women = value;
+                                    d5_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        color: Colors.blueAccent,
-                        child: Row(
-                        children: <Widget>[
-                          Expanded(
-                              flex: 60, child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("06.Psychiatric Illnesses"),
-                              )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d6_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            flex: 60, child: Text("06.Psychiatric Illnesses")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d6_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d6_Men = value;
+                                    d6_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d6_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d6_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d6_Women = value;
+                                    d6_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("07.Epilepsy"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d7_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("07.Epilepsy")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d7_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d7_Men = value;
+                                    d7_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d7_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d7_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d7_Women = value;
+                                    d7_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        color: Colors.blueAccent,
-                        child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("08.Malignancies"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d8_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("08.Malignancies")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d8_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d8_Men = value;
+                                    d8_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d8_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d8_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d8_Women = value;
+                                    d8_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                                          child: Row(
-                        children: <Widget>[
-                          Expanded(
-                              flex: 60,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("09.Haematological Diseases"),
-                              )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d9_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            flex: 60,
+                            child: Text("09.Haematological Diseases")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d9_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d9_Men = value;
+                                    d9_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d9_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d9_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d9_Women = value;
+                                    d9_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                      color: Colors.blueAccent,
-                                          child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("10.Tuberculosis"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d10_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("10.Tuberculosis")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d10_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d10_Men = value;
+                                    d10_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d10_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d10_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d10_Women = value;
+                                    d10_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                                          child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("11.Thyroid Diseases"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d11_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("11.Thyroid Diseases")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d11_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d11_Men = value;
+                                    d11_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d11_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d11_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d11_Women = value;
+                                    d11_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                      color: Colors.blueAccent,
-                                          child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("12.Bronchial Asthma"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d12_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("12.Bronchial Asthma")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d12_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d12_Men = value;
+                                    d12_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d12_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d12_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d12_Women = value;
+                                    d12_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("13.Previous DVT"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d13_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("13.Previous DVT")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d13_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d13_Men = value;
+                                    d13_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d13_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d13_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d13_Women = value;
+                                    d13_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        color: Colors.blueAccent,
-                                          child: Row(
-                        children: <Widget>[
-                          Expanded(
-                              flex: 60,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("14.Surgeries other than LSCS"),
-                              )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d14_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            flex: 60,
+                            child: Text("14.Surgeries other than LSCS")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d14_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d14_Men = value;
+                                    d14_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d14_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d14_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d14_Women = value;
+                                    d14_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
-                    Card(
-                        child: Row(
-                        children: <Widget>[
-                          Expanded(flex: 60, child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("15.HIV"),
-                          )),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d15_Men,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 60, child: Text("15.HIV")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d15_Yes,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d15_Men = value;
+                                    d15_Yes = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                          Expanded(
-                              flex: 20,
-                              child: Switch(
-                                activeColor: Colors.pinkAccent,
-                                value: d15_Women,
-                                onChanged: (value) {
-                                  print("VALUE : $value");
+                                })),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: d15_No,
+                                onChanged: (bool value) {
                                   setState(() {
-                                    d15_Women = value;
+                                    d15_No = value;
+                                    print(value);
                                   });
-                                },
-                              ),),
-                        ],
-                      ),
+                                })),
+                      ],
                     ),
                   ],
                 ),
@@ -1697,32 +1615,35 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 25,
                                 child: Text(
-                                  "* Have you got Rubella Immunization..?",
+                                  "Have you got Rubella Immunization..?",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                      fontSize: 14),
                                 ),
                               ),
                             )),
-                        Expanded(
-                          flex: 17,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                height: 25,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.grey[300],
-                                    border: Border.all(
-                                        color: Colors.black,
-                                        style: BorderStyle.solid,
-                                        width: 0.5)),
-                                child: rubellaDropDownMenu()),
+                        Container(
+                          height: 25.0,
+                          child: ToggleSwitch(
+                            minWidth: 50.0,
+                            fontSize: 14,
+                            iconSize: 5.0,
+                            cornerRadius: 10.0,
+                            activeBgColor: kActiveIconColor,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            labels: ['NO', 'YES'],
+                            onToggle: (index) {
+                              rubellaDropdownValue =
+                                  (index == 1) ? "Yes" : "No";
+
+                              print('switched to: $index');
+                            },
                           ),
                         ),
-                        Expanded(flex: 3, child: Container()),
                       ],
                     ),
                     Row(
@@ -1743,23 +1664,26 @@ class _ComFamRegState extends State<ComFamReg> {
                                 ),
                               ),
                             )),
-                        Expanded(
-                          flex: 17,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                height: 25,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.grey[300],
-                                    border: Border.all(
-                                        color: Colors.black,
-                                        style: BorderStyle.solid,
-                                        width: 0.5)),
-                                child: formicDropDownMenu()),
+                        Container(
+                          height: 25.0,
+                          child: ToggleSwitch(
+                            minWidth: 50.0,
+                            fontSize: 14,
+                            iconSize: 5.0,
+                            cornerRadius: 10.0,
+                            activeBgColor: kActiveIconColor,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            labels: ['NO', 'YES'],
+                            onToggle: (index) {
+                              formicDropdownValue = (index == 1) ? "Yes" : "No";
+
+                              print(
+                                  'switched to: $index  $formicDropdownValue');
+                            },
                           ),
-                        ),
-                        Expanded(flex: 3, child: Container()),
+                        )
                       ],
                     ),
                     Row(
@@ -1771,7 +1695,7 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 25,
                                 child: Text(
-                                  "* Consanguinity",
+                                  "Consanguinity",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       color: Colors.black,
@@ -1780,23 +1704,25 @@ class _ComFamRegState extends State<ComFamReg> {
                                 ),
                               ),
                             )),
-                        Expanded(
-                          flex: 17,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                height: 25,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.grey[300],
-                                    border: Border.all(
-                                        color: Colors.black,
-                                        style: BorderStyle.solid,
-                                        width: 0.5)),
-                                child: conDropDownMenu()),
+                        Container(
+                          height: 25.0,
+                          child: ToggleSwitch(
+                            minWidth: 50.0,
+                            fontSize: 14,
+                            iconSize: 5.0,
+                            cornerRadius: 10.0,
+                            activeBgColor: kActiveIconColor,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            labels: ['NO', 'YES'],
+                            onToggle: (index) {
+                              conDropdownValue = (index == 1) ? "Yes" : "No";
+
+                              print('switched to: $index');
+                            },
                           ),
-                        ),
-                        Expanded(flex: 3, child: Container()),
+                        )
                       ],
                     ),
                   ],
@@ -2155,19 +2081,35 @@ class _ComFamRegState extends State<ComFamReg> {
     }
 
     return new Scaffold(
-      //backgroundColor: Colors.green,
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(
-          height: 20,
+        Container(
+          height: MediaQuery.of(context).copyWith().size.height / 5,
+          width: MediaQuery.of(context).copyWith().size.width,
+          color: Colors.lightBlue,
+          child: Container(
+            child: Text(
+              'Eligible Family Registration',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.06,
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.04),
+          ),
         ),
         complete
             ? validate()
                 ? Expanded(
                     child: Center(
                     child: AlertDialog(
-                      title: Text("Competency Registration Succesfully"),
+                      title: Text("Eligible Family Registration Succesfully"),
                       content: Text("Congratulation"),
                       actions: <Widget>[
                         Row(
@@ -2180,7 +2122,9 @@ class _ComFamRegState extends State<ComFamReg> {
                                     allreadyComReg = true;
                                   });
                                   stepOneReg();
-                                  comRegComfirm();
+                                  _storageService.uploadProfileImage(
+                                      _image, _user.uid, "profile");
+                                  //comRegComfirm();
                                   setCompetencyTrue();
                                   Navigator.pushNamed(context, '/dashboard');
                                   myController1.clear();
