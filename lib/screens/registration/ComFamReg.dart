@@ -118,7 +118,8 @@ class _ComFamRegState extends State<ComFamReg> {
   String rubellaDropdownValue = 'Yes';
   String formicDropdownValue = 'Yes';
   String conDropdownValue = 'Yes';
-  DateTime _dateDOB;
+  DateTime _menDOB;
+  DateTime _womenDOB;
   DateTime _dateMarrage;
   bool _set = false;
   bool allreadyComReg;
@@ -471,7 +472,8 @@ class _ComFamRegState extends State<ComFamReg> {
           nic: myController4.text,
           mohDropDownValue: mohDropdownValue,
           phmDropDownValue: phmDropdownValue,
-          dateDOB: _dateDOB.toString(),
+          menDOB: _menDOB.toString(),
+        womenDOB: _womenDOB.toString(),
           contactNum: myController5.text,
           email: myController6.text,
           job: myController7.text,
@@ -862,7 +864,7 @@ class _ComFamRegState extends State<ComFamReg> {
                     Expanded(
                       flex: 30,
                       child: Text(
-                        "Date of Birth",
+                        "Men's Date of Birth :",
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -870,13 +872,13 @@ class _ComFamRegState extends State<ComFamReg> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_dateDOB == null
+                          Text(_menDOB == null
                               ? "Select DOB"
-                              : _dateDOB.year.toString() +
+                              : _menDOB.year.toString() +
                                   "/" +
-                                  _dateDOB.month.toString() +
+                                  _menDOB.month.toString() +
                                   "/" +
-                                  _dateDOB.day.toString()),
+                                  _menDOB.day.toString(),style: TextStyle(color: Colors.red),),
                           SizedBox(
                             width: 20,
                           ),
@@ -884,7 +886,8 @@ class _ComFamRegState extends State<ComFamReg> {
                             width: 60,
                             height: 30,
                             child: RaisedButton(
-                                child: Icon(Icons.calendar_today),
+                                color: Colors.white,
+                                child: Center(child: Icon(Icons.calendar_today,color: Colors.blueAccent,)),
                                 /* shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                     side: BorderSide(
@@ -898,7 +901,68 @@ class _ComFamRegState extends State<ComFamReg> {
                                           lastDate: DateTime(2021))
                                       .then((date) {
                                     setState(() {
-                                      _dateDOB = date;
+                                      _menDOB = date;
+                                    });
+                                  });
+                                }),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.005,
+                    MediaQuery.of(context).size.width * 0.005,
+                    MediaQuery.of(context).size.height * 0.005),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 30,
+                      child: Text(
+                        "Women's Date of Birth :",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(_womenDOB == null
+                              ? "Select DOB"
+                              : _womenDOB.year.toString() +
+                                  "/" +
+                                  _womenDOB.month.toString() +
+                                  "/" +
+                                  _womenDOB.day.toString(),style: TextStyle(color: Colors.red),),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          SizedBox(
+                            width: 60,
+                            height: 30,
+                            child: RaisedButton(
+                                color: Colors.white,
+                                child: Center(child: Icon(Icons.calendar_today,color: Colors.blueAccent,)),
+                                /* shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    side: BorderSide(
+                                      color: Color.fromARGB(500, 21, 166, 211),
+                                    )),*/
+                                onPressed: () {
+                                  showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1980),
+                                          lastDate: DateTime(2021))
+                                      .then((date) {
+                                    setState(() {
+                                      _womenDOB = date;
                                     });
                                   });
                                 }),
@@ -1998,22 +2062,25 @@ class _ComFamRegState extends State<ComFamReg> {
     }
 
     bool validate() {
-      if (myController1.text.isEmpty &&
-          myController2.text.isEmpty &&
-          myController3.text.isEmpty &&
-          myController4.text.isEmpty &&
-          myController5.text.isEmpty &&
-          myController6.text.isEmpty &&
-          myController7.text.isEmpty &&
-          myController8.text.isEmpty &&
-          myController9.text.isEmpty &&
-          myController10.text.isEmpty &&
+      if (myController1.text.isEmpty ||
+          myController2.text.isEmpty ||
+          myController3.text.isEmpty ||
+          myController4.text.isEmpty ||
+          myController5.text.isEmpty ||
+          myController6.text.isEmpty ||
+          myController7.text.isEmpty ||
+          myController8.text.isEmpty ||
+          myController9.text.isEmpty ||
+          myController10.text.isEmpty ||
           myController11.text.isEmpty) {
         print("This cant't be empty");
         return false;
       }
-      print("not empty");
+      else{
+        print("not empty");
       return true;
+      }
+      
     }
 
     return new Scaffold(

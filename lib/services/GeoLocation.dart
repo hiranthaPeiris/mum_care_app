@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 class GeoLocation extends StatefulWidget {
   @override
@@ -10,12 +13,13 @@ class GeoLocation extends StatefulWidget {
 class _GeoLocationState extends State<GeoLocation> {
   double latitudeData;
   double longitiduData;
+  Geolocator geolocator =Geolocator();
 
   void initState() {
     super.initState();
     getCurrentLocation();
   }
-  
+
   getCurrentLocation() async {
     final geoposition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -48,10 +52,9 @@ class _GeoLocationState extends State<GeoLocation> {
               onPressed: () {
                 openMap(latitudeData, longitiduData);
               },
-              child: Text("Press"))      
+              child: Text("Press"))
         ],
       ),
     );
   }
 }
-
