@@ -29,7 +29,7 @@ class _PreFamRegState extends State<PreFamReg> {
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
 
-  String wombDropdownValue = "G1";
+  String wombDropdownValue = "1st Child";
 
   bool diabetic_Yes = false;
   bool maleria_Yes = false;
@@ -51,6 +51,8 @@ class _PreFamRegState extends State<PreFamReg> {
     'Ahangama',
     'Thalgaswala'
   ];
+
+  String _pohSex = '';
 
   TextEditingController myController12 = new TextEditingController();
   TextEditingController myController13 = new TextEditingController();
@@ -170,13 +172,23 @@ class _PreFamRegState extends State<PreFamReg> {
     Widget wombDropDownMenu() {
       return DropdownButton<String>(
         value: wombDropdownValue,
-        icon: Icon(Icons.arrow_downward),
+        icon: Icon(
+          Icons.arrow_circle_down_rounded,
+          size: 20,
+        ),
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
         // style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
-        items: <String>['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7']
-            .map<DropdownMenuItem<String>>((String value) {
+        items: <String>[
+          '1st Child',
+          '2nd Child',
+          '3rd Child',
+          '4th Child',
+          '5th Child',
+          '6th Child',
+          '7th Child'
+        ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Padding(
@@ -205,6 +217,9 @@ class _PreFamRegState extends State<PreFamReg> {
           date.month.toString() +
           "/" +
           date.day.toString();
+
+      String monthConvert = date.year.toString() + "/" + date.month.toString();
+
       PreRegDB preRegDB = PreRegDB(
           mohDropDownValue: mohDropdownValue,
           phmDropDownValue: phmDropdownValue,
@@ -218,7 +233,9 @@ class _PreFamRegState extends State<PreFamReg> {
           maleria: maleria_Yes,
           heartDisorder: heartDisorders_Yes,
           kidneyDisorder: kidneyDisorders_Yes,
-          regDate: dateConvert);
+          regDate: dateConvert,
+          regMonth: monthConvert,
+          delete: false);
 
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
@@ -240,7 +257,7 @@ class _PreFamRegState extends State<PreFamReg> {
         details: myController17.text,
         kgWeight: myController18.text,
         gWeight: myController19.text,
-        sex: myController20.text,
+        sex: _pohSex,
       );
       try {
         Firestore.instance.runTransaction((Transaction transaction) async {
@@ -262,7 +279,7 @@ class _PreFamRegState extends State<PreFamReg> {
           .collection('users')
           .doc(_auth.currentUser.uid)
           .update({
-            'pregApp': true,
+            'PregnanctFam': true,
           })
           .then((value) => print("Pregnancy true"))
           .catchError((err) => print(err));
@@ -279,7 +296,48 @@ class _PreFamRegState extends State<PreFamReg> {
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[               
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.height * 0.001,
+                    MediaQuery.of(context).size.height * 0.01,
+                    MediaQuery.of(context).size.width * 0.4,
+                    MediaQuery.of(context).size.height * 0.03),
+                child: Container(
+                  child: Text(
+                    "Registration",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(500, 21, 166, 211),
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.08,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Pregnency Family",
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
               Container(
                 child: Column(
                   children: <Widget>[
@@ -308,7 +366,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                                 height: 25,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
+                                    borderRadius: BorderRadius.circular(12),
                                     color: Colors.grey[300],
                                     border: Border.all(
                                         color: Colors.black,
@@ -345,7 +403,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                                 height: 25,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
+                                    borderRadius: BorderRadius.circular(12),
                                     color: Colors.grey[300],
                                     border: Border.all(
                                         color: Colors.black,
@@ -447,7 +505,7 @@ class _PreFamRegState extends State<PreFamReg> {
                             child: Container(
                               height: 25,
                               child: Text(
-                                "Pregnancy Count",
+                                "Child Number  :",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 15,
@@ -594,7 +652,82 @@ class _PreFamRegState extends State<PreFamReg> {
                     MediaQuery.of(context).size.height * 0.005,
                     MediaQuery.of(context).size.width * 0.05,
                     MediaQuery.of(context).size.height * 0.005),
-                child: showTextField("Sex", "pohSex", myController20),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 30,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 25,
+                            child: Text(
+                              "Sex   :",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        )),
+                    Expanded(
+                      flex: 70,
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio(
+                                    value: "male",
+                                    groupValue: _pohSex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _pohSex = value;
+                                        print(_pohSex);
+                                      });
+                                    },
+                                  ),
+                                  const Text('Male'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio(
+                                    value: "female",
+                                    groupValue: _pohSex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _pohSex = value;
+                                        print(_pohSex);
+                                      });
+                                    },
+                                  ),
+                                  const Text('Female'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio(
+                                    value: "others",
+                                    groupValue: _pohSex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _pohSex = value;
+                                        print(_pohSex);
+                                      });
+                                    },
+                                  ),
+                                  const Text('Others'),
+                                ],
+                              ),
+                            ],
+                          )),
+                    )
+                  ],
+                ),
               ),
             ),
             Container(
@@ -859,25 +992,8 @@ class _PreFamRegState extends State<PreFamReg> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-       Container(
-          height: MediaQuery.of(context).copyWith().size.height / 5,
-          width: MediaQuery.of(context).copyWith().size.width,
-          color: Colors.lightBlue,
-          child: Container(
-            child: Text(
-              'Mother Pregnancy Registration',
-              style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            padding: EdgeInsets.fromLTRB(
-                MediaQuery.of(context).size.width * 0.2,
-                MediaQuery.of(context).size.height * 0.06,
-                MediaQuery.of(context).size.width * 0.2,
-                MediaQuery.of(context).size.height * 0.04),
-          ),
+        SizedBox(
+          height: 20,
         ),
         complete
             ? validate()
