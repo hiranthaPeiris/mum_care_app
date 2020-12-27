@@ -323,7 +323,7 @@ class _ProfileState extends State<Profile> {
                                                   _buildTile(
                                                       "NIC", _compData.nic),
                                                   _buildTile("Date of Birth",
-                                                      _compData.dateDOB),
+                                                      _compData.womenDOB),
                                                   _buildTile(
                                                       "Job", _compData.job),
                                                   _buildTile(
