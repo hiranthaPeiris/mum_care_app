@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
-  int id;
+class UserModel {
+  String uid;
   String name;
   String imageUrl;
   String role;
@@ -21,8 +21,8 @@ class User {
 
   DocumentReference documentReference;
 
-  User({
-    this.id,
+  UserModel({
+    this.uid,
     this.name,
     this.imageUrl,
     this.role,
@@ -37,12 +37,12 @@ class User {
     this.email,
     this.token,
     this.condition,
-    this.nameSearch,
     this.timeStamp,
   });
 
-  User.fromMap(Map<String, dynamic> map, {this.documentReference}) {
-    id = map["id"];
+  UserModel.setUID(this.uid);
+  UserModel.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    uid = map["uid"];
     name = map["name"];
     imageUrl = map["imageUrl"];
     role = map["role"];
@@ -60,7 +60,7 @@ class User {
     nameSearch = map['nameSearch'];
     timeStamp = map['timeStamp'];
   }
-  User.fromSnapshot(DocumentSnapshot snapshot)
+  UserModel.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
 
   toJson() {
@@ -79,9 +79,19 @@ class User {
       'email': email,
       'token': token,
       'condition': condition,
-      'nameSearch':nameSearch,
+      'nameSearch':getSearchParam(name),
       'timeStamp':timeStamp
     };
+  }
+  //search data creator
+  List<String> getSearchParam(String param) {
+    List<String> searchList = List();
+    String temp = "";
+    for (int i = 0; i < param.length; i++) {
+      temp = temp + param[i];
+      searchList.add(temp);
+    }
+    return searchList;
   }
 }
 

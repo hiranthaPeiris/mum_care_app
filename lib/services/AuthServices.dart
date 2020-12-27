@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NotificationService.dart';
+import 'package:mun_care_app/models/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -111,11 +112,12 @@ class AuthService {
   }
 
   //register
-  Future register(String email, String password, String name,String role,String mobNumber) async {
+  Future register(UserModel userModel,String password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      await setUserRole(userCredential.user.uid, name,role,userCredential.user.email,mobNumber);
+          .createUserWithEmailAndPassword(email: userModel.email, password: password);
+          userModel.uid = userCredential.user.uid;
+      await setUserRole(userModel);
       await setUserMessageToken();
       _notification.subscribeTopic("general");
       
@@ -127,43 +129,45 @@ class AuthService {
     }
   }
 //register as midwife
-Future<User> registerAsMidwife(String email, String password, String name,String role,String mobNumber) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      await setUserRole(userCredential.user.uid, name,role,userCredential.user.email,mobNumber);
-      await setUserMessageToken();
-      _notification.subscribeTopic("general");
+// Future<User> registerAsMidwife(String email, String password, String name,String role,String mobNumber) async {
+//     try {
+//       UserCredential userCredential = await FirebaseAuth.instance
+//           .createUserWithEmailAndPassword(email: email, password: password);
+//       await setUserRole(userModel);
+//       await setUserMessageToken();
+//       _notification.subscribeTopic("general");
       
-      print(userCredential.user.uid);
-      return userCredential.user;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
+//       print(userCredential.user.uid);
+//       return userCredential.user;
+//     } catch (e) {
+//       print(e.toString());
+//       return null;
+//     }
+//   }
 //set user role
-  Future<void> setUserRole(String uid, String name,String role,String email,String mobileNum) async {
+  Future<void> setUserRole(UserModel userModel) async {
     await _firestore
         .collection('users')
-        .doc(uid)
-        .set({
-          'name': name,
-          'role': role,
-          'area01': 'notSelect',
-          'competencyFam': false,
-          'PregnanctFam': false,
-          'compApp': false,
-          'pregApp': false,
-          'midwifeID': 'null',
-          'onDuty': false,
-          'tel': mobileNum,
-          'email':email,
-          'token': "",
-          'condition':"normal",
-          'timeStamp': FieldValue.serverTimestamp(),
-          'nameSearch': getSearchParam(name)
-        })
+        .doc(userModel.uid)
+         .set(userModel.toJson())
+        //   {
+        //   'name': name,
+        //   'role': role,
+        //   'area01': 'notSelect',
+        //   'mohArea': "",
+        //   'competencyFam': false,
+        //   'PregnanctFam': false,
+        //   'compApp': false,
+        //   'pregApp': false,
+        //   'midwifeID': 'null',
+        //   'onDuty': false,
+        //   'tel': mobileNum,
+        //   'email':email,
+        //   'token': "",
+        //   'condition':"normal",
+        //   'timeStamp': FieldValue.serverTimestamp(),
+        //   'nameSearch': getSearchParam(name)
+        // })
         .then((value) => print("user role added"))
         .catchError((err) => print(err));
   }

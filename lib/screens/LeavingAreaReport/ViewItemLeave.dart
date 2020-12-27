@@ -195,7 +195,7 @@ class _ViewItemLeaveState extends State<ViewItemLeave> {
     return await _firestore
         .collection('informLeaving')
         .doc(documentSnapshot.id)
-        .set({'_midwifeRemarks': remarks,"_status":"accepted"})
+        .update({'_midwifeRemarks': remarks,"_status":"accepted"})
         .then((value) => print("updated"))
         .catchError((err) => print(err));
   }

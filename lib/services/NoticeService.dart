@@ -50,7 +50,7 @@ class NoticeService {
         break;
       case "NoticeAudiance.Midwife":
         Response rst = await _notification.sendMessageTopic(
-            notification.getMap(), "midwife1");
+            notification.getMap(), noticeModel.midwifeID);
         return rst;
         break;
       case "NoticeAudiance.Eligible":
@@ -63,7 +63,7 @@ class NoticeService {
             notification.getMap(), tokenList);
         return rst;
         break;
-      case "NoticeAudiance.General":
+      case "NoticeAudiance.Pregnancy":
         List<QueryDocumentSnapshot> userList =
             await _userDataService.getMyPregMums(noticeModel.midwifeID);
         tokenList = userList.map((doc) => doc['token'].toString()).toList();
@@ -74,6 +74,7 @@ class NoticeService {
         break;
       default:
         print("def");
+        return null;
     }
   }
 }

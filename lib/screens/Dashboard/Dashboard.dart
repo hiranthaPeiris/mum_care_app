@@ -235,15 +235,15 @@ class _DashboardState extends State<Dashboard> {
       return SliverList(
         delegate: SliverChildListDelegate([
           Menu_liner_card(
-              heading: "Competency family Reviews",
-              content: "You have pending competency family data to review",
+              heading: "Eligible family Reviews",
+              content: "You have pending eligible family data to review",
               svgSrc: "assets/icons/Hamburger.svg",
               press: () {
                 Navigator.pushNamed(context, '/motherList');
               }),
           Menu_liner_card(
-              heading: "Pregnancy Mothers",
-              content: "You have pending competency family data to review",
+              heading: "Pregnancy Mother Reviews",
+              content: "You have pending mother pegnancy data to review",
               svgSrc: "assets/icons/Hamburger.svg",
               press: () {
                 Navigator.pushNamed(context, '/motherPregReview');
@@ -264,7 +264,7 @@ class _DashboardState extends State<Dashboard> {
           delegate: SliverChildListDelegate([
             Menu_liner_card(
                 heading: "Complete Registration",
-                content: "Complete the competency family registration",
+                content: "Complete the eligble family registration",
                 svgSrc: "assets/icons/Hamburger.svg",
                 press: () {
                   Navigator.pushNamed(context, '/comReg');
@@ -383,7 +383,7 @@ class _DashboardState extends State<Dashboard> {
             press: () {
               Navigator.pushNamed(
                 context,
-                '/UpcomingHome',
+                '/viewupcominghomevisit',
               );
             },
           ),

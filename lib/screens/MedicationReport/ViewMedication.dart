@@ -21,13 +21,12 @@ class _ViewMedicationState extends State<ViewMedication> {
     _user = Provider.of<UserM>(context);
     return Scaffold(
         body: Builder(
-            builder: (context) => Container(
-                color: Colors.lightBlue,
-                child: SingleChildScrollView(
+            builder: (context) => SingleChildScrollView(
                   child: Column(children: <Widget>[
                     Container(
                       height: MediaQuery.of(context).copyWith().size.height / 5,
                       width: MediaQuery.of(context).copyWith().size.width,
+                      color: Colors.lightBlue,
                       child: Container(
                         child: Text(
                           'View Medication Reports',
@@ -86,7 +85,7 @@ class _ViewMedicationState extends State<ViewMedication> {
                                 ),
                               ),
                               child: Column(
-                                children: [
+                                children: [                                  
                                   Expanded(
                                       child: StreamBuilder<QuerySnapshot>(
                                           stream: widget._firestore
@@ -133,30 +132,7 @@ class _ViewMedicationState extends State<ViewMedication> {
                                 ),
                               ),
                               child: Column(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(29.5),
-                                    ),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        hintText: "Search",
-                                        icon: SvgPicture.asset(
-                                            "assets/icons/search.svg"),
-                                        border: InputBorder.none,
-                                      ),
-                                      onChanged: (val) {
-                                        setState(() {
-                                          searchPara = val;
-                                        });
-                                      },
-                                    ),
-                                  ),
+                                children: [                                 
                                   Expanded(
                                       child: StreamBuilder<QuerySnapshot>(
                                           stream: (searchPara == null ||
@@ -198,7 +174,7 @@ class _ViewMedicationState extends State<ViewMedication> {
                           ],
                         )),
                   ]),
-                ))));
+                )));
   }
 
   Widget _buildListTile(DocumentSnapshot document) {

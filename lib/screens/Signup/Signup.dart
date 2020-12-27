@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/models/user.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:sign_button/sign_button.dart';
 
@@ -246,12 +247,13 @@ class _SignupState extends State<Signup> {
                     )),
                 onPressed: () {
                   if (validate()) {
-                    dynamic result = _auth.register(
-                        emailController.text.trim(),
-                        password.trim(),
-                        nameController.text.trim(),
-                        "user",
-                        telController.text.trim());
+                    UserModel userMod = UserModel(
+                        email: emailController.text.trim(),
+                        name: nameController.text.trim(),
+                        role: "user",
+                        tel: telController.text.trim());
+                        
+                    dynamic result = _auth.register(userMod, password.trim());
                     if (result == null) {
                       setState(() {
                         error = 'Please supply a valid email';

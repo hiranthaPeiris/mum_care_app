@@ -42,7 +42,7 @@ class _MotherListState extends State<MotherList> {
               Tab(icon: Icon(Icons.cancel),child: Text("Rejected"),),
             ],
           ),
-          title: Text('Review Competency Family'),
+          title: Text('Review Eligible Family'),
         ),
         body: TabBarView(
           children: [

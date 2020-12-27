@@ -57,7 +57,11 @@ class ComRegDB {
   String menHeight;
   String womenBloodDropDownValue;
   String menBloodDropDownValue;
-  String regDate;
+   String regDate;
+  String regMonth;
+  double latitudeData;
+  double longitiduData;
+  bool delete;
 
   DocumentReference documentReference;
 
@@ -114,6 +118,10 @@ class ComRegDB {
     this.womenBloodDropDownValue,
     this.menBloodDropDownValue,
     this.regDate,
+      this.regMonth,
+      this.latitudeData,
+      this.longitiduData,
+      this.delete
   });
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
@@ -173,6 +181,10 @@ class ComRegDB {
     womenBloodDropDownValue = map["_womenBloodDropDownValue"];
     menBloodDropDownValue = map["_menBloodDropDownValue"];
     regDate = map['_regDate'];
+    regMonth = map['_regMonth'];
+    latitudeData = map['_latitudeData'];
+    longitiduData = map['_longitiduData'];
+    delete = map['_delete'];
   }
   ComRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -231,6 +243,10 @@ class ComRegDB {
       '_womenBloodDropDownValue': womenBloodDropDownValue,
       '_menBloodDropDownValue': menBloodDropDownValue,
       '_regDate': regDate,
+      '_regMonth': regMonth,
+      '_latitudeData': latitudeData,
+      '_longitiduData': longitiduData,
+      '_delete': delete,
     };
   }
 }

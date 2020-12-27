@@ -3,16 +3,22 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mun_care_app/helpers/Constants.dart';
 import 'package:mun_care_app/helpers/enums.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/models/UserReg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
 import 'package:mun_care_app/services/StorageService.dart';
+import 'package:mun_care_app/services/UserDataService.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:provider/provider.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class ComFamReg extends StatefulWidget {
   @override
@@ -34,7 +40,9 @@ class ShapePainter extends CustomPainter {
 
 class _ComFamRegState extends State<ComFamReg> {
   StorageService _storageService = StorageService();
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final UserDataSevice _dataSevice = UserDataSevice();
+  final NotificationService _notificationService = NotificationService();
   int currentStep = 0;
   bool complete = false;
   bool isActive = false;
@@ -43,6 +51,7 @@ class _ComFamRegState extends State<ComFamReg> {
   //StepState stepState=StepState.editing;
   String mohDropdownValue = 'Select Area';
   String phmDropdownValue = 'Select Area';
+  String provinceDropValue = 'Select Province';
   String eduDropdownValue = 'Education Level';
   String womenBloodDropdownValue = 'A+';
   String menBloodDropdownValue = 'A+';
@@ -127,10 +136,24 @@ class _ComFamRegState extends State<ComFamReg> {
     'Thalgaswala'
   ];
 
+  List<String> province = [
+    'Select Province',
+    'Western',
+    'Southern',
+    'Northern',
+    'Eastern',
+    'Central',
+    'North Central',
+    'Dodanduwa',
+    'Sabaragamuwa',
+  ];
+  double latitudeData;
+  double longitiduData;
+
   File _image;
   final picker = ImagePicker();
   FirebaseStorage storage = FirebaseStorage.instance;
-  
+
   @override
   Widget build(BuildContext context) {
     _user = Provider.of<UserM>(context);
@@ -166,7 +189,7 @@ class _ComFamRegState extends State<ComFamReg> {
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        style: TextStyle(color: kActiveIconColor, fontWeight: FontWeight.w700),
         items: arr.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -187,6 +210,28 @@ class _ComFamRegState extends State<ComFamReg> {
       );
     }
 
+    Widget provinceDownMenu() {
+      return DropdownButton<String>(
+        value: provinceDropValue,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 18,
+        elevation: 16,
+        isExpanded: true,
+        style: TextStyle(color: kActiveIconColor, fontWeight: FontWeight.w700),
+        onChanged: (String newValue) {
+          setState(() {
+            provinceDropValue = newValue;
+          });
+        },
+        items: province.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      );
+    }
+
     Widget phmDropDownMenu() {
       return DropdownButton<String>(
         value: phmDropdownValue,
@@ -194,7 +239,7 @@ class _ComFamRegState extends State<ComFamReg> {
         iconSize: 18,
         elevation: 36,
         isExpanded: true,
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        style: TextStyle(color: kActiveIconColor, fontWeight: FontWeight.w700),
         items: <String>[
           'Select Area',
           '01',
@@ -238,12 +283,12 @@ class _ComFamRegState extends State<ComFamReg> {
         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
         items: <String>[
           'Education Level',
-          '1990',
-          '1991',
-          '1992',
-          '1993',
-          '1994',
-          '1995'
+          'Secondary School',
+          'Ordinary Level',
+          'Advance Level',
+          'Undergraduate',
+          'post graduate',
+          'none',
         ].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -413,64 +458,72 @@ class _ComFamRegState extends State<ComFamReg> {
     stepOneReg() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
       DateTime date = DateTime.now();
+      String dateConvert = date.year.toString() +
+          "/" +
+          date.month.toString() +
+          "/" +
+          date.day.toString();
+      String monthConvert = date.year.toString() + "/" + date.month.toString();
       ComRegDB comRegDB = ComRegDB(
-        husbandName: myController1.text,
-        wifeName: myController2.text,
-        address: myController3.text,
-        nic: myController4.text,
-        mohDropDownValue: mohDropdownValue,
-        phmDropDownValue: phmDropdownValue,
-        dateDOB: _dateDOB.toString(),
-        contactNum: myController5.text,
-        email: myController6.text,
-        job: myController7.text,
-        eduDropDownValue: eduDropdownValue,
-        marrageDate: _dateMarrage.toString(),
-        md1: d1_Yes,
-        md2: d2_Yes,
-        md3: d3_Yes,
-        md4: d4_Yes,
-        md5: d5_Yes,
-        md6: d6_Yes,
-        md7: d7_Yes,
-        md8: d8_Yes,
-        md9: d9_Yes,
-        md10: d10_Yes,
-        md11: d11_Yes,
-        md12: d12_Yes,
-        md13: d13_Yes,
-        md14: d14_Yes,
-        md15: d15_Yes,
-        wd1: d1_No,
-        wd2: d2_No,
-        wd3: d3_No,
-        wd4: d4_No,
-        wd5: d5_No,
-        wd6: d6_No,
-        wd7: d7_No,
-        wd8: d8_No,
-        wd9: d9_No,
-        wd10: d10_No,
-        wd11: d11_No,
-        wd12: d12_No,
-        wd13: d13_No,
-        wd14: d14_No,
-        wd15: d15_No,
-        rubellaDropDownValue: rubellaDropdownValue,
-        formicDropDownValue: formicDropdownValue,
-        conDropDownValue: conDropdownValue,
-        womenWeight: myController8.text,
-        menWeight: myController9.text,
-        womenHeight: myController10.text,
-        menHeight: myController11.text,
-        womenBloodDropDownValue: womenBloodDropdownValue,
-        menBloodDropDownValue: menBloodDropdownValue,
-        regDate: date.toString(),
-      );
+          husbandName: myController1.text,
+          wifeName: myController2.text,
+          address: myController3.text,
+          nic: myController4.text,
+          mohDropDownValue: mohDropdownValue,
+          phmDropDownValue: phmDropdownValue,
+          dateDOB: _dateDOB.toString(),
+          contactNum: myController5.text,
+          email: myController6.text,
+          job: myController7.text,
+          eduDropDownValue: eduDropdownValue,
+          marrageDate: _dateMarrage.toString(),
+          md1: d1_Yes,
+          md2: d2_Yes,
+          md3: d3_Yes,
+          md4: d4_Yes,
+          md5: d5_Yes,
+          md6: d6_Yes,
+          md7: d7_Yes,
+          md8: d8_Yes,
+          md9: d9_Yes,
+          md10: d10_Yes,
+          md11: d11_Yes,
+          md12: d12_Yes,
+          md13: d13_Yes,
+          md14: d14_Yes,
+          md15: d15_Yes,
+          wd1: d1_No,
+          wd2: d2_No,
+          wd3: d3_No,
+          wd4: d4_No,
+          wd5: d5_No,
+          wd6: d6_No,
+          wd7: d7_No,
+          wd8: d8_No,
+          wd9: d9_No,
+          wd10: d10_No,
+          wd11: d11_No,
+          wd12: d12_No,
+          wd13: d13_No,
+          wd14: d14_No,
+          wd15: d15_No,
+          rubellaDropDownValue: rubellaDropdownValue,
+          formicDropDownValue: formicDropdownValue,
+          conDropDownValue: conDropdownValue,
+          womenWeight: myController8.text,
+          menWeight: myController9.text,
+          womenHeight: myController10.text,
+          menHeight: myController11.text,
+          womenBloodDropDownValue: womenBloodDropdownValue,
+          menBloodDropDownValue: menBloodDropdownValue,
+          regDate: dateConvert,
+          regMonth: monthConvert,
+          latitudeData: latitudeData,
+          longitiduData: longitiduData,
+          delete: false);
 
       try {
-        FirebaseFirestore.instance
-            .runTransaction((Transaction transaction) async {
+        _firestore.runTransaction((Transaction transaction) async {
           await FirebaseFirestore.instance
               .collection("ComDatabase")
               .doc(_auth.currentUser.uid)
@@ -481,34 +534,17 @@ class _ComFamRegState extends State<ComFamReg> {
       }
     }
 
-    comRegComfirm() async {
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      ComSetState comSetState = ComSetState(allreadyComReg: allreadyComReg);
-      try {
-        FirebaseFirestore.instance
-            .runTransaction((Transaction transaction) async {
-          await FirebaseFirestore.instance
-              .collection("ComDatabase")
-              .doc(_auth.currentUser.uid)
-              .collection("State")
-              .doc(_auth.currentUser.uid)
-              .set(comSetState.toJson());
-        });
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-
     Future<void> setCompetencyTrue() async {
       FirebaseAuth _auth = FirebaseAuth.instance;
-      await FirebaseFirestore.instance
+
+      String midID = await _dataSevice.getMyMidwife(mohDropdownValue);
+      await _firestore
           .collection('users')
           .doc(_auth.currentUser.uid)
-          .update({
-            'compApp': true,
-          })
-          .then((value) => print("Competency true"))
-          .catchError((err) => print(err));
+          .update({'compApp': true, 'midwifeID': midID}).then((value) {
+        print("Competency true");
+        _notificationService.subscribeTopic(midID);
+      }).catchError((err) => print(err));
     }
 
     Future getImage() async {
@@ -519,7 +555,6 @@ class _ComFamRegState extends State<ComFamReg> {
       });
     }
 
-    
     List<Step> steps = [
       Step(
           title: const Text(
@@ -548,13 +583,15 @@ class _ComFamRegState extends State<ComFamReg> {
                                 height: 110.0,
                                 width: 110.0,
                                 child: (_image == null)
-                                    ? Image(image: AssetImage("assets/images/profile.png"))
+                                    ? Image(
+                                        image: AssetImage(
+                                            "assets/images/profile.png"))
                                     : Image.file(
                                         _image,
                                         fit: BoxFit.fill,
                                       ),
                               ),
-                            ),                         
+                            ),
                           ),
                         ),
                         Padding(
@@ -566,6 +603,43 @@ class _ComFamRegState extends State<ComFamReg> {
                             },
                           ),
                         )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(flex: 10, child: Container()),
+                        Expanded(
+                            flex: 40,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 20,
+                                child: Text(
+                                  "Province",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                          flex: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: 20,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0),
+                                    color: Colors.grey[300],
+                                    border: Border.all(
+                                        color: Colors.black,
+                                        style: BorderStyle.solid,
+                                        width: 0.5)),
+                                child: provinceDownMenu()),
+                          ),
+                        ),
+                        Expanded(flex: 5, child: Container()),
                       ],
                     ),
                     Row(
@@ -643,6 +717,81 @@ class _ComFamRegState extends State<ComFamReg> {
                       ],
                     ),
                   ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent[50],
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * 0.05,
+                      MediaQuery.of(context).size.height * 0.05,
+                      MediaQuery.of(context).size.width * 0.025,
+                      MediaQuery.of(context).size.height * 0.005),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent[50],
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 45,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_pin,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "Share your Location",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.brown),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 60,
+                                height: 30,
+                                child: RaisedButton(
+                                  color: Color.fromARGB(500, 21, 166, 211),
+                                  textColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      side: BorderSide(color: Colors.white)),
+                                  onPressed: () async {
+                                    final geoposition =
+                                        await Geolocator.getCurrentPosition(
+                                            desiredAccuracy:
+                                                LocationAccuracy.high);
+                                    setState(() {
+                                      latitudeData = geoposition.latitude;
+                                      longitiduData = geoposition.longitude;
+                                    });
+                                  },
+                                  child: Icon(
+                                    (latitudeData == null)
+                                        ? Icons.refresh_rounded
+                                        : Icons.switch_right,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
               Container(
@@ -854,7 +1003,7 @@ class _ComFamRegState extends State<ComFamReg> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(_dateMarrage == null
-                              ? "Select Marriage Date"
+                              ? " ---"
                               : _dateMarrage.year.toString() +
                                   "/" +
                                   _dateMarrage.month.toString() +
@@ -1402,32 +1551,35 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 25,
                                 child: Text(
-                                  "* Have you got Rubella Immunization..?",
+                                  "Have you got Rubella Immunization..?",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                      fontSize: 14),
                                 ),
                               ),
                             )),
-                        Expanded(
-                          flex: 17,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                height: 25,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.grey[300],
-                                    border: Border.all(
-                                        color: Colors.black,
-                                        style: BorderStyle.solid,
-                                        width: 0.5)),
-                                child: rubellaDropDownMenu()),
+                        Container(
+                          height: 25.0,
+                          child: ToggleSwitch(
+                            minWidth: 50.0,
+                            fontSize: 14,
+                            iconSize: 5.0,
+                            cornerRadius: 10.0,
+                            activeBgColor: kActiveIconColor,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            labels: ['NO', 'YES'],
+                            onToggle: (index) {
+                              rubellaDropdownValue =
+                                  (index == 1) ? "Yes" : "No";
+
+                              print('switched to: $index');
+                            },
                           ),
                         ),
-                        Expanded(flex: 3, child: Container()),
                       ],
                     ),
                     Row(
@@ -1448,23 +1600,26 @@ class _ComFamRegState extends State<ComFamReg> {
                                 ),
                               ),
                             )),
-                        Expanded(
-                          flex: 17,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                height: 25,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.grey[300],
-                                    border: Border.all(
-                                        color: Colors.black,
-                                        style: BorderStyle.solid,
-                                        width: 0.5)),
-                                child: formicDropDownMenu()),
+                        Container(
+                          height: 25.0,
+                          child: ToggleSwitch(
+                            minWidth: 50.0,
+                            fontSize: 14,
+                            iconSize: 5.0,
+                            cornerRadius: 10.0,
+                            activeBgColor: kActiveIconColor,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            labels: ['NO', 'YES'],
+                            onToggle: (index) {
+                              formicDropdownValue = (index == 1) ? "Yes" : "No";
+
+                              print(
+                                  'switched to: $index  $formicDropdownValue');
+                            },
                           ),
-                        ),
-                        Expanded(flex: 3, child: Container()),
+                        )
                       ],
                     ),
                     Row(
@@ -1476,7 +1631,7 @@ class _ComFamRegState extends State<ComFamReg> {
                               child: Container(
                                 height: 25,
                                 child: Text(
-                                  "* Consanguinity",
+                                  "Consanguinity",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       color: Colors.black,
@@ -1485,23 +1640,25 @@ class _ComFamRegState extends State<ComFamReg> {
                                 ),
                               ),
                             )),
-                        Expanded(
-                          flex: 17,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                height: 25,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.grey[300],
-                                    border: Border.all(
-                                        color: Colors.black,
-                                        style: BorderStyle.solid,
-                                        width: 0.5)),
-                                child: conDropDownMenu()),
+                        Container(
+                          height: 25.0,
+                          child: ToggleSwitch(
+                            minWidth: 50.0,
+                            fontSize: 14,
+                            iconSize: 5.0,
+                            cornerRadius: 10.0,
+                            activeBgColor: kActiveIconColor,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            labels: ['NO', 'YES'],
+                            onToggle: (index) {
+                              conDropdownValue = (index == 1) ? "Yes" : "No";
+
+                              print('switched to: $index');
+                            },
                           ),
-                        ),
-                        Expanded(flex: 3, child: Container()),
+                        )
                       ],
                     ),
                   ],
@@ -1869,7 +2026,7 @@ class _ComFamRegState extends State<ComFamReg> {
           color: Colors.lightBlue,
           child: Container(
             child: Text(
-              'Competency Family Registration',
+              'Eligible Family Registration',
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -1888,7 +2045,7 @@ class _ComFamRegState extends State<ComFamReg> {
                 ? Expanded(
                     child: Center(
                     child: AlertDialog(
-                      title: Text("Competency Registration Succesfully"),
+                      title: Text("Eligible Family Registration Succesfully"),
                       content: Text("Congratulation"),
                       actions: <Widget>[
                         Row(
@@ -1901,8 +2058,9 @@ class _ComFamRegState extends State<ComFamReg> {
                                     allreadyComReg = true;
                                   });
                                   stepOneReg();
-                                  _storageService.uploadProfileImage(_image, _user.uid,"profile");
-                                  comRegComfirm();
+                                  _storageService.uploadProfileImage(
+                                      _image, _user.uid, "profile");
+                                  //comRegComfirm();
                                   setCompetencyTrue();
                                   Navigator.pushNamed(context, '/dashboard');
                                   myController1.clear();

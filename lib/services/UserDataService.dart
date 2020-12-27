@@ -66,4 +66,19 @@ class UserDataSevice {
       return null;
     });
   }
+
+  Future<String> getMyMidwife(String mohArea) async {
+    return await _firestore
+        .collection('users')
+        .where('mohArea', isEqualTo: mohArea)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.length > 0) {
+        return querySnapshot.docs[0].id;
+      }
+    }).catchError((err) {
+      print(err);
+      return null;
+    });
+  }
 }

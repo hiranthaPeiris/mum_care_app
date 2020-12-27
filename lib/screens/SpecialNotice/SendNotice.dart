@@ -7,7 +7,7 @@ import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/NoticeService.dart';
 import 'package:provider/provider.dart';
 
-enum NoticeAudiance { General, Midwife, Eligible, Pregnanc }
+enum NoticeAudiance { General, Midwife, Eligible, Pregnancy }
 
 class SendNotice extends StatefulWidget {
   SendNotice({Key key}) : super(key: key);
@@ -328,7 +328,7 @@ class _SendNoticeState extends State<SendNotice> {
                                                                   'Pregnancy Families'),
                                                               value:
                                                                   NoticeAudiance
-                                                                      .Pregnanc,
+                                                                      .Pregnancy,
                                                               groupValue:
                                                                   _audiance,
                                                               onChanged:

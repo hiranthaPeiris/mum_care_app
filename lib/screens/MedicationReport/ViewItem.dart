@@ -222,7 +222,7 @@ class _ViewItemState extends State<ViewItem> {
     return await _firestore
         .collection('informMedical')
         .doc(documentSnapshot.id)
-        .set({'_midwifeRemarks': remarks})
+        .update({'_midwifeRemarks': remarks,"_status":"accepted"})
         .then((value) => print("updated"))
         .catchError((err) => print(err));
   }

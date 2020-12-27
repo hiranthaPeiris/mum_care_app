@@ -30,7 +30,7 @@ class _MedicationReportState extends State<MedicationReport> {
   bool _uploaded = false;
   String _downloadUrl;
   String dropdownMediDesc = "Normal";
-  String dropdownVaccine = "BCC";
+  String dropdownVaccine = "None";
 
   final picker = ImagePicker();
 
@@ -41,6 +41,70 @@ class _MedicationReportState extends State<MedicationReport> {
     myController3.dispose();
     myController4.dispose();
     myController5.dispose();
+  }
+
+  Widget medDescDropDown() {
+    return DropdownButton<String>(
+      value: dropdownMediDesc,
+      icon: Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style: TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      items: <String>[
+        "Normal",
+        "UFRReport",
+        "HIV Report",
+        "PPBS Report",
+        "OGTT Report",
+        "Dental Report",
+        "BloodReport",
+      ].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownMediDesc = newValue;
+        });
+      },
+    );
+  }
+
+  Widget vaccDropDown() {
+    return DropdownButton<String>(
+      value: dropdownVaccine,
+      icon: Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style: TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      items: <String>[
+        'None',
+        'Medication Type 1',
+        'Medication Type 2',
+        'Medication Type 3',
+        'Other'
+      ].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownVaccine = newValue;
+        });
+      },
+    );
   }
 
   DateTime _date;
@@ -112,40 +176,24 @@ class _MedicationReportState extends State<MedicationReport> {
                                           "_Description", myController1),
                                     ),
                                   ),
-                                  Row(
-                                    children: [Text("Medication Description"),
-                                      DropdownButton<String>(
-                                        value: dropdownMediDesc,
-                                        icon: Icon(Icons.arrow_downward),
-                                        iconSize: 24,
-                                        elevation: 16,
-                                        style: TextStyle(color: Colors.deepPurple),
-                                        underline: Container(
-                                          height: 2,
-                                          color: Colors.deepPurpleAccent,
-                                        ),
-                                        onChanged: (String newValue) {
-                                          setState(() {
-                                            dropdownMediDesc = newValue;
-                                          });
-                                        },
-                                        items: <String>[
-                                          'Normal',
-                                          'Medication Type 1',
-                                          'Medication Type 3',
-                                          'Medication Type 3',
-                                          'Other'
-                                        ].map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ],
+                                  Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                        MediaQuery.of(context).size.height *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                        MediaQuery.of(context).size.height *
+                                            0.005),
+                                    child: Row(
+                                      children: [
+                                        Text("Medication Description"),
+                                        Spacer(),
+                                        medDescDropDown()
+                                      ],
+                                    ),
                                   ),
-                                  
                                   Container(
                                     padding: EdgeInsets.fromLTRB(
                                         MediaQuery.of(context).size.width * 0.1,
@@ -165,6 +213,15 @@ class _MedicationReportState extends State<MedicationReport> {
                                     ),
                                   ),
                                   Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                        MediaQuery.of(context).size.height *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                        MediaQuery.of(context).size.height *
+                                            0.005),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -191,8 +248,8 @@ class _MedicationReportState extends State<MedicationReport> {
                                               width: 20,
                                             ),
                                             Container(
-                                              height: 120.0,
-                                              width: 120.0,
+                                              height: 100.0,
+                                              width: 100.0,
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(0),
@@ -238,39 +295,24 @@ class _MedicationReportState extends State<MedicationReport> {
                                     child: showTextField("Doctor's Name",
                                         "_Doctor's_name", myController4),
                                   ),
-                                   Row(
-                                     children: [Text("Vaccine Name"),
-                                       DropdownButton<String>(
-                                        value: dropdownMediDesc,
-                                        icon: Icon(Icons.arrow_downward),
-                                        iconSize: 24,
-                                        elevation: 16,
-                                        style: TextStyle(color: Colors.deepPurple),
-                                        underline: Container(
-                                          height: 2,
-                                          color: Colors.deepPurpleAccent,
-                                        ),
-                                        onChanged: (String newValue) {
-                                          setState(() {
-                                            dropdownVaccine = newValue;
-                                          });
-                                        },
-                                        items: <String>[
-                                          'Normal',
-                                          'Medication Type 1',
-                                          'Medication Type 3',
-                                          'Medication Type 3',
-                                          'Other'
-                                        ].map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
+                                  Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                        MediaQuery.of(context).size.height *
+                                            0.005,
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                        MediaQuery.of(context).size.height *
+                                            0.005),
+                                    child: Row(
+                                      children: [
+                                        Text("Vaccine Name (if any)"),
+                                        Spacer(),
+                                        vaccDropDown()
+                                      ],
+                                    ),
                                   ),
-                                     ],
-                                   ),
                                   Container(
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(
@@ -367,7 +409,7 @@ class _MedicationReportState extends State<MedicationReport> {
                                         MediaQuery.of(context).size.width *
                                             0.05,
                                         MediaQuery.of(context).size.height *
-                                            0.05),
+                                            0.15),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -520,7 +562,7 @@ class _MedicationReportState extends State<MedicationReport> {
         date: _date.toString(),
         regDate: dateConvert,
         midwifeID: midID,
-        userDocRef: userDocRef);
+        userDocRef: userDocRef,status: "pending");
 
     return await FirebaseFirestore.instance
         .collection("informMedical")

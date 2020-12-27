@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:provider/provider.dart';
+import 'package:mun_care_app/models/user.dart';
 
 class AddMidwife extends StatefulWidget {
   AddMidwife({Key key}) : super(key: key);
@@ -309,13 +310,9 @@ class _AddMidwifeState extends State<AddMidwife> {
                                               ),
                                             ),
                                             onPressed: () async{
+                                              UserModel userModel = UserModel(name:nameController.text,email:emailController.text.trim(),tel:  mobileController.text.trim(),role: "midwife",mohArea: "hikkaduwa N" );
                                               User rst = await
-                                                  _authService.registerAsMidwife(
-                                                      emailController.text,
-                                                      "password",
-                                                      nameController.text,
-                                                      "midwife",
-                                                      mobileController.text);
+                                                 _authService.register(userModel, "password");
 
                                               if (rst != null) {
                                                 print(rst.toString());
