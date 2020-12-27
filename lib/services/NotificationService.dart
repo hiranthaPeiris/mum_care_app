@@ -120,7 +120,7 @@ class NotificationService {
     //   const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
     // );
     print(data['title']);
-
+    
     return await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -140,16 +140,6 @@ class NotificationService {
       ),
     );
 
-    // final Completer<Map<String, dynamic>> completer =
-    //    Completer<Map<String, dynamic>>();
-
-    // firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     completer.complete(message);
-    //   },
-    // );
-
-    //return completer.future;
   }
 
   Future<http.Response> sendMessageTopic(

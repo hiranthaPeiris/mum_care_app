@@ -779,7 +779,7 @@ class _ProfileState extends State<Profile> {
 
     NotificationM notification = NotificationM(
         "Application Status",
-        "Your $type application has accepted ",
+        "Your $type application has accepted",
         new DateTime.now().toString(),
         widget.documentSnapshot.id,
         new DateTime.now(),

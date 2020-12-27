@@ -268,7 +268,7 @@ class _DashboardState extends State<Dashboard> {
                 svgSrc: "assets/icons/Hamburger.svg",
                 press: () {
                   Navigator.pushNamed(context, '/comReg');
-                }),         
+                }),
           ]),
         );
       } else if (!pregApp && !pregMum) {
@@ -345,7 +345,6 @@ class _DashboardState extends State<Dashboard> {
               Navigator.pushNamed(context, '/searchReport');
             },
           ),
-         
           Menu_card(
             title: "Send Special and Emergancy Notices",
             heading: "Special Notice",

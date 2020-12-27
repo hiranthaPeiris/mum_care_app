@@ -778,11 +778,12 @@ class _ComFamRegState extends State<ComFamReg> {
                                       latitudeData = geoposition.latitude;
                                       longitiduData = geoposition.longitude;
                                     });
+                                    print(latitudeData);
                                   },
                                   child: Icon(
                                     (latitudeData == null)
                                         ? Icons.refresh_rounded
-                                        : Icons.switch_right,
+                                        : Icons.check_circle,
                                   ),
                                 ),
                               ),
