@@ -35,6 +35,7 @@ class _PreFamRegState extends State<PreFamReg> {
   bool maleria_Yes = false;
   bool heartDisorders_Yes = false;
   bool kidneyDisorders_Yes = false;
+  bool periodCycle_Yes= false;
 
   DateTime _dateDOB;
   DateTime _dateMarrage;
@@ -63,7 +64,7 @@ class _PreFamRegState extends State<PreFamReg> {
   TextEditingController myController18 = new TextEditingController();
   TextEditingController myController19 = new TextEditingController();
   TextEditingController myController20 = new TextEditingController();
-  TextEditingController myController21 = new TextEditingController();
+  //TextEditingController myController21 = new TextEditingController();
   TextEditingController myController22 = new TextEditingController();
 
   void dispose() {
@@ -77,7 +78,7 @@ class _PreFamRegState extends State<PreFamReg> {
     myController18.dispose();
     myController19.dispose();
     myController20.dispose();
-    myController21.dispose();
+    //myController21.dispose();
     myController22.dispose();
   }
 
@@ -227,7 +228,7 @@ class _PreFamRegState extends State<PreFamReg> {
           fcName: myController13.text,
           hcName: myController14.text,
           coName: myController15.text,
-          pvb: myController21.text,
+          pvb: periodCycle_Yes,
           bloodPresure: myController22.text,
           diabetic: diabetic_Yes,
           maleria: maleria_Yes,
@@ -296,6 +297,7 @@ class _PreFamRegState extends State<PreFamReg> {
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.fromLTRB(
@@ -335,6 +337,7 @@ class _PreFamRegState extends State<PreFamReg> {
                   ),
                 ),
               ),
+
               SizedBox(
                 height: 15,
               ),
@@ -459,7 +462,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
                   child: showTextField(
-                      "Consultant Obstetrician", "coName", myController15),
+                      "Name of Consultant", "coName", myController15),
                 ),
               ),
             ],
@@ -706,6 +709,7 @@ class _PreFamRegState extends State<PreFamReg> {
                                   ),
                                   const Text('Female'),
                                 ],
+
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -723,6 +727,7 @@ class _PreFamRegState extends State<PreFamReg> {
                                   const Text('Others'),
                                 ],
                               ),
+
                             ],
                           )),
                     )
@@ -799,16 +804,28 @@ class _PreFamRegState extends State<PreFamReg> {
                   ),
                 ),
               ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.025,
-                      MediaQuery.of(context).size.width * 0.05,
-                      MediaQuery.of(context).size.height * 0.005),
-                  child: showTextField(
-                      "Present vaginal bleeding", "pvb", myController21),
-                ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * 0.05,
+                    MediaQuery.of(context).size.height * 0.01,
+                    MediaQuery.of(context).size.width * 0.01,
+                    MediaQuery.of(context).size.height * 0.01),
+                child: Row(
+                      children: <Widget>[
+                        Expanded(flex: 40, child: Text("Period Cycle -")),
+                        Expanded(
+                            flex: 20,
+                            child: Checkbox(
+                                value: periodCycle_Yes,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    periodCycle_Yes = value;
+                                    print(value);
+                                  });
+                                })),
+                        Expanded(flex: 40, child: Text("Active")),
+                      ],
+                    ),
               ),
               Container(
                 child: Padding(
@@ -979,7 +996,6 @@ class _PreFamRegState extends State<PreFamReg> {
           myController13.text.isEmpty ||
           myController14.text.isEmpty ||
           myController15.text.isEmpty ||
-          myController21.text.isEmpty ||
           myController22.text.isEmpty) {
         print("This cant't be empty");
         return false;
@@ -993,8 +1009,28 @@ class _PreFamRegState extends State<PreFamReg> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(
-          height: 20,
+
+
+       Container(
+          height: MediaQuery.of(context).copyWith().size.height / 5,
+          width: MediaQuery.of(context).copyWith().size.width,
+          color: Colors.lightBlue,
+          child: Container(
+            child: Text(
+              'Pregnency Registration',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.09,
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.04),
+          ),
+
         ),
         complete
             ? validate()
@@ -1023,7 +1059,6 @@ class _PreFamRegState extends State<PreFamReg> {
                                     myController18.clear();
                                     myController19.clear();
                                     myController20.clear();
-                                    myController21.clear();
                                     myController22.clear();
                                   });
                                 }),

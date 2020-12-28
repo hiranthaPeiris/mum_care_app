@@ -248,7 +248,12 @@ class PreGetIdDetails extends StatelessWidget {
                             flex: 50,
                             child: Text('Blood Plessure :'),
                           ),
-                          Expanded(flex: 50, child: Text(data['_pvb']))
+                          Expanded(flex: 50, child: (data['_pvb'])? Container(
+                                      child: Text("Yes"),
+                                    )
+                                  : Container(
+                                      child: Text("No"),
+                                    ))
                         ],
                       ),
                     ),

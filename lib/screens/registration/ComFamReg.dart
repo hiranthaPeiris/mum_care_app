@@ -780,11 +780,12 @@ class _ComFamRegState extends State<ComFamReg> {
                                       latitudeData = geoposition.latitude;
                                       longitiduData = geoposition.longitude;
                                     });
+                                    print(latitudeData);
                                   },
                                   child: Icon(
                                     (latitudeData == null)
                                         ? Icons.refresh_rounded
-                                        : Icons.switch_right,
+                                        : Icons.check_circle,
                                   ),
                                 ),
                               ),
@@ -2061,7 +2062,9 @@ class _ComFamRegState extends State<ComFamReg> {
       ));
     }
 
-    bool validate() {
+
+     bool validate() {
+
       if (myController1.text.isEmpty ||
           myController2.text.isEmpty ||
           myController3.text.isEmpty ||

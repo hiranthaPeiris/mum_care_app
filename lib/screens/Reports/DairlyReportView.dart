@@ -6,7 +6,6 @@ import 'package:mun_care_app/models/UserM.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
 import 'package:mun_care_app/screens/registration/ComDisplayData.dart';
 import 'package:mun_care_app/screens/registration/PreDisplayData.dart';
 
@@ -102,8 +101,8 @@ class _DairlyReportViewState extends State<DairlyReportView> {
                       ),
                     ),
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 40,
+                      height: 40,
                       color: Colors.white,
                       child: ClipOval(
                         child: Material(

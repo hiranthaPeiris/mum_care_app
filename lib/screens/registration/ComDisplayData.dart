@@ -159,11 +159,25 @@ class ComGetIdDetails extends StatelessWidget {
                                 children: <Widget>[
                                   Expanded(
                                     flex: 40,
-                                    child: Text('Date Of Birth   :'),
+                                    child: Text('Women Date Of Birth   :'),
                                   ),
                                   Expanded(
                                       flex: 60,
-                                      child: Text(" ${data['_dateDOB']} "))
+                                      child: Text(" ${data['_womenDOB']} "))
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 40,
+                                    child: Text('Man Date Of Birth   :'),
+                                  ),
+                                  Expanded(
+                                      flex: 60,
+                                      child: Text(" ${data['_manDOB']} "))
                                 ],
                               ),
                             ),

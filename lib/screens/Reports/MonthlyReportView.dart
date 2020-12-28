@@ -75,8 +75,8 @@ class _MonthlyReportViewState extends State<MonthlyReportView> {
                       ),
                     ),
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 40,
+                      height: 40,
                       color: Colors.white,
                       child: ClipOval(
                         child: Material(

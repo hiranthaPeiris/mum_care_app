@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_format/date_time_format.dart';
@@ -124,7 +125,7 @@ class _DiaryState extends State<Diary> {
     return pending
         ? Loading()
         : Scaffold(
-            backgroundColor: kBackground,        
+            backgroundColor: kBackgroundLight,
             bottomNavigationBar: BottomAppBar(
               shape: const CircularNotchedRectangle(),
               child: Container(
@@ -142,169 +143,188 @@ class _DiaryState extends State<Diary> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
             // drawer: Drawer(
-            body: Builder(
-              builder: (context) => Container(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20.0),
-                            bottomRight: Radius.circular(20.0),
-                          )),
-                      width: MediaQuery.of(context).size.width,
-                      height: 110.0,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30.0, right: 30.0, top: 50.0),
-                            child: Row(
-                              children: <Widget>[
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      "Duty",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold,
+            body: SafeArea(
+              child: Builder(
+                builder: (context) => Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20.0),
+                              bottomRight: Radius.circular(20.0),
+                            )),
+                        width: MediaQuery.of(context).size.width,
+                        height: 80.0,
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 30.0, right: 30.0, top: 20.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "Report Duty",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: Icon(Icons.add),
-                                )
-                              ],
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: Icon(Icons.add),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 2.0,
-                          ),
-                        ],
+                            SizedBox(
+                              height: 2.0,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10,),
-                    Container(
-                      height: 100,
-                      width: 100,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          CircularProgressIndicator(
-                            strokeWidth: 15,
-                            backgroundColor: Colors.cyanAccent,
-                            valueColor:
-                                new AlwaysStoppedAnimation<Color>(Colors.red),
-                            value: _progress,
-                          ),
-                          Positioned(
-                              bottom: 35,
-                              left: 25,
-                              child: Text(
-                                "$workHours Hrs\n$workMins Mins",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
-                              ))
-                        ],
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        (_dayJobState)
-                            ? _displaySnackBar(
-                                context, "Already Fininshed the work job")
-                            : showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return StatefulBuilder(
-                                    builder: (BuildContext sfcontext,
-                                        StateSetter setModelState) {
-                                      return getTimeBox(setModelState, context);
-                                    },
-                                  );
-                                });
-                      },
-                      child: _jobState
-                          ? Text('End Work Log')
-                          : Text('Start Work Log'),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: _firestore
-                            .collection('diaryNotes')
-                            .doc(_user.uid)
-                            .collection('notes')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text('Error...');
-                          } else {
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.none:
-                                return Container(
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.info,
-                                        color: Colors.blue,
-                                        size: 60,
-                                      ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 16),
-                                        child: Text('Select a lot'),
-                                      )
-                                    ],
-                                  ),
-                                );
-                                break;
-                              case ConnectionState.waiting:
-                                return Center(
-                                  heightFactor: 5.0,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        child:
-                                            const CircularProgressIndicator(),
-                                        width: 50,
-                                        height: 50,
-                                      ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 16),
-                                        child: Text('Awaiting Data...'),
-                                      )
-                                    ],
-                                  ),
-                                );
-                                break;
-                              case ConnectionState.active:
-                                return new ListView(
-                                    children: snapshot.data.docs
-                                        .map((DocumentSnapshot document) {
-                                  //refe from below
-                                  return getNoteCard(context, document);
-                                }).toList());
-
-                              default:
-                                print(snapshot.connectionState.toString());
-                                return Text("No data");
-                            }
-                          }
+                      Container(
+                        height: 100,
+                        width: 100,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            CircularProgressIndicator(
+                              strokeWidth: 15,
+                              backgroundColor: Colors.cyanAccent,
+                              valueColor:
+                                  new AlwaysStoppedAnimation<Color>(Colors.red),
+                              value: _progress,
+                            ),
+                            Positioned(
+                                bottom: 35,
+                                left: 25,
+                                child: Text(
+                                  "$workHours Hrs\n$workMins Mins",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ))
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          (_dayJobState)
+                              ? _displaySnackBar(
+                                  context, "Already Fininshed the work job")
+                              : showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return StatefulBuilder(
+                                      builder: (BuildContext sfcontext,
+                                          StateSetter setModelState) {
+                                        return getTimeBox(
+                                            setModelState, context);
+                                      },
+                                    );
+                                  });
                         },
+                        child: _jobState
+                            ? Text('End Work Log')
+                            : Text('Start Work Log'),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 20, 0.0, 10),
+                        child: Text(
+                          "Daily Notes",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: _firestore
+                              .collection('diaryNotes')
+                              .doc(_user.uid)
+                              .collection('notes')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error...');
+                            } else {
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.none:
+                                  return Container(
+                                    child: Column(
+                                      children: [
+                                        Icon(
+                                          Icons.info,
+                                          color: Colors.blue,
+                                          size: 60,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 16),
+                                          child: Text('Select a lot'),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                  break;
+                                case ConnectionState.waiting:
+                                  return Center(
+                                    heightFactor: 5.0,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          child:
+                                              const CircularProgressIndicator(),
+                                          width: 50,
+                                          height: 50,
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 16),
+                                          child: Text('Awaiting Data...'),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                  break;
+                                case ConnectionState.active:
+                                  return new ListView(
+                                      padding: EdgeInsets.fromLTRB(
+                                          0.0, 10.0, 0.0, 10.0),
+                                      children: snapshot.data.docs
+                                          .map((DocumentSnapshot document) {
+                                        //refe from below
+                                        return getNoteCard(context, document);
+                                      }).toList());
+
+                                default:
+                                  print(snapshot.connectionState.toString());
+                                  return Text("No data");
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ));
@@ -424,7 +444,7 @@ class _DiaryState extends State<Diary> {
     TextEditingController descController = TextEditingController();
     TextEditingController remarksController = TextEditingController();
 
-    if (docSnap!=null) {
+    if (docSnap != null) {
       titleController.text = docSnap['title'];
       descController.text = docSnap['desc'];
       remarksController.text = docSnap['remarks'];
@@ -432,8 +452,9 @@ class _DiaryState extends State<Diary> {
     }
     return AlertDialog(
       scrollable: true,
-      title:
-          (docSnap!=null) ? Text('Update the Tasks') : Text('About the Tasks'),
+      title: (docSnap != null)
+          ? Text('Update the Tasks')
+          : Text('About the Tasks'),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -528,7 +549,7 @@ class _DiaryState extends State<Diary> {
                   remarks: remarksController.text,
                   createdAt: FieldValue.serverTimestamp());
               var rst;
-              (docSnap==null)
+              (docSnap == null)
                   ? rst = await _diaryServices.saveDailyNote(note, _user.uid)
                   : rst = await _diaryServices.updateDailyNote(
                       note, _user.uid, docSnap.id);

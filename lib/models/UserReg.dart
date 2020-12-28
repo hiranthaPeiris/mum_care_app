@@ -272,7 +272,7 @@ class PreRegDB {
   String gWeight;
   String sex;
 
-  String pvb;
+  bool pvb;
   String bloodPresure;
   bool diabetic;
   bool maleria;
