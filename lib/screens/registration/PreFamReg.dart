@@ -296,45 +296,7 @@ class _PreFamRegState extends State<PreFamReg> {
           state: StepState.indexed,
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.height * 0.001,
-                    MediaQuery.of(context).size.height * 0.01,
-                    MediaQuery.of(context).size.width * 0.4,
-                    MediaQuery.of(context).size.height * 0.03),
-                child: Container(
-                  child: Text(
-                    "Registration",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(500, 21, 166, 211),
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Pregnency Family",
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            children: <Widget>[                            
               SizedBox(
                 height: 15,
               ),
@@ -459,7 +421,7 @@ class _PreFamRegState extends State<PreFamReg> {
                       MediaQuery.of(context).size.width * 0.05,
                       MediaQuery.of(context).size.height * 0.005),
                   child: showTextField(
-                      "Consultant Obstetrician", "coName", myController15),
+                      "Name of Consultant", "coName", myController15),
                 ),
               ),
             ],
@@ -706,23 +668,7 @@ class _PreFamRegState extends State<PreFamReg> {
                                   ),
                                   const Text('Female'),
                                 ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Radio(
-                                    value: "others",
-                                    groupValue: _pohSex,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _pohSex = value;
-                                        print(_pohSex);
-                                      });
-                                    },
-                                  ),
-                                  const Text('Others'),
-                                ],
-                              ),
+                              ),                             
                             ],
                           )),
                     )
@@ -988,8 +934,25 @@ class _PreFamRegState extends State<PreFamReg> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(
-          height: 20,
+       Container(
+          height: MediaQuery.of(context).copyWith().size.height / 5,
+          width: MediaQuery.of(context).copyWith().size.width,
+          color: Colors.lightBlue,
+          child: Container(
+            child: Text(
+              'Pregnency Registration',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            padding: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.09,
+                MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.height * 0.04),
+          ),
         ),
         complete
             ? validate()

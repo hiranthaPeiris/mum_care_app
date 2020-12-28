@@ -217,7 +217,7 @@ class _DashboardState extends State<Dashboard> {
                           Expanded(
                               child: CustomScrollView(
                             slivers: <Widget>[
-                              _buildSliverList(),
+                              _buildSliverList(context),
                               _buildSliverGrid()
                             ],
                           ))
@@ -230,7 +230,7 @@ class _DashboardState extends State<Dashboard> {
             )));
   }
 
-  Widget _buildSliverList() {
+  Widget _buildSliverList(BuildContext context) {
     if (role == 'midwife') {
       return SliverList(
         delegate: SliverChildListDelegate([
@@ -279,7 +279,39 @@ class _DashboardState extends State<Dashboard> {
                 content: "Complete the pregnancy registration",
                 svgSrc: "assets/icons/Hamburger.svg",
                 press: () {
-                  Navigator.pushNamed(context, '/preReg');
+                  // set up the buttons
+                  Widget cancelButton = FlatButton(
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                  Widget continueButton = FlatButton(
+                    child: Text("Continue"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/preReg');
+                    },
+                  );
+
+                  // set up the AlertDialog
+                  AlertDialog alert = AlertDialog(
+                    title: Text("Information"),
+                    content: Text(
+                        "You only need to register once you have confirmed about your pregnancy.\nDo you want to continue?"),
+                    actions: [
+                      cancelButton,
+                      continueButton,
+                    ],
+                  );
+
+                  // show the dialog
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
                 }),
           ]),
         );
