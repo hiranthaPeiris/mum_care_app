@@ -1,7 +1,7 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mun_care_app/widgets/Menu_linear_card.dart';
 
 class ComRegDB {
   String mohDropDownValue;
@@ -11,7 +11,8 @@ class ComRegDB {
   String address;
   String nic;
 
-  String dateDOB;
+  String menDOB;
+  String womenDOB;
   String contactNum;
   String email;
   String job;
@@ -59,62 +60,72 @@ class ComRegDB {
   String menHeight;
   String womenBloodDropDownValue;
   String menBloodDropDownValue;
+  String regDate;
+  String regMonth;
+  double latitudeData;
+  double longitiduData;
+  bool delete;
 
   DocumentReference documentReference;
 
-  ComRegDB({
-    this.husbandName,
-    this.wifeName,
-    this.address,
-    this.nic,
-    this.mohDropDownValue,
-    this.phmDropDownValue,
-    this.dateDOB,
-    this.contactNum,
-    this.email,
-    this.job,
-    this.eduDropDownValue,
-    this.marrageDate,
-    this.md1,
-    this.md2,
-    this.md3,
-    this.md4,
-    this.md5,
-    this.md6,
-    this.md7,
-    this.md8,
-    this.md9,
-    this.md10,
-    this.md11,
-    this.md12,
-    this.md13,
-    this.md14,
-    this.md15,
-    this.wd1,
-    this.wd2,
-    this.wd3,
-    this.wd4,
-    this.wd5,
-    this.wd6,
-    this.wd7,
-    this.wd8,
-    this.wd9,
-    this.wd10,
-    this.wd11,
-    this.wd12,
-    this.wd13,
-    this.wd14,
-    this.wd15,
-    this.rubellaDropDownValue,
-    this.formicDropDownValue,
-    this.conDropDownValue,
-    this.womenWeight,
-    this.menWeight,
-    this.womenHeight,
-    this.menHeight,
-    this.womenBloodDropDownValue,
-    this.menBloodDropDownValue,
-  });
+  ComRegDB(
+      {this.husbandName,
+      this.wifeName,
+      this.address,
+      this.nic,
+      this.mohDropDownValue,
+      this.phmDropDownValue,
+      this.menDOB,
+      this.womenDOB,
+      this.contactNum,
+      this.email,
+      this.job,
+      this.eduDropDownValue,
+      this.marrageDate,
+      this.md1,
+      this.md2,
+      this.md3,
+      this.md4,
+      this.md5,
+      this.md6,
+      this.md7,
+      this.md8,
+      this.md9,
+      this.md10,
+      this.md11,
+      this.md12,
+      this.md13,
+      this.md14,
+      this.md15,
+      this.wd1,
+      this.wd2,
+      this.wd3,
+      this.wd4,
+      this.wd5,
+      this.wd6,
+      this.wd7,
+      this.wd8,
+      this.wd9,
+      this.wd10,
+      this.wd11,
+      this.wd12,
+      this.wd13,
+      this.wd14,
+      this.wd15,
+      this.rubellaDropDownValue,
+      this.formicDropDownValue,
+      this.conDropDownValue,
+      this.womenWeight,
+      this.menWeight,
+      this.womenHeight,
+      this.menHeight,
+      this.womenBloodDropDownValue,
+      this.menBloodDropDownValue,
+      this.regDate,
+      this.regMonth,
+      this.latitudeData,
+      this.longitiduData,
+      this.delete});
 
   ComRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
     mohDropDownValue = map["_mohDropDownValue"];
@@ -124,7 +135,8 @@ class ComRegDB {
     address = map["_address"];
     nic = map["_nic"];
 
-    dateDOB = map["_dateDOB"];
+    menDOB = map["_menDOB"];
+    womenDOB = map["_womenDOB"];
     contactNum = map["_contactNumber"];
     email = map["_email"];
     job = map["_job"];
@@ -172,6 +184,12 @@ class ComRegDB {
     menHeight = map["_menHeight"];
     womenBloodDropDownValue = map["_womenBloodDropDownValue"];
     menBloodDropDownValue = map["_menBloodDropDownValue"];
+    regDate = map['_regDate'];
+    regMonth = map['_regMonth'];
+    latitudeData = map['_latitudeData'];
+    longitiduData = map['_longitiduData'];
+    delete = map['_delete'];
+    
   }
   ComRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
@@ -184,7 +202,8 @@ class ComRegDB {
       '_wifeName': wifeName,
       '_address': address,
       '_nic': nic,
-      '_dateDOB': dateDOB,
+      '_menDOB': menDOB,
+      '_womenDOB': womenDOB,
       '_contactNumber': contactNum,
       '_email': email,
       '_job': job,
@@ -229,11 +248,18 @@ class ComRegDB {
       '_menHeight': menHeight,
       '_womenBloodDropDownValue': womenBloodDropDownValue,
       '_menBloodDropDownValue': menBloodDropDownValue,
+      '_regDate': regDate,
+      '_regMonth': regMonth,
+      '_latitudeData': latitudeData,
+      '_longitiduData': longitiduData,
+      '_delete': delete,
     };
   }
 }
 
 class PreRegDB {
+  String mohDropDownValue;
+  String phmDropDownValue;
   String gnDivision;
   String fcName;
   String hcName;
@@ -252,11 +278,16 @@ class PreRegDB {
   bool maleria;
   bool heartDisorder;
   bool kidneyDisorder;
+  String regDate;
+  String regMonth;
+  bool delete;
 
   DocumentReference documentReference;
 
   PreRegDB(
-      {this.gnDivision,
+      {this.mohDropDownValue,
+      this.phmDropDownValue,
+      this.gnDivision,
       this.fcName,
       this.hcName,
       this.coName,
@@ -271,9 +302,14 @@ class PreRegDB {
       this.diabetic,
       this.maleria,
       this.heartDisorder,
-      this.kidneyDisorder});
+      this.kidneyDisorder,
+      this.regDate,
+      this.regMonth,
+      this.delete});
 
   PreRegDB.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    mohDropDownValue = map["_mohDropDownValue"];
+    phmDropDownValue = map["_phmDropDownValue"];
     gnDivision = map["_gnDivision"];
     fcName = map["_fcName"];
     hcName = map["_hcName"];
@@ -292,12 +328,17 @@ class PreRegDB {
     maleria = map["_maleria"];
     heartDisorder = map["_heartDisorder"];
     maleria = map["_maleria"];
+    regDate = map["_regDate"];
+    regMonth = map['_regMonth'];
+    delete = map['_delete'];
   }
   PreRegDB.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
 
   toJson() {
     return {
+      '_mohDropDownValue': mohDropDownValue,
+      '_phmDropDownValue': phmDropDownValue,
       '_gnDivision': gnDivision,
       '_fcName': fcName,
       '_hcName': hcName,
@@ -314,6 +355,9 @@ class PreRegDB {
       '_maleria': maleria,
       '_heartDisorder': heartDisorder,
       '_kidneyDisorder': kidneyDisorder,
+      '_regDate': regDate,
+      '_regMonth': regMonth,
+      '_delete': delete,
     };
   }
 }
@@ -382,58 +426,22 @@ class ComSetState {
   }
 }
 
-Widget getG1(BuildContext context) {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection("PreDatabase")
-        .doc(_auth.currentUser.uid)
-        .collection("G1")
-        .doc("G1")
-        .snapshots(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        var value = snapshot.data;
-        return ListView(
-          children: [
-            Text(value["_womb"].toString()),
-            Text(value["_details"].toString()),
-            Text(value["_kgWeight"].toString()),
-            Text(value["_gWeight"].toString()),
-            Text(value["_result"].toString()),
-            Text(value["_sex"].toString()),
-          ],
-        );
-      }
-    },
-  );
-}
+/*class OndutyState {
+  bool onDuty;
+  String logTime;
 
-Widget getG2(BuildContext context) {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection("PreDatabase")
-        .doc(_auth.currentUser.uid)
-        .collection("G2")
-        .doc("G2")
-        .snapshots(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        var value = snapshot.data;
-        return ListView(
-          children: [
-            Text(value["_womb"].toString()),
-            Text(value["_details"].toString()),
-            Text(value["_kgWeight"].toString()),
-            Text(value["_gWeight"].toString()),
-            Text(value["_result"].toString()),
-            Text(value["_sex"].toString()),
-          ],
-        );
-      }
-    },
-  );
-}
+  DocumentReference documentReference;
 
+  OndutyState({this.onDuty, this.logTime});
 
+  OndutyState.fromMap(Map<String, dynamic> map, {this.documentReference}) {
+    onDuty = map["_onDuty"];
+    logTime = map["_logTime"];
+  }
+  OndutyState.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), documentReference: snapshot.reference);
+
+  toJson() {
+    return {'_onDuty': onDuty, '_logTime': logTime};
+  }
+}*/

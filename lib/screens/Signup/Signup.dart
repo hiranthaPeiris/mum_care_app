@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/models/user.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:sign_button/sign_button.dart';
 
@@ -22,13 +23,14 @@ class _SignupState extends State<Signup> {
   String confPassword = "";
   String password = "";
   String _comfirmPassword = "";
-  TextEditingController myController1 = new TextEditingController();
-  TextEditingController myController2 = new TextEditingController();
-
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController telController = new TextEditingController();
   void dispose() {
     super.dispose();
-    myController1.dispose();
-    myController2.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    telController.dispose();
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -76,7 +78,6 @@ class _SignupState extends State<Signup> {
                 ),
               ),
             ),
-
             Container(
               padding: EdgeInsets.all(10),
               alignment: Alignment.center,
@@ -107,7 +108,6 @@ class _SignupState extends State<Signup> {
                 ),
               ),
             ),
-
             Container(
               child: Row(
                 children: <Widget>[
@@ -127,7 +127,6 @@ class _SignupState extends State<Signup> {
                 ),
               ),
             ),
-
             Form(
               key: _formKey,
               child: Column(
@@ -135,6 +134,7 @@ class _SignupState extends State<Signup> {
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding: EdgeInsets.all(16),
@@ -142,16 +142,12 @@ class _SignupState extends State<Signup> {
                             borderRadius: new BorderRadius.circular(20.0)),
                         labelText: 'Name',
                       ),
-                      onChanged: (val) {
-                        setState(() {
-                          name = val;
-                        });
-                      },
                     ),
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding: EdgeInsets.all(16),
@@ -159,17 +155,24 @@ class _SignupState extends State<Signup> {
                             borderRadius: new BorderRadius.circular(20.0)),
                         labelText: 'Email',
                       ),
-                      onChanged: (val) {
-                        setState(() {
-                          email = val;
-                        });
-                      },
                     ),
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: TextField(
-                      controller: myController1,
+                      controller: telController,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(20.0)),
+                        labelText: 'Mobile Number',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: TextField(
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding: EdgeInsets.all(16),
@@ -203,26 +206,9 @@ class _SignupState extends State<Signup> {
                       obscureText: true,
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: TextField(
-                      controller: myController2,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(20.0)),
-                        labelText: 'Comfirm Password',
-                      ),
-                      onChanged: (val) {
-                        setState(() {
-                          _comfirmPassword = val;
-                        });
-                      },
-                    ),
-                  )
                 ],
               ),
             ),
-
             Container(
               child: Column(
                 children: <Widget>[
@@ -247,9 +233,9 @@ class _SignupState extends State<Signup> {
                   ),
                 ],
               ),
-            ), ///////////
+            ),
             Container(
-              height: 45.0,
+              height: 40.0,
               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
               child: RaisedButton(
                 shape: StadiumBorder(),
@@ -257,11 +243,17 @@ class _SignupState extends State<Signup> {
                 color: Colors.lightBlue,
                 child: Text('Sign Up',
                     style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 20.0,
                     )),
                 onPressed: () {
                   if (validate()) {
-                    dynamic result = _auth.Register(email, password, name);
+                    UserModel userMod = UserModel(
+                        email: emailController.text.trim(),
+                        name: nameController.text.trim(),
+                        role: "user",
+                        tel: telController.text.trim());
+                        
+                    dynamic result = _auth.register(userMod, password.trim());
                     if (result == null) {
                       setState(() {
                         error = 'Please supply a valid email';
@@ -275,7 +267,6 @@ class _SignupState extends State<Signup> {
                 },
               ),
             ),
-
             Text(
               error,
               style: TextStyle(color: Colors.red, fontSize: 14.0),

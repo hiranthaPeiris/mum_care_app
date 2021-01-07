@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/services/ClinicService.dart';
+import 'package:provider/provider.dart';
 
 //import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 class ScheduleClinic extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
   final ClinicService _clinicService = ClinicService();
   final _formKey = GlobalKey<FormState>();
   bool pending = false;
-  UserM _userM = UserM.get();
+  UserM _user;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   DateTime _date;
   TimeOfDay _time;
@@ -34,6 +35,8 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
   @override
   Widget build(BuildContext context) {
     //debugShowCheckedModeBanner:false;
+    _user = Provider.of<UserM>(context);
+
     bool flag = widget.rescheduleFLAG;
     return pending
         ? Loading()
@@ -187,6 +190,38 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                     SizedBox(
                       height: 40,
                     ),
+                    Text(
+                      "Mothers you referes : ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                            stream: _firestore
+                                .collection('users')
+                                .where('midwifeID', isEqualTo: _user.user.uid)
+                                .where("competencyFam", isEqualTo: true)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return new Text("has error");
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return new Text("Loading");
+                              }
+                              return new ListView(
+                                children: snapshot.data.docs
+                                    .map((DocumentSnapshot document) {
+                                  return new ListTile(
+                                    title: new Text(document['name']),
+                                    trailing: Icon(Icons.more_vert_rounded),
+                                    leading: Icon(Icons.person_rounded),
+                                  );
+                                }).toList(),
+                              );
+                            })),
                     Container(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                       alignment: Alignment.bottomRight,
@@ -231,15 +266,13 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                                 dynamic result;
                                 (flag)
                                     ? result = _clinicService.clinicReschedule(
-                                        _userM.userCredential.user.uid,
+                                        _user.user.uid,
                                         widget.docID,
                                         description.text,
                                         dateSlug,
                                         widget.userClinicRefList)
                                     : result = _clinicService.saveClinics(
-                                        description.text,
-                                        dateSlug,
-                                        _userM.userCredential.user.uid);
+                                        description.text, dateSlug, _user.uid);
 
                                 if (result == null) {
                                   setState(() {
@@ -260,38 +293,6 @@ class _ScheduleClinicState extends State<ScheduleClinic> {
                         ],
                       ),
                     ),
-                    Text(
-                      "Mothers you referes : ",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Expanded(
-                        child: StreamBuilder<QuerySnapshot>(
-                            stream: _firestore
-                                .collection('users')
-                                .where('midwifeID',
-                                    isEqualTo: _userM.userCredential.user.uid)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.hasError) {
-                                return new Text("has error");
-                              }
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return new Text("Loading");
-                              }
-                              return new ListView(
-                                children: snapshot.data.docs
-                                    .map((DocumentSnapshot document) {
-                                  return new ListTile(
-                                    title: new Text(document['name']),
-                                    trailing: Icon(Icons.more_vert_rounded),
-                                    leading: Icon(Icons.person_rounded),
-                                  );
-                                }).toList(),
-                              );
-                            }))
                   ],
                 ),
               ),

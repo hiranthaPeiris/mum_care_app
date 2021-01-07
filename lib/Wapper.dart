@@ -13,7 +13,6 @@ class _WapperState extends State<Wapper> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserM>(context);
-    //print(user);
     if (user == null) {
       return Authenticate();
     } else {

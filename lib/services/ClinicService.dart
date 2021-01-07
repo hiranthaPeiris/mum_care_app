@@ -1,14 +1,17 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
+import 'package:mun_care_app/models/Notification.model.dart';
 
 enum CLINICSTATE { active, done, cancle, rescheduled }
 enum CLINICCONFM { accept, deny }
 
 class ClinicService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
   Future<void> saveClinics(String desc, String dateTime, String midUID) async {
-    //get list of mother assigned for midwife
+    //get list of mothers assigned for midwife
     QuerySnapshot query = await getMotherList(midUID);
 
     //user list for midwife
@@ -20,8 +23,11 @@ class ClinicService {
     CollectionReference midwifeVisit =
         _firestore.collection('Bookings').doc(midUID).collection('Clinics');
 
+    NotificationM notification = NotificationM("New Clinic assigned", desc,
+        dateTime, "doc.id", new DateTime.now(), "clinic","New Clinic");
+
     await Future.forEach(query.docs, (doc) async {
-      userList.add(_firestore.collection('user').doc(doc.id));
+      userList.add(_firestore.collection('users').doc(doc.id));
       CollectionReference clinic =
           _firestore.collection("Bookings").doc(doc.id).collection('Clinics');
 
@@ -60,6 +66,10 @@ class ClinicService {
     } else {
       print("list empty");
     }
+
+    Response rst = await _notificationService.sendMessageTopic(
+        notification.getMap(), "midwife1");
+    print(rst.body);
   }
 
 //Done by only midwife
@@ -67,6 +77,7 @@ class ClinicService {
     return await _firestore
         .collection('users')
         .where('midwifeID', isEqualTo: midUID)
+        .where("competencyFam", isEqualTo: true)
         .get()
         .then((QuerySnapshot querySnapshot) {
       return querySnapshot;
@@ -75,7 +86,7 @@ class ClinicService {
 
 //Clinic status update by midwife
   Future<void> updateStatus(String midUID, String docID, CLINICSTATE status,
-      List<DocumentReference> userClinicRefList) async {
+      List<DocumentReference> userClinicRefList, String remarks) async {
     //docID - midwife's clinic record id
 
     WriteBatch batch = _firestore.batch();
@@ -126,7 +137,7 @@ class ClinicService {
   }
 
   //clinic reshcedule
-  Future<void> clinicReschedule(String midUID, String docID, String desc,
+  Future<dynamic> clinicReschedule(String midUID, String docID, String desc,
       String dateTime, List<DocumentReference> userClinicRefList) async {
     //docID - midwife's clinic record id
 
@@ -153,7 +164,7 @@ class ClinicService {
       });
     });
 
-    await batch.commit().then((value) => print("Reschedule Done"));
+    return await batch.commit().then((value) => print("Reschedule Done"));
   }
 
   //increase or decreace clinic count - trigger by user(mother)
@@ -196,12 +207,10 @@ class ClinicService {
       // Return the new count
       return newCount;
     }).then((value) {
-
       print("count updated to $value");
       String conf = confm.toString();
       userClinicRef.update({'confirmation': conf}).then(
           (value) => print("confirmation changed to $conf"));
-
     }).catchError((error) => print("Failed to update user followers: $error"));
   }
 }
