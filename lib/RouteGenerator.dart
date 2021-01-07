@@ -1,14 +1,16 @@
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
+import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/screens/Clinic/ClinicHomeWapper.dart';
 
 import 'package:mun_care_app/screens/Dashboard/Dashboard.dart';
+
 import 'package:mun_care_app/screens/Error/ErrorView.dart';
 import 'package:mun_care_app/screens/LeavingAreaReport/LeavingReport.dart';
+import 'package:mun_care_app/screens/MediLeaveWapper.dart';
 import 'package:mun_care_app/screens/MedicationReport/MedicationReport.dart';
 import 'package:mun_care_app/screens/MedicationReport/ViewMedication.dart';
+import 'package:mun_care_app/screens/Midwife/LeavingApply.dart/MidLeave.dart';
 import 'package:mun_care_app/screens/Notification/NotificationScreen.dart';
 import 'package:mun_care_app/screens/Profile/Profile.dart';
 import 'package:mun_care_app/screens/Reports/DairlyReportView.dart';
@@ -16,9 +18,11 @@ import 'package:mun_care_app/screens/Reports/MonthlyReportView.dart';
 import 'package:mun_care_app/screens/Reports/ReportSearch.dart';
 import 'package:mun_care_app/screens/Reviews/PregReview.dart';
 import 'package:mun_care_app/screens/Signup/Signup.dart';
-import 'package:mun_care_app/screens/Sister/MidleaveView.dart';
+
+
+
 import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart';
-import 'package:mun_care_app/screens/chat/homechat.dart';
+ import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
 import 'package:mun_care_app/screens/chat/setUsers.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
@@ -39,24 +43,37 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => Wapper());
+      case '/loading':
+        return MaterialPageRoute(builder: (_) => Loading());
+      // case '/welcome':
+      //   return MaterialPageRoute(builder: (_) => Welcome());
       case '/dashboard':
         return MaterialPageRoute(builder: (_) => Dashboard());
+      case '/signup':
+        return MaterialPageRoute(builder: (_) => Signup());
+      // case '/diary':
+      //   return MaterialPageRoute(builder: (_) => Diary());
+      //
+      //Registration
       case '/comReg':
         return MaterialPageRoute(builder: (_) => ComFamReg());
       case '/preReg':
         return MaterialPageRoute(builder: (_) => PreFamReg());
       case '/renderData':
         return MaterialPageRoute(builder: (_) => ComRenderData());
-
-      //Midwife Mother reviews
+      //
+      //Midwife's Mother reviews////////////////////////////////////////////////////////
       case '/motherAssign':
         return MaterialPageRoute(builder: (_) => MotherAssign());
 
       case '/motherPregReview':
         return MaterialPageRoute(builder: (_) => PregReview());
-
-      case '/signup':
-        return MaterialPageRoute(builder: (_) => Signup());
+      //
+      //Special Notices-----------///////////////////////////////////////////////////////
+      // case '/specialNotice':
+      //   return MaterialPageRoute(builder: (_) => SendNotice());
+      //
+      //Notifications------------/////////////////////////////////////////////////////////
       case '/notification':
         return MaterialPageRoute(builder: (_) => NotificationScreen());
       case '/sechHomeVisits':
@@ -70,44 +87,56 @@ class RouteGenerator {
                   key: Key('clinic'),
                   viewSwitch: args['switchView'],
                 ));
+      //
       case '/geoLocate':
         return MaterialPageRoute(builder: (_) => GeoLocation());
 
+
       case '/chat':
         return MaterialPageRoute(builder: (_) => SetChatUser());
+
       case '/motherList':
         return MaterialPageRoute(builder: (_) => MotherList());
+
+      //
+      //Medication and Area Leaving Report & Views//////////////////////////////////////
+      case '/MediLeaveWap':
+        return MaterialPageRoute(builder: (_) => MediLeaveWapper());
       case '/leavingReport':
         return MaterialPageRoute(builder: (_) => LeavingReport());
-      case '/midwifeleaveReport':
-        return MaterialPageRoute(builder: (_) => LeaveReportView());
+      // case '/midwifeleaveReport':
+      //   return MaterialPageRoute(builder: (_) => LeaveReportView());
       case '/MedicalReport':
         return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/ViewleavingReport':
         return MaterialPageRoute(builder: (_) => ViewLeaving());
       case '/ViewMedicalReport':
         return MaterialPageRoute(builder: (_) => ViewMedication());
+      //
+      // Upcomming home visits and clinics////////////////////////////////////////////////
       case '/UpcomingClinics':
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
-      case '/UpcomingHome':
-        return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
       case '/viewupcominghomevisit':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
-        
-      //Profile 
+
       case '/profile':
         return MaterialPageRoute(
             builder: (_) => Profile(
                   review: false,
                 ));
-      //Reports (Daily | Monthly)
+      //
+      //Reports (Daily | Monthly)///////////////////////////////////////////////////////////
       case '/searchReport':
         return MaterialPageRoute(builder: (_) => ReportSearch());
       case '/dairlyReportView':
         return MaterialPageRoute(builder: (_) => DairlyReportView());
       case '/monthlyReportView':
         return MaterialPageRoute(builder: (_) => MonthlyReportView());
-
+      //
+      //Midwife leave and sister views//////////////////////////////////////////////////////
+      case '/midLeave':
+        return MaterialPageRoute(builder: (_) => LeaveForm());
+      
       case '/error':
         return MaterialPageRoute(
             builder: (_) => ErrorView(errorMsg: "Direct Route"));
