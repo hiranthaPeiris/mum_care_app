@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mun_care_app/helpers/Constants.dart';
 
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
@@ -60,6 +61,15 @@ class _LoginCompState extends State<LoginComp> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Container(padding: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                    child: Center(
+                      child: Text(
+                        "Mum&Care",
+                        style: TextStyle(
+                            fontSize: 48.0, fontWeight: FontWeight.bold,color: kBackground),
                       ),
                     ),
                   ),
