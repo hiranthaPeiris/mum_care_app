@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:mun_care_app/Wapper.dart';
 import 'package:mun_care_app/helpers/Loading.dart';
@@ -30,8 +28,11 @@ import 'package:mun_care_app/screens/ViewUpcomingClinics/ViewUpcomingClinic.dart
 import 'package:mun_care_app/screens/Welcome/Welcome.dart';
 // import 'package:mun_care_app/screens/chat/homechat.dart';
 import 'package:mun_care_app/screens/ViewUpcomingHomevisit/ViewUpcomingHomevisit.dart';
+import 'package:mun_care_app/screens/chat/homechat.dart';
+import 'package:mun_care_app/screens/chat/setUsers.dart';
 import 'package:mun_care_app/screens/registration/ComFamReg.dart';
 import 'package:mun_care_app/screens/Reviews/MotherList.dart';
+import 'package:mun_care_app/screens/registration/MotherAssign.dart';
 import 'package:mun_care_app/screens/registration/PreFamReg.dart';
 import 'package:mun_care_app/screens/registration/RenderData.dart';
 import 'package:mun_care_app/screens/reminders/SchHomeSearch.dart';
@@ -68,7 +69,8 @@ class RouteGenerator {
       //
       //Midwife's Mother reviews////////////////////////////////////////////////////////
       case '/motherAssign':
-        return MaterialPageRoute(builder: (_) => MotherList());
+        return MaterialPageRoute(builder: (_) => MotherAssign());
+
       case '/motherPregReview':
         return MaterialPageRoute(builder: (_) => PregReview());
       //
@@ -93,8 +95,11 @@ class RouteGenerator {
       //
       case '/geoLocate':
         return MaterialPageRoute(builder: (_) => GeoLocation());
-      // case '/chat':
-      //   return MaterialPageRoute(builder: (_) => HomeChat());
+
+
+      case '/chat':
+        return MaterialPageRoute(builder: (_) => SetChatUser());
+
       case '/motherList':
         return MaterialPageRoute(builder: (_) => MotherList());
 
@@ -104,6 +109,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MediLeaveWapper());
       case '/leavingReport':
         return MaterialPageRoute(builder: (_) => LeavingReport());
+      // case '/midwifeleaveReport':
+      //   return MaterialPageRoute(builder: (_) => LeaveReportView());
       case '/MedicalReport':
         return MaterialPageRoute(builder: (_) => MedicationReport());
       case '/ViewleavingReport':
@@ -116,8 +123,6 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/viewupcominghomevisit':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
-      //
-      //Profile///////////////////////////////////////////////////////////////////////////
       case '/profile':
         return MaterialPageRoute(
             builder: (_) => Profile(
