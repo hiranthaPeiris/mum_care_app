@@ -32,153 +32,155 @@ class _MidDutyViewState extends State<MidDutyView> {
       },
       child: Scaffold(
         backgroundColor: Colors.lightBlue,
-        body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).copyWith().size.height / 6,
-                width: MediaQuery.of(context).copyWith().size.width,
-                color: Colors.lightBlue,
-                child: Container(
-                  child: Text(
-                    'Midwife Duty',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                  padding: EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width * 0.2,
-                      MediaQuery.of(context).size.height * 0.06,
-                      MediaQuery.of(context).size.width * 0.2,
-                      MediaQuery.of(context).size.height * 0.02),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                height: MediaQuery.of(context).copyWith().size.height * (5 / 6),
-                width: MediaQuery.of(context).copyWith().size.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    topRight: Radius.circular(20.0),
-                  ),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 15),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(29.5),
-                            ),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: "Search",
-                                icon:
-                                    SvgPicture.asset("assets/icons/search.svg"),
-                                border: InputBorder.none,
-                              ),
-                              onChanged: (val) {
-                                setState(() {
-                                  searchPara = val;
-                                });
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: StreamBuilder<QuerySnapshot>(
-                              stream: (searchPara == null || searchPara == '')
-                                  ? collection
-                                      .where('role',
-                                          isEqualTo: "midwife")
-                                      .where("mohArea", isEqualTo:mohArea)
-                                      .snapshots()
-                                  : collection
-                                      .where('nameSearch',
-                                          arrayContains: searchPara)
-                                      .where('role',
-                                          isEqualTo: "midwife")
-                                      .where("mohArea", isEqualTo:mohArea)
-                                      .snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Something went wrong');
-                                }
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Text("Loading");
-                                }
-                                if (snapshot.connectionState ==
-                                    ConnectionState.none) {
-                                  return Text("No data present");
-                                }
-                                return new ListView(
-                                    children: snapshot.data.docs
-                                        .map((DocumentSnapshot document) {
-                                  //refe from below
-                                  return listItem(document);
-                                  
-                                }).toList());
-                              },
-                            ),
-                          )
-                        ],
-                      ),
+        body: SafeArea(
+                  child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: MediaQuery.of(context).copyWith().size.height / 6,
+                  width: MediaQuery.of(context).copyWith().size.width,
+                  color: Colors.lightBlue,
+                  child: Container(
+                    child: Text(
+                      'Midwife Duty',
+                      style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                      textAlign: TextAlign.center,
                     ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(
-                          MediaQuery.of(context).size.width * 0.1,
-                          MediaQuery.of(context).size.height * 0.01,
-                          MediaQuery.of(context).size.width * 0.05,
-                          MediaQuery.of(context).size.height * 0.05),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: RaisedButton(
-                                            shape: StadiumBorder(),
-                                            textColor: Colors.white,
-                                            color: Colors.lightBlue,
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text(
-                                              'Back',
-                                              style: TextStyle(
-                                                fontSize: 20.0,
+                    padding: EdgeInsets.fromLTRB(
+                        MediaQuery.of(context).size.width * 0.2,
+                        MediaQuery.of(context).size.height * 0.06,
+                        MediaQuery.of(context).size.width * 0.2,
+                        MediaQuery.of(context).size.height * 0.002),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  height: MediaQuery.of(context).copyWith().size.height * (5 / 6),
+                  width: MediaQuery.of(context).copyWith().size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
+                    ),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 15),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(29.5),
+                              ),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: "Search",
+                                  icon:
+                                      SvgPicture.asset("assets/icons/search.svg"),
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: (val) {
+                                  setState(() {
+                                    searchPara = val;
+                                  });
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: StreamBuilder<QuerySnapshot>(
+                                stream: (searchPara == null || searchPara == '')
+                                    ? collection
+                                        .where('role',
+                                            isEqualTo: "midwife")
+                                        .where("mohArea", isEqualTo:mohArea)
+                                        .snapshots()
+                                    : collection
+                                        .where('nameSearch',
+                                            arrayContains: searchPara)
+                                        .where('role',
+                                            isEqualTo: "midwife")
+                                        .where("mohArea", isEqualTo:mohArea)
+                                        .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text('Something went wrong');
+                                  }
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Text("Loading");
+                                  }
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.none) {
+                                    return Text("No data present");
+                                  }
+                                  return new ListView(
+                                      children: snapshot.data.docs
+                                          .map((DocumentSnapshot document) {
+                                    //refe from below
+                                    return listItem(document);
+                                    
+                                  }).toList());
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width * 0.1,
+                            MediaQuery.of(context).size.height * 0.01,
+                            MediaQuery.of(context).size.width * 0.05,
+                            MediaQuery.of(context).size.height * 0.09),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: RaisedButton(
+                                              shape: StadiumBorder(),
+                                              textColor: Colors.white,
+                                              color: Colors.lightBlue,
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                'Back',
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
                                               ),
                                             ),
-                                          ),
+                              ),
                             ),
-                          ),
-                          // Container(
-                          //   child: Align(
-                          //     alignment: Alignment.bottomRight,
-                          //     child: ElevatedButton(
-                          //       child: Text('Submit'),
-                          //       onPressed: () {},
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
+                            // Container(
+                            //   child: Align(
+                            //     alignment: Alignment.bottomRight,
+                            //     child: ElevatedButton(
+                            //       child: Text('Submit'),
+                            //       onPressed: () {},
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

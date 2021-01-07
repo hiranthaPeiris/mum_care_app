@@ -129,7 +129,7 @@ class _ProfileState extends State<Profile> {
       _userDataSevice.getCompData(uid).then((doc) {
         setState(() {
           //compFamData = doc;
-           pending = false;
+          pending = false;
           _compData = ComRegDB.fromSnapshot(doc);
           //print(doc.data());
         });

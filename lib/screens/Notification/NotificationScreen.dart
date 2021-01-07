@@ -28,6 +28,7 @@ class _NotificationState extends State<NotificationScreen> {
             builder: (BuildContext context,
                 AsyncSnapshot<List<NotificationM>> asyncSnapshot) {
               Widget widget;
+             
               if (asyncSnapshot.hasData) {
                 widget = Navigator(
                   pages: [

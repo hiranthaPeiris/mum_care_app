@@ -356,7 +356,7 @@ class _DashboardState extends State<Dashboard> {
           Menu_card(
             title: "View Medications & Leaving Reports",
             heading: "Medications & Area Leaving",
-            svgSrc: "assets/icons/yoga.svg",
+            svgSrc: "assets/icons/medi-report.svg",
             press: () {
               Navigator.pushNamed(context, '/MediLeaveWap');
             },
@@ -364,7 +364,7 @@ class _DashboardState extends State<Dashboard> {
           Menu_card(
             title: "Apply day leave",
             heading: "Apply Leaving",
-            svgSrc: "assets/icons/yoga.svg",
+            svgSrc: "assets/icons/leaving.svg",
             press: () {
               Navigator.pushNamed(context, '/midLeave');
             },
@@ -421,7 +421,7 @@ class _DashboardState extends State<Dashboard> {
           Menu_card(
             title: "Report private medications",
             heading: "Report Medications",
-            svgSrc: "assets/icons/yoga.svg",
+            svgSrc: "assets/icons/medi-report.svg",
             press: () {
               Navigator.pushNamed(context, '/MedicalReport');
             },
@@ -429,7 +429,7 @@ class _DashboardState extends State<Dashboard> {
           Menu_card(
             title: "Report leaving residential area",
             heading: "Report Leaving",
-            svgSrc: "assets/icons/yoga.svg",
+            svgSrc: "assets/icons/leaving.svg",
             press: () {
               Navigator.pushNamed(context, '/leavingReport');
             },

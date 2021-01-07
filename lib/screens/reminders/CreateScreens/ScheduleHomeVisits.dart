@@ -116,7 +116,7 @@ class _ScheduleHomeVisitsState extends State<ScheduleHomeVisits> {
                                                   initialDate:
                                                       new DateTime.now(),
                                                   firstDate: DateTime(1980),
-                                                  lastDate: DateTime(2021))
+                                                  lastDate: DateTime(2022))
                                               .then((date) {
                                             setState(() {
                                               _date = date;

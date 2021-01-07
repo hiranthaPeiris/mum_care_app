@@ -140,7 +140,7 @@ class _DutyViewerState extends State<DutyViewer> {
                                           backgroundColor: Colors.white,
                                           title: _buildTitle(document),
                                           trailing: SizedBox(),
-                                          children: _buildDataList(document)),
+                                          children:_buildDataList(document)),
                                     ),
                                   );
                                 }).toList());

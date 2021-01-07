@@ -78,7 +78,7 @@ class _MediLeaveWapperState extends State<MediLeaveWapper> {
                           Menu_card(
                             title: "View reports on private medications",
                             heading: "View Mother Medications",
-                            svgSrc: "assets/icons/yoga.svg",
+                            svgSrc: "assets/icons/medi-report.svg",
                             press: () {
                               Navigator.pushNamed(
                                   context, '/ViewMedicalReport');
@@ -87,7 +87,7 @@ class _MediLeaveWapperState extends State<MediLeaveWapper> {
                           Menu_card(
                             title: "View reports on leaving residential area",
                             heading: "View Leaving Report",
-                            svgSrc: "assets/icons/yoga.svg",
+                            svgSrc: "assets/icons/leaving.svg",
                             press: () {
                               Navigator.pushNamed(
                                   context, '/ViewleavingReport');

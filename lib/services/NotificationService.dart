@@ -77,7 +77,7 @@ class NotificationService {
               doc['topicDate'],
               doc['topicRef'],
               new DateTime.now(),
-              doc['type'],doc['subtitle']));
+              doc['type'],doc['subTitle']));
           print(doc["createdAt"]);
         });
         print(notifications.length);
@@ -160,6 +160,7 @@ class NotificationService {
           'title': data['body'],
           "topicDate": data['topicDate'],
           "topicRef": data['topicRef'],
+          "subTitle":data['subTitle'],
           "type": data['type']
         },
       ),
@@ -182,6 +183,7 @@ Future<http.Response> sendMessageToList(Map<String, dynamic> data,
           "topicDate": data['topicDate'],
           "topicRef": data['topicRef'],
           "type": data['type'],
+          "subTitle":data['subTitle'],
           "tokens":tokenList
         },
       ),
