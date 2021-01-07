@@ -112,15 +112,16 @@ class AuthService {
   }
 
   //register
-  Future register(UserModel userModel,String password) async {
+  Future register(UserModel userModel, String password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: userModel.email, password: password);
-          userModel.uid = userCredential.user.uid;
+          .createUserWithEmailAndPassword(
+              email: userModel.email, password: password);
+      userModel.uid = userCredential.user.uid;
       await setUserRole(userModel);
       await setUserMessageToken();
       _notification.subscribeTopic("general");
-      
+
       print(userCredential.user.uid);
       return (_userFromFirebase(userCredential.user));
     } catch (e) {
@@ -136,7 +137,7 @@ class AuthService {
 //       await setUserRole(userModel);
 //       await setUserMessageToken();
 //       _notification.subscribeTopic("general");
-      
+
 //       print(userCredential.user.uid);
 //       return userCredential.user;
 //     } catch (e) {
@@ -149,25 +150,24 @@ class AuthService {
     await _firestore
         .collection('users')
         .doc(userModel.uid)
-         .set(userModel.toJson())
-        //   {
-        //   'name': name,
-        //   'role': role,
-        //   'area01': 'notSelect',
-        //   'mohArea': "",
-        //   'competencyFam': false,
-        //   'PregnanctFam': false,
-        //   'compApp': false,
-        //   'pregApp': false,
-        //   'midwifeID': 'null',
-        //   'onDuty': false,
-        //   'tel': mobileNum,
-        //   'email':email,
-        //   'token': "",
-        //   'condition':"normal",
-        //   'timeStamp': FieldValue.serverTimestamp(),
-        //   'nameSearch': getSearchParam(name)
-        // })
+        .set({
+          'name': userModel.name,
+          'role': userModel.role,
+          'area01': 'notSelect',
+          'mohArea': "",
+          'competencyFam': false,
+          'PregnanctFam': false,
+          'compApp': false,
+          'pregApp': false,
+          'midwifeID': 'null',
+          'onDuty': false,
+          'tel': userModel.tel,
+          'email': userModel.email,
+          'token': "",
+          'condition': "normal",
+          'timeStamp': FieldValue.serverTimestamp(),
+          'nameSearch': getSearchParam(userModel.name)
+        })
         .then((value) => print("user role added"))
         .catchError((err) => print(err));
   }

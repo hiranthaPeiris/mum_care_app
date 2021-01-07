@@ -115,24 +115,22 @@ class _SetChatUserState extends State<SetChatUser> {
   }
 
   Widget getProfileImage(String id) {
-    _storageService.downloadProfileImage("profile",id).then((url) {
-      if (url != null) {
-        setState(() {
-          _profileImage = url;
-          //pending = false;
-          print("image came");
-        });
-
-      }
-      if (url == null){
-         setState(() {
-          _profileImage = url;
-          //pending = false;
-          print("image came");
-        });
-      }
-    
-    });
+    // _storageService.downloadProfileImage("profile", id).then((url) {
+    //   if (url != null) {
+    //     setState(() {
+    //       _profileImage = url;
+    //       //pending = false;
+    //       print("image came");
+    //     });
+    //   }
+    //   if (url == null) {
+    //     setState(() {
+    //       _profileImage = url;
+    //       //pending = false;
+    //       print("image came");
+    //     });
+    //   }
+    // });
     return CircleAvatar(
       radius: 35.0,
       backgroundImage: NetworkImage(_profileImage),
@@ -148,7 +146,7 @@ class _SetChatUserState extends State<SetChatUser> {
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
           }
-          
+
           if (snapshot.hasData) {
             print("Document -> ${snapshot.data.documents.length}");
             return buildList01(context, snapshot.data.documents);
@@ -292,10 +290,6 @@ class _SetChatUserState extends State<SetChatUser> {
                   .doc(_auth.currentUser.uid)
                   .snapshots(),
               builder: (context, snapshot) {
-                var value = snapshot.data;
-                String area = value['area01'].toString();
-
-                print(area);
                 print(_auth.currentUser.uid);
                 if (snapshot.hasError) {
                   return Text('Error...');
@@ -337,6 +331,8 @@ class _SetChatUserState extends State<SetChatUser> {
                       );
                       break;
                     case ConnectionState.active:
+                      var value = snapshot.data;
+                      String area = value['area01'].toString();
                       return buildBody01(context, area);
 
                       break;

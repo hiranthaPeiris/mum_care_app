@@ -899,7 +899,7 @@ class _ComFamRegState extends State<ComFamReg> {
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(1980),
-                                          lastDate: DateTime(2021))
+                                          lastDate: DateTime(2022))
                                       .then((date) {
                                     setState(() {
                                       _menDOB = date;
@@ -960,7 +960,7 @@ class _ComFamRegState extends State<ComFamReg> {
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(1980),
-                                          lastDate: DateTime(2021))
+                                          lastDate: DateTime(2022))
                                       .then((date) {
                                     setState(() {
                                       _womenDOB = date;
@@ -1087,7 +1087,7 @@ class _ComFamRegState extends State<ComFamReg> {
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(1980),
-                                          lastDate: DateTime(2021))
+                                          lastDate: DateTime(2022))
                                       .then((date) {
                                     setState(() {
                                       _dateMarrage = date;

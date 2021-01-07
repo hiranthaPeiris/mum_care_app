@@ -386,7 +386,7 @@ class _MedicationReportState extends State<MedicationReport> {
                                                                         1980),
                                                                 lastDate:
                                                                     DateTime(
-                                                                        2021))
+                                                                        2022))
                                                             .then((date) {
                                                           setState(() {
                                                             _date = date;

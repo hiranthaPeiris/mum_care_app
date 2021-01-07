@@ -70,7 +70,7 @@ class UserDataSevice {
   Future<String> getMyMidwife(String mohArea) async {
     return await _firestore
         .collection('users')
-        .where('mohArea', isEqualTo: mohArea)
+        .where('mohArea', isEqualTo: mohArea).where('role',isEqualTo: 'midwife')
         .get()
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.length > 0) {
