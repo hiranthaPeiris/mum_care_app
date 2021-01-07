@@ -118,7 +118,7 @@ class _ChatScreenState extends State<ChatScreen> {
           );
         });
         msgUnread = msgUnread + 1;
-        msgUnread == 1 ? setUnreadField() : updateUnreadField();
+         updateUnreadField();
 
         // listScrollController.animateTo(0.0,
         //     duration: Duration(milliseconds: 300), curve: Curves.easeOut);

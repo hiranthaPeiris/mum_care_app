@@ -13,6 +13,8 @@ class AuthService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final NotificationService _notification = NotificationService();
   var userInstance = new UserM.get();
+  num msgUnread = 0;
+  String lastContent;
 
   UserM _userFromFirebase(User user) {
     if (user != null) {
@@ -111,6 +113,20 @@ class AuthService {
     }
   }
 
+  Future<void> setUnreadField(String id) async {
+    var documentReference01 =
+        FirebaseFirestore.instance.collection('messages').doc(id);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      await transaction.set(
+        documentReference01,
+        {
+          'numUnread': msgUnread,
+          'lastContent': lastContent,
+        },
+      );
+    });
+  }
+
   //register
   Future register(UserModel userModel, String password) async {
     try {
@@ -120,6 +136,7 @@ class AuthService {
       userModel.uid = userCredential.user.uid;
       await setUserRole(userModel);
       await setUserMessageToken();
+      await setUnreadField(userCredential.user.uid);
       _notification.subscribeTopic("general");
 
       print(userCredential.user.uid);
