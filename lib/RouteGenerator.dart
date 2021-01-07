@@ -95,8 +95,11 @@ class RouteGenerator {
       //
       case '/geoLocate':
         return MaterialPageRoute(builder: (_) => GeoLocation());
+
+
       case '/chat':
         return MaterialPageRoute(builder: (_) => SetChatUser());
+
       case '/motherList':
         return MaterialPageRoute(builder: (_) => MotherList());
 
@@ -120,8 +123,6 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ViewUpcomingClinic());
       case '/viewupcominghomevisit':
         return MaterialPageRoute(builder: (_) => ViewUpcomingHomevisit());
-      //
-      //Profile///////////////////////////////////////////////////////////////////////////
       case '/profile':
         return MaterialPageRoute(
             builder: (_) => Profile(

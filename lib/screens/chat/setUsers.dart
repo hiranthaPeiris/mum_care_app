@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mun_care_app/helpers/Loading.dart';
 import 'package:mun_care_app/models/UserM.dart';
 import 'package:mun_care_app/screens/chat/chatscreen.dart';
+import 'package:mun_care_app/services/StorageService.dart';
 
 class SetChatUser extends StatefulWidget {
   @override
@@ -12,6 +14,11 @@ class SetChatUser extends StatefulWidget {
 class _SetChatUserState extends State<SetChatUser> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   UserM user = new UserM.get();
+  bool pending = true;
+  String chatID;
+  final StorageService _storageService = StorageService();
+  String _profileImage =
+      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg";
 
   getData01(String area) {
     return FirebaseFirestore.instance
@@ -29,6 +36,100 @@ class _SetChatUserState extends State<SetChatUser> {
         .snapshots();
   }
 
+  Widget getUnreadCount(BuildContext context, String id) {
+    return StreamBuilder(
+      stream:
+          FirebaseFirestore.instance.collection("messages").doc(id).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot == null) {
+          return Text(" ");
+        }
+        if (snapshot.hasError) {
+          return Text(" ");
+        }
+        if (!snapshot.hasData) {
+          return Text(" ");
+        }
+        var value = snapshot.data;
+        num count = value["numUnread"];
+
+        if (snapshot.hasData) {
+          return count == 0
+              ? Text(" ")
+              : Container(
+                  width: 40.0,
+                  height: 20.0,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    count.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+        } else {
+          Text(" ");
+        }
+      },
+    );
+  }
+
+  Widget getLastContent(BuildContext context, String id) {
+    return StreamBuilder(
+      stream:
+          FirebaseFirestore.instance.collection("messages").doc(id).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot == null) {
+          return Text(" ");
+        }
+        if (snapshot.hasError) {
+          return Text(" ");
+        }
+        if (!snapshot.hasData) {
+          return Text(" ");
+        }
+        var value = snapshot.data;
+        String content = value["lastContent"];
+
+        if (snapshot.hasData) {
+          return Text(
+            content,
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
+            ),
+            overflow: TextOverflow.ellipsis,
+          );
+        } else {
+          Text(" ");
+        }
+      },
+    );
+  }
+
+  Widget getProfileImage(String id) {
+    _storageService.downloadProfileImage("profile",id).then((url) {
+      if (url != null) {
+        setState(() {
+          _profileImage = url;
+          //pending = false;
+          print("image came");
+        });
+      }
+    });
+    return CircleAvatar(
+      radius: 35.0,
+      backgroundImage: NetworkImage(_profileImage),
+    );
+  }
+
   Widget buildBody01(BuildContext context, String abc) {
     return StreamBuilder(
         stream: user.userCustomData['role'] == 'midwife'
@@ -37,6 +138,9 @@ class _SetChatUserState extends State<SetChatUser> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
+          }
+          if (!snapshot.hasData) {
+            return Loading();
           }
           if (snapshot.hasData) {
             print("Document -> ${snapshot.data.documents.length}");
@@ -67,14 +171,21 @@ class _SetChatUserState extends State<SetChatUser> {
 
   Widget listItemBuild01(BuildContext context, DocumentSnapshot data) {
     //final comRegBD = ComRegDB.fromSnapshot(data);
+    print(data.id + _auth.currentUser.uid);
+    user.userCustomData['role'] == 'midwife'
+        ? chatID = _auth.currentUser.uid + data.id
+        : chatID = data.id + _auth.currentUser.uid;
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => ChatScreen(
-                  userID: data.id,
-                )),
-      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => ChatScreen(
+                    userID: data.id,
+                  )),
+        );
+        print(chatID + "This is setuser");
+      },
       child: Container(
         margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 10.0),
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
@@ -91,10 +202,7 @@ class _SetChatUserState extends State<SetChatUser> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 35.0,
-                  //backgroundImage: AssetImage(chat.sender.imageUrl),
-                ),
+                getProfileImage(data.id),
                 SizedBox(width: 10.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,52 +216,29 @@ class _SetChatUserState extends State<SetChatUser> {
                       ),
                     ),
                     SizedBox(height: 5.0),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      child: Text(
-                        data.id,
-                        style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width * 0.45,
+                    //   child: getLastContent(context, data.id)
+                    // ),
                   ],
                 ),
               ],
             ),
             Column(
               children: <Widget>[
-                Text(
-                  "Sender Name",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 5.0),
-                // chat.unread
-                //     ? Container(
-                //   width: 40.0,
-                //   height: 20.0,
-                //   decoration: BoxDecoration(
-                //     color: Theme.of(context).primaryColor,
-                //     borderRadius: BorderRadius.circular(30.0),
+                // Text(
+                //   "Sender Name",
+                //   style: TextStyle(
+                //     color: Colors.grey,
+                //     fontSize: 10.0,
+                //     fontWeight: FontWeight.bold,
                 //   ),
-                //   alignment: Alignment.center,
-                //   child: Text(
-                //     'NEW',
-                //     style: TextStyle(
-                //       color: Colors.white,
-                //       fontSize: 12.0,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // )
-                //     : Text(''),
+                // ),
+                Container(
+                  width: 40,
+                  height: 40,
+                  child: getUnreadCount(context, data.id),
+                )
               ],
             ),
           ],
