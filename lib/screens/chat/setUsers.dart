@@ -122,7 +122,16 @@ class _SetChatUserState extends State<SetChatUser> {
           //pending = false;
           print("image came");
         });
+
       }
+      if (url == null){
+         setState(() {
+          _profileImage = url;
+          //pending = false;
+          print("image came");
+        });
+      }
+    
     });
     return CircleAvatar(
       radius: 35.0,
@@ -139,9 +148,7 @@ class _SetChatUserState extends State<SetChatUser> {
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
           }
-          if (!snapshot.hasData) {
-            return Loading();
-          }
+          
           if (snapshot.hasData) {
             print("Document -> ${snapshot.data.documents.length}");
             return buildList01(context, snapshot.data.documents);
