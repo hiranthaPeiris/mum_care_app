@@ -184,17 +184,6 @@ class _LeavingState extends State<LeavingReport> {
                                     ],
                                   ),
                                 ),
-                                // Container(
-                                //   child: Padding(
-                                //     padding: EdgeInsets.fromLTRB(
-                                //         MediaQuery.of(context).size.width * 0.05,
-                                //         MediaQuery.of(context).size.height * 0.005,
-                                //         MediaQuery.of(context).size.width * 0.05,
-                                //         MediaQuery.of(context).size.height * 0.005),
-                                //     child:
-                                //         showTextField("Name ", "_Name", myController1),
-                                //   ),
-                                // ),
                                 Container(
                                   child: Padding(
                                     padding: EdgeInsets.fromLTRB(
@@ -221,10 +210,8 @@ class _LeavingState extends State<LeavingReport> {
                                             0.05,
                                         MediaQuery.of(context).size.height *
                                             0.0005),
-                                    child: showTextField(
-                                        "Any Remarks",
-                                        "_MumRemarks",
-                                        myController3),
+                                    child: showTextField("Any Remarks",
+                                        "_MumRemarks", myController3),
                                   ),
                                 ),
                                 Container(
@@ -324,7 +311,6 @@ class _LeavingState extends State<LeavingReport> {
                                     ),
                                   ),
                                 ),
-
                                 Container(
                                   padding: EdgeInsets.fromLTRB(
                                       MediaQuery.of(context).size.width * 0.1,
@@ -358,7 +344,6 @@ class _LeavingState extends State<LeavingReport> {
                                               if (rst != null) {
                                                 _displaySnackBar(context);
                                               } else {
-                                                
                                                 AlertDialog alert = AlertDialog(
                                                   title: Text('Error'),
                                                   content:
@@ -548,7 +533,8 @@ class _LeavingState extends State<LeavingReport> {
         phmDropDownValue: phmDropdownValue,
         date: _date.toString(),
         regDate: dateConvert,
-        midwifeID: _user.userCustomData['midwifeID']);
+        midwifeID: _user.userCustomData['midwifeID'],
+        status: "pending");
 
     return await _firestore
         .collection("informLeaving")

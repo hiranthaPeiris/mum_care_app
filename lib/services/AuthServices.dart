@@ -4,11 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mun_care_app/models/UserM.dart';
+import 'package:mun_care_app/services/NotificationService.dart';
+import 'package:mun_care_app/models/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final NotificationService _notification = NotificationService();
   var userInstance = new UserM.get();
 
   UserM _userFromFirebase(User user) {
@@ -46,7 +49,7 @@ class AuthService {
           await _auth.signInWithEmailAndPassword(email: email, password: pass);
       Map<String, dynamic> customData =
           await getUserCustomData(userCredential.user.uid);
-
+      await setUserMessageToken();
       new UserM(user: userCredential, data: customData);
       return _userFromFirebase(userCredential.user);
     } on FirebaseAuthException catch (e) {
@@ -61,6 +64,10 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+
+  DocumentReference getUserRef(String uid) {
+    return _firestore.collection('users').doc(uid);
   }
 
   Future<void> setUserMessageToken() async {
@@ -80,17 +87,13 @@ class AuthService {
 
         // Save it to Firestore
         if (fcmToken != null) {
-          var tokens = _firestore
-              .collection('users')
-              .doc(uid)
-              .collection('tokens')
-              .doc(fcmToken);
+          var tokens = _firestore.collection('users').doc(uid);
 
-          await tokens.set({
+          await tokens.update({
             'token': fcmToken,
-            'createdAt': FieldValue.serverTimestamp(), // optional
-            'platform': Platform.operatingSystem // optional
+            'timeStamp': FieldValue.serverTimestamp(), // optional
           });
+          print("token updated");
         } else {
           print("firebase message token null");
         }
@@ -109,13 +112,15 @@ class AuthService {
   }
 
   //register
-  Future Register(String email, String password, String name) async {
+  Future register(UserModel userModel,String password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: userModel.email, password: password);
+          userModel.uid = userCredential.user.uid;
+      await setUserRole(userModel);
       await setUserMessageToken();
-      await setUserRole(userCredential.user.uid, name);
-
+      _notification.subscribeTopic("general");
+      
       print(userCredential.user.uid);
       return (_userFromFirebase(userCredential.user));
     } catch (e) {
@@ -123,24 +128,46 @@ class AuthService {
       return null;
     }
   }
-
+//register as midwife
+// Future<User> registerAsMidwife(String email, String password, String name,String role,String mobNumber) async {
+//     try {
+//       UserCredential userCredential = await FirebaseAuth.instance
+//           .createUserWithEmailAndPassword(email: email, password: password);
+//       await setUserRole(userModel);
+//       await setUserMessageToken();
+//       _notification.subscribeTopic("general");
+      
+//       print(userCredential.user.uid);
+//       return userCredential.user;
+//     } catch (e) {
+//       print(e.toString());
+//       return null;
+//     }
+//   }
 //set user role
-  Future<void> setUserRole(String uid, String name) async {
+  Future<void> setUserRole(UserModel userModel) async {
     await _firestore
         .collection('users')
-        .doc(uid)
-        .set({
-          'name': name,
-          'role': 'user',
-          'area01': 'notSelect',
-          'competencyFam': false,
-          'PregnanctFam': false,
-          'midwifeID': 'null',
-          'onDuty': false,
-          'tel':"",
-          'email':"",
-          'nameSearch': getSearchParam(name)
-        })
+        .doc(userModel.uid)
+         .set(userModel.toJson())
+        //   {
+        //   'name': name,
+        //   'role': role,
+        //   'area01': 'notSelect',
+        //   'mohArea': "",
+        //   'competencyFam': false,
+        //   'PregnanctFam': false,
+        //   'compApp': false,
+        //   'pregApp': false,
+        //   'midwifeID': 'null',
+        //   'onDuty': false,
+        //   'tel': mobileNum,
+        //   'email':email,
+        //   'token': "",
+        //   'condition':"normal",
+        //   'timeStamp': FieldValue.serverTimestamp(),
+        //   'nameSearch': getSearchParam(name)
+        // })
         .then((value) => print("user role added"))
         .catchError((err) => print(err));
   }

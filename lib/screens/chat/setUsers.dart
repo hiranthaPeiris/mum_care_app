@@ -8,49 +8,32 @@ class SetChatUser extends StatefulWidget {
   @override
   _SetChatUserState createState() => _SetChatUserState();
 }
-// void setUser(){
-//   FirebaseFirestore.instance
-//                 .collection("users")
-//                 .where('role', isEqualTo: "midwife")
-//                 .where('mohArea', isEqualTo: snapshot.data["_mohDropDownValue"])
-//                 .where('area01', isEqualTo: snapshot.data["_phmDropDownValue"])
-//                 .get()
-//                 .then((querySnapshot) {
-//               querySnapshot.docs.forEach((result) {
-//                 setState(() {
-//                   val1 = result.data()["area01"];
-//                   name = result.data()["name"];
-//                   id = result.id;
-//                 });
-//               });
-//             });
-// }
 
 class _SetChatUserState extends State<SetChatUser> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   UserM user = new UserM.get();
 
-
   getData01(String area) {
-      return FirebaseFirestore.instance
-            .collection("users")
-            .where('role', isEqualTo: 'user')
-            .where('area01', isEqualTo: area)
-            .snapshots();  
-  }
-  getData02(String area){
     return FirebaseFirestore.instance
-            .collection("users")
-            .where('role', isEqualTo: 'midwife')
-            .where('area01', isEqualTo: area)
-            .snapshots();
+        .collection("users")
+        .where('role', isEqualTo: 'user')
+        .where('area01', isEqualTo: area)
+        .snapshots();
+  }
+
+  getData02(String area) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .where('role', isEqualTo: 'midwife')
+        .where('area01', isEqualTo: area)
+        .snapshots();
   }
 
   Widget buildBody01(BuildContext context, String abc) {
     return StreamBuilder(
         stream: user.userCustomData['role'] == 'midwife'
-           ?  getData01(abc)
-           :  getData02(abc),
+            ? getData01(abc)
+            : getData02(abc),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text("Error ${snapshot.error}");
@@ -59,6 +42,20 @@ class _SetChatUserState extends State<SetChatUser> {
             print("Document -> ${snapshot.data.documents.length}");
             return buildList01(context, snapshot.data.documents);
           }
+          return Container(
+              child: Column(
+            children: [
+              Icon(
+                Icons.info,
+                color: Colors.blue,
+                size: 60,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Select a lot'),
+              )
+            ],
+          ));
         });
   }
 
@@ -167,51 +164,98 @@ class _SetChatUserState extends State<SetChatUser> {
 
   @override
   Widget build(BuildContext context) {
-    Widget getState(BuildContext context) {
-      return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("users")
-            .doc(_auth.currentUser.uid)
-            .snapshots(),
-        builder: (context, snapshot) {
-          var value = snapshot.data;
-          String area = value['area01'].toString();
-
-          print(area);
-          print(_auth.currentUser.uid);
-          if (snapshot.hasData) {
-            return buildBody01(context, area);
-          }
-        },
-      );
-    }
-
     return Scaffold(
-      appBar: AppBar(
-        /*leading: IconButton(
+        appBar: AppBar(
+          /*leading: IconButton(
           icon: Icon(Icons.menu),
           iconSize: 30.0,
           color: Colors.white,
           onPressed: () {},
         ),*/
-        title: Text(
-          'Chats',
-          style: TextStyle(
-            fontSize: 28.0,
-            fontWeight: FontWeight.bold,
+          title: Text(
+            'Chats',
+            style: TextStyle(
+              fontSize: 28.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          elevation: 0.0,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              iconSize: 30.0,
+              color: Colors.white,
+              onPressed: () {},
+            ),
+          ],
         ),
-        elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            iconSize: 30.0,
-            color: Colors.white,
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: getState(context),
-    );
+        body: // getState(context),
+            SafeArea(
+                child: Column(
+          children: [
+            Expanded(
+                child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(_auth.currentUser.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                var value = snapshot.data;
+                String area = value['area01'].toString();
+
+                print(area);
+                print(_auth.currentUser.uid);
+                if (snapshot.hasError) {
+                  return Text('Error...');
+                } else {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return Container(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.info,
+                              color: Colors.blue,
+                              size: 60,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Text('Select a lot'),
+                            )
+                          ],
+                        ),
+                      );
+                      break;
+                    case ConnectionState.waiting:
+                      return Center(
+                        heightFactor: 5.0,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              child: const CircularProgressIndicator(),
+                              width: 50,
+                              height: 50,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Text('Awaiting Data...'),
+                            )
+                          ],
+                        ),
+                      );
+                      break;
+                    case ConnectionState.active:
+                      return buildBody01(context, area);
+
+                      break;
+                    default:
+                      print(snapshot.connectionState.toString());
+                      return Text("No data");
+                  }
+                }
+              },
+            ))
+          ],
+        )));
   }
 }

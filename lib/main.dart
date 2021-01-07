@@ -30,15 +30,21 @@ class _MyAppState extends State<MyApp> {
 
   Future startUp() async {
     await _notificationService.InitalizeMessaging();
-    print("notifi start");
+    //print("notifi start");
+  }
+
+  @override
+  void initState() {
+    startUp();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    startUp();
     return StreamProvider<UserM>.value(
       value: AuthService().user,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         navigatorKey: locator<NavigationService>().navigatorKey,
         title: 'Mun & Baby',
         theme: ThemeData(
@@ -47,7 +53,7 @@ class _MyAppState extends State<MyApp> {
           textTheme:
               Theme.of(context).textTheme.apply(displayColor: kTextColor),
         ),
-        initialRoute: '/',
+        initialRoute: "/welcome",
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );

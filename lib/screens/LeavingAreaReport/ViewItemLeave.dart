@@ -36,7 +36,7 @@ class _ViewItemLeaveState extends State<ViewItemLeave> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        "Medication Report",
+                        "Residential Area Leaving Report",
                         style: TextStyle(
                             color: kTextColor,
                             fontSize: 28.0,
@@ -195,7 +195,7 @@ class _ViewItemLeaveState extends State<ViewItemLeave> {
     return await _firestore
         .collection('informLeaving')
         .doc(documentSnapshot.id)
-        .set({'_midwifeRemarks': remarks})
+        .update({'_midwifeRemarks': remarks,"_status":"accepted"})
         .then((value) => print("updated"))
         .catchError((err) => print(err));
   }
