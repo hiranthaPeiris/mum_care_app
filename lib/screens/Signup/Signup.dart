@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mun_care_app/models/user.dart';
 import 'package:mun_care_app/services/AuthServices.dart';
 import 'package:sign_button/sign_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Signup extends StatefulWidget {
   final Function toggleView;
@@ -26,6 +28,10 @@ class _SignupState extends State<Signup> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController telController = new TextEditingController();
+
+  ///FirebaseAuth _auth1 = FirebaseAuth.instance;
+  bool pending = true;
+  
   void dispose() {
     super.dispose();
     nameController.dispose();
@@ -50,6 +56,7 @@ class _SignupState extends State<Signup> {
     print("else");
     return false;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -252,7 +259,7 @@ class _SignupState extends State<Signup> {
                         name: nameController.text.trim(),
                         role: "user",
                         tel: telController.text.trim());
-                        
+
                     dynamic result = _auth.register(userMod, password.trim());
                     if (result == null) {
                       setState(() {

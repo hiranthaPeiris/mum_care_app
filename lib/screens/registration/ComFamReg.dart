@@ -543,7 +543,7 @@ class _ComFamRegState extends State<ComFamReg> {
       await _firestore
           .collection('users')
           .doc(_auth.currentUser.uid)
-          .update({'compApp': true, 'midwifeID': midID}).then((value) {
+          .update({'compApp': true, 'midwifeID': midID,'area01':phmDropdownValue}).then((value) {
         print("Competency true");
         _notificationService.subscribeTopic(midID);
       }).catchError((err) => print(err));
